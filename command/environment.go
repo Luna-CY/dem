@@ -10,7 +10,7 @@ package command
 
 import (
 	"fmt"
-	"github.com/Luna-CY/dem/dem"
+	"github.com/Luna-CY/dem/core"
 	"github.com/Luna-CY/dem/environment"
 	"github.com/Luna-CY/dem/index"
 	"github.com/Luna-CY/dem/util/echo"
@@ -119,7 +119,7 @@ var environmentSwitchToCommand = &cobra.Command{
 			return
 		}
 
-		var target = filepath.Join(dem.Root, args[0], version.Version)
+		var target = filepath.Join(core.Root, args[0], version.Version)
 		var keywords = []string{"{ROOT}", target}
 
 		var paths []string

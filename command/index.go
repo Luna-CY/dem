@@ -10,7 +10,7 @@ package command
 
 import (
 	"fmt"
-	"github.com/Luna-CY/dem/dem"
+	"github.com/Luna-CY/dem/core"
 	"github.com/Luna-CY/dem/index"
 	"github.com/Luna-CY/dem/util/echo"
 	"github.com/Luna-CY/dem/util/mapping"
@@ -51,15 +51,15 @@ var indexUpdateCommand = &cobra.Command{
 	Short: "更新本地索引",
 	Args:  cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
-		if err := os.MkdirAll(filepath.Join(dem.Home, "index"), 0755); nil != err {
+		if err := os.MkdirAll(filepath.Join(core.Home, "index"), 0755); nil != err {
 			echo.ErrorLN(err)
 
 			os.Exit(1)
 		}
 
-		var source = fmt.Sprintf("https://raw.githubusercontent.com/Luna-CY/dem-repo/main/index/%s/.metadata.yaml", dem.Version)
+		var source = fmt.Sprintf("https://raw.githubusercontent.com/Luna-CY/dem-repo/%s/index/.metadata.yaml", core.Version)
 
-		request, err := http.NewRequest(http.MethodGet, source, nil)
+		request, err := http.NewRequestWithContext(cmd.Context(), http.MethodGet, source, nil)
 		if nil != err {
 			echo.ErrorLN(err)
 
@@ -101,7 +101,7 @@ var indexUpdateCommand = &cobra.Command{
 		for _, name := range indexes.Files {
 			var remoteFilename = fmt.Sprintf("%s.%s.%s.%s.yaml", name, runtime.GOOS, runtime.GOARCH, indexes.Version)
 			u.Path = filepath.Join(filepath.Dir(u.Path), remoteFilename)
-			request, err := http.NewRequest(http.MethodGet, u.String(), nil)
+			request, err := http.NewRequestWithContext(cmd.Context(), http.MethodGet, u.String(), nil)
 			if nil != err {
 				echo.ErrorLN(err)
 
@@ -115,7 +115,7 @@ var indexUpdateCommand = &cobra.Command{
 				os.Exit(1)
 			}
 
-			if http.StatusNotFound != response.StatusCode {
+			if http.StatusNotFound == response.StatusCode {
 				continue
 			}
 
@@ -126,7 +126,7 @@ var indexUpdateCommand = &cobra.Command{
 			}
 
 			var localFilename = fmt.Sprintf("%s.%s.%s.yaml", name, runtime.GOOS, runtime.GOARCH)
-			f, err := os.OpenFile(filepath.Join(dem.Home, "index", localFilename), os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0644)
+			f, err := os.OpenFile(filepath.Join(core.Home, "index", localFilename), os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0644)
 			if nil != err {
 				echo.ErrorLN(err)
 

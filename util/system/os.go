@@ -11,7 +11,9 @@ package system
 import (
 	"io/fs"
 	"os"
+	"os/exec"
 	"path/filepath"
+	"strings"
 )
 
 // Chmod 支持递归修改权限
@@ -29,4 +31,50 @@ func Chmod(path string, mode os.FileMode) error {
 
 		return nil
 	})
+}
+
+func LockPath(name string, paths []string) (string, error) {
+	if strings.Contains(name, "/") {
+		if err := findExecutable(name); err == nil {
+			return "", &exec.Error{Name: name, Err: err}
+		}
+
+		return name, nil
+	}
+
+	for _, dir := range paths {
+		var path = filepath.Join(dir, name)
+		if err := findExecutable(path); err == nil {
+			return path, nil
+		}
+	}
+
+	var path = os.Getenv("PATH")
+	for _, dir := range filepath.SplitList(path) {
+		if dir == "" {
+			// Unix shell semantics: path element "" means "."
+			dir = "."
+		}
+
+		var path = filepath.Join(dir, name)
+		if err := findExecutable(path); err == nil {
+			return path, nil
+		}
+	}
+
+	return "", &exec.Error{Name: name, Err: exec.ErrNotFound}
+}
+
+func findExecutable(file string) error {
+	d, err := os.Stat(file)
+
+	if err != nil {
+		return err
+	}
+
+	if m := d.Mode(); !m.IsDir() && m&0111 != 0 {
+		return nil
+	}
+
+	return fs.ErrPermission
 }

@@ -11,13 +11,13 @@ package environment
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/Luna-CY/dem/dem"
+	"github.com/Luna-CY/dem/core"
 	"os"
 	"path/filepath"
 )
 
 func Init() error {
-	var path = filepath.Join(dem.Home, "environment.json")
+	var path = filepath.Join(core.Home, "environment.json")
 
 	var file, err = os.OpenFile(path, os.O_CREATE|os.O_RDWR, 0644)
 	if nil != err {
@@ -115,9 +115,7 @@ func SwitchTo(name string, version string, tag string, paths []string, environme
 		environment.Used = map[string]map[string]Used{}
 	}
 
-	if _, ok := environment.Used[name]; !ok {
-		environment.Used[name] = map[string]Used{}
-	}
+	environment.Used[name] = map[string]Used{}
 
 	var toolEnvironments = GetEnvironments(name, version, tag)
 	for k, v := range toolEnvironments {
@@ -131,7 +129,7 @@ func SwitchTo(name string, version string, tag string, paths []string, environme
 }
 
 func sync() error {
-	var path = filepath.Join(dem.Home, "environment.json")
+	var path = filepath.Join(core.Home, "environment.json")
 
 	var file, err = os.OpenFile(path, os.O_CREATE|os.O_RDWR, 0644)
 	if nil != err {

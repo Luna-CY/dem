@@ -12,6 +12,8 @@ import (
 	"context"
 	"fmt"
 	"github.com/Luna-CY/dem/environment"
+	"github.com/Luna-CY/dem/util/echo"
+	"github.com/Luna-CY/dem/util/system"
 	"github.com/spf13/cobra"
 	"os"
 	"os/exec"
@@ -31,7 +33,7 @@ var main = &cobra.Command{
 		if 0 == len(args) {
 			fmt.Println("未指定执行的命令")
 
-			return
+			os.Exit(1)
 		}
 
 		var used = environment.GetUsed()
@@ -67,10 +69,16 @@ var main = &cobra.Command{
 			}
 		}
 
-		// TODO 命令的查找有问题，需要重载exec的LockPath函数
-		_ = os.Setenv("PATH", fmt.Sprintf("PATH=%s:%s", strings.Join(paths, ":"), os.Getenv("PATH")))
-		var command = exec.CommandContext(cmd.Context(), args[0], params...)
+		environments["PATH"] = fmt.Sprintf("PATH=%s:%s", strings.Join(paths, ":"), os.Getenv("PATH"))
 
+		var name, err = system.LockPath(args[0], paths)
+		if nil != err {
+			fmt.Println(err)
+
+			os.Exit(1)
+		}
+
+		var command = exec.CommandContext(cmd.Context(), name, params...)
 		command.Env = []string{}
 		for k, v := range environments {
 			command.Env = append(command.Env, fmt.Sprintf("%s=%s", k, v))
@@ -80,6 +88,8 @@ var main = &cobra.Command{
 		command.Stdout = os.Stdout
 		command.Stderr = os.Stderr
 
-		_ = command.Run()
+		if err := command.Run(); nil != err {
+			echo.ErrorLN(err)
+		}
 	},
 }

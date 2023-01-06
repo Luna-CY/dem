@@ -9,7 +9,7 @@
 package index
 
 import (
-	"github.com/Luna-CY/dem/dem"
+	"github.com/Luna-CY/dem/core"
 	"gopkg.in/yaml.v3"
 	"io/fs"
 	"os"
@@ -17,7 +17,10 @@ import (
 )
 
 func Init() error {
-	return filepath.Walk(filepath.Join(dem.Home, "index"), func(path string, info fs.FileInfo, err error) error {
+	index.versions = map[string]map[string]Version{}
+	index.versionStringList = map[string][]string{}
+
+	return filepath.Walk(filepath.Join(core.Home, "index"), func(path string, info fs.FileInfo, err error) error {
 		if nil != err {
 			return err
 		}
@@ -36,9 +39,6 @@ func Init() error {
 		if err := yaml.NewDecoder(file).Decode(&i); nil != err {
 			return err
 		}
-
-		index.versionStringList = map[string][]string{}
-		index.versions = map[string]map[string]Version{}
 
 		if _, ok := index.versionStringList[i.Name]; !ok {
 			index.versionStringList[i.Name] = []string{}
