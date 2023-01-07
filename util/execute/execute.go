@@ -10,6 +10,7 @@ package execute
 
 import (
 	"context"
+	"github.com/Luna-CY/dem/util/echo"
 	"os"
 	"os/exec"
 	"runtime"
@@ -22,6 +23,7 @@ func RunCommand(ctx context.Context, working string, command string) error {
 		commands = []string{"/bin/bash", "-c", command}
 	}
 
+	echo.InfoLN(commands)
 	var c = exec.CommandContext(ctx, commands[0], commands[1:]...)
 
 	c.Dir = working
