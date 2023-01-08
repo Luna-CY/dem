@@ -120,7 +120,7 @@ var environmentSwitchToCommand = &cobra.Command{
 		}
 
 		var target = filepath.Join(core.Root, args[0], version.Version)
-		var keywords = []string{"{ROOT}", target}
+		var keywords = []string{"{ROOT}", target, "{VERSION}", version.Version}
 
 		var paths []string
 		for _, path := range version.Paths {
