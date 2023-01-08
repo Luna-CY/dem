@@ -26,7 +26,7 @@
 
 ubuntu 22.04环境下编译python源码需要确保本地安装了如下依赖，否则安装后部分模块会不可用
 
-- libffi7 libbz2-dev libffi-dev libncurses5-dev libgdbm-compat-dev libsqlite3-dev uuid-dev lzma-dev liblzma-dev libgdbm6 libgdbm-dev
+- libffi7 libbz2-dev libffi-dev libncurses5-dev libgdbm-compat-dev libsqlite3-dev uuid-dev lzma-dev liblzma-dev libgdbm6 libgdbm-dev zlib1g zlib1g-dev xz-utils
 
 ## 安装
 
