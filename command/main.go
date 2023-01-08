@@ -11,12 +11,15 @@ package command
 import (
 	"context"
 	"fmt"
+	"github.com/Luna-CY/dem/core"
 	"github.com/Luna-CY/dem/environment"
+	"github.com/Luna-CY/dem/index"
 	"github.com/Luna-CY/dem/util/echo"
 	"github.com/Luna-CY/dem/util/system"
 	"github.com/spf13/cobra"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 )
 
@@ -36,8 +39,6 @@ var main = &cobra.Command{
 			os.Exit(1)
 		}
 
-		var used = environment.GetUsed()
-
 		var params []string
 		if 2 <= len(args) {
 			params = args[1:]
@@ -54,22 +55,35 @@ var main = &cobra.Command{
 		}
 
 		var paths []string
-		for _, item := range used {
-			for _, env := range item.Environments {
-				var tokens = strings.SplitN(env, "=", 2)
+		for name, used := range environment.GetUsed() {
+			var version, ok = index.GetVersion(name, used.Version)
+			if !ok {
+				continue
+			}
+
+			var target = filepath.Join(core.Root, name, version.Version)
+			var keywords = []string{"{ROOT}", target, "{VERSION}", version.Version}
+
+			for _, path := range version.Paths {
+				paths = append(paths, strings.NewReplacer(keywords...).Replace(path))
+			}
+
+			for _, environment := range version.Environments {
+				var tokens = strings.SplitN(environment, "=", 2)
 				if 2 != len(tokens) {
 					continue
 				}
 
-				environments[tokens[0]] = tokens[1]
+				environments[tokens[0]] = strings.NewReplacer(keywords...).Replace(tokens[1])
 			}
 
-			for _, path := range item.Paths {
-				paths = append(paths, path)
+			for k, v := range environment.GetEnvironments(name, used.Version, used.Tag) {
+				environments[k] = strings.NewReplacer(keywords...).Replace(v)
 			}
 		}
 
-		environments["PATH"] = fmt.Sprintf("PATH=%s:%s", strings.Join(paths, ":"), os.Getenv("PATH"))
+		paths = append(paths, filepath.SplitList(os.Getenv("PATH"))...)
+		environments["PATH"] = strings.Join(paths, string(filepath.ListSeparator))
 
 		var name, err = system.LockPath(args[0], paths)
 		if nil != err {

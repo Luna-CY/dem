@@ -9,7 +9,7 @@
 package command
 
 var InstallCommandUsage = `usage:{{if .Runnable}}
-  {{.UseLine}}{{end}} TOOL_NAME TOOL_VERSION{{if .HasExample}}
+  {{.UseLine}}{{end}} NAME VERSION{{if .HasExample}}
 
 example:
 {{.Example}}{{end}}{{if .HasAvailableSubCommands}}
@@ -91,7 +91,7 @@ Additional help topics:{{range .Commands}}{{if .IsAdditionalHelpTopicCommand}}
 Use "{{.CommandPath}} [command] --help" for more information about a command.{{end}}
 `
 
-var EnvironmentSwitchToCommandUsage = `usage:{{if .Runnable}}
+var SwitchToCommandUsage = `usage:{{if .Runnable}}
   {{.UseLine}}{{end}} NAME VERSION TAG{{if .HasExample}}
 
 example:
@@ -114,27 +114,6 @@ Use "{{.CommandPath}} [command] --help" for more information about a command.{{e
 
 var MainCommandUsage = `usage:{{if .Runnable}}
   {{.UseLine}}{{end}} CMD [ARGS] [FLAGS]{{if .HasExample}}
-
-example:
-{{.Example}}{{end}}{{if .HasAvailableSubCommands}}
-
-sub commands:{{range .Commands}}{{if (or .IsAvailableCommand (eq .Name "help"))}}
-  {{rpad .Name .NamePadding }} {{.Short}}{{end}}{{end}}{{end}}{{if .HasAvailableLocalFlags}}
-
-flags:
-{{.LocalFlags.FlagUsages | trimTrailingWhitespaces}}{{end}}{{if .HasAvailableInheritedFlags}}
-
-global flags:
-{{.InheritedFlags.FlagUsages | trimTrailingWhitespaces}}{{end}}{{if .HasHelpSubCommands}}
-
-Additional help topics:{{range .Commands}}{{if .IsAdditionalHelpTopicCommand}}
-  {{rpad .CommandPath .CommandPathPadding}} {{.Short}}{{end}}{{end}}{{end}}{{if .HasAvailableSubCommands}}
-
-Use "{{.CommandPath}} [command] --help" for more information about a command.{{end}}
-`
-
-var WithDefaultCommandUsage = `usage:{{if .Runnable}}
-  {{.UseLine}}{{end}} TOOL_NAME CMD [ARGS] [FLAGS]{{if .HasExample}}
 
 example:
 {{.Example}}{{end}}{{if .HasAvailableSubCommands}}

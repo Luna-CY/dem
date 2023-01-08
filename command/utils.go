@@ -17,13 +17,15 @@ func ToolsCommandExecute(ctx context.Context) error {
 	environmentSetCommand.SetUsageTemplate(EnvironmentSetCommandUsage)
 	environmentListCommand.SetUsageTemplate(EnvironmentListCommandUsage)
 	environmentCopyCommand.SetUsageTemplate(EnvironmentCopyCommandUsage)
-	environmentSwitchToCommand.SetUsageTemplate(EnvironmentSwitchToCommandUsage)
-	environmentCommand.AddCommand(environmentSetCommand, environmentListCommand, environmentCopyCommand, environmentSwitchToCommand)
+	environmentCommand.AddCommand(environmentSetCommand, environmentListCommand, environmentCopyCommand)
 
 	indexCommand.AddCommand(indexListCommand, indexUpdateCommand)
 	installCommand.SetUsageTemplate(InstallCommandUsage)
 	installCommand.Flags().BoolVar(&overwrite, "overwrite", false, "覆盖安装，设置该参数时将完全移除已安装的内容并重新安装，请谨慎使用")
-	tools.AddCommand(environmentCommand, indexCommand, installCommand)
+	installCommand.Flags().BoolVar(&switchTo, "switch-to", false, "安装完成后设置到运行时环境")
+	removeCommand.SetUsageTemplate(InstallCommandUsage)
+	switchToCommand.SetUsageTemplate(SwitchToCommandUsage)
+	tools.AddCommand(environmentCommand, indexCommand, installCommand, removeCommand, switchToCommand)
 
 	return tools.ExecuteContext(ctx)
 }

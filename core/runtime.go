@@ -38,5 +38,9 @@ func Init() error {
 		return err
 	}
 
+	if err := os.MkdirAll(filepath.Join(Home, "index"), 0755); nil != err {
+		return err
+	}
+
 	return nil
 }

@@ -10,7 +10,6 @@ package environment
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/Luna-CY/dem/core"
 	"os"
 	"path/filepath"
@@ -40,27 +39,25 @@ func Init() error {
 }
 
 type Used struct {
-	Paths        []string `json:"paths"`
-	Environments []string `json:"environments"`
+	Version string `json:"version"`
+	Tag     string `json:"tag"`
 }
 
 var environment struct {
-	// NAME -> VERSION -> TAG
-	Used map[string]map[string]Used `json:"used"`
+	// NAME -> STRUCT
+	Used map[string]Used `json:"used"`
 	// NAME -> VERSION -> TAG -> KEY -> VALUE
 	Environments map[string]map[string]map[string]map[string]string `json:"environments"`
 }
 
-func GetUsed() []Used {
-	var res []Used
+func GetUsed() map[string]Used {
+	return environment.Used
+}
 
-	for _, version := range environment.Used {
-		for _, used := range version {
-			res = append(res, used)
-		}
-	}
+func IsSetUsedEnvironment(name string) bool {
+	var _, ok = environment.Used[name]
 
-	return res
+	return ok
 }
 
 func GetEnvironments(name string, version string, tag string) map[string]string {
@@ -110,20 +107,12 @@ func SetEnvironments(name string, version string, tag string, kvs map[string]str
 	return sync()
 }
 
-func SwitchTo(name string, version string, tag string, paths []string, environments []string) error {
+func SwitchTo(name string, version string, tag string) error {
 	if nil == environment.Used {
-		environment.Used = map[string]map[string]Used{}
+		environment.Used = map[string]Used{}
 	}
 
-	environment.Used[name] = map[string]Used{}
-
-	var toolEnvironments = GetEnvironments(name, version, tag)
-	for k, v := range toolEnvironments {
-		environments = append(environments, fmt.Sprintf("%s=%s", k, v))
-	}
-
-	var used = Used{Paths: paths, Environments: environments}
-	environment.Used[name][version] = used
+	environment.Used[name] = Used{Version: version, Tag: tag}
 
 	return sync()
 }

@@ -51,12 +51,7 @@ var indexUpdateCommand = &cobra.Command{
 	Short: "更新本地索引",
 	Args:  cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
-		if err := os.MkdirAll(filepath.Join(core.Home, "index"), 0755); nil != err {
-			echo.ErrorLN(err)
-
-			os.Exit(1)
-		}
-
+		echo.InfoLN("读取元数据信息")
 		var source = fmt.Sprintf("https://raw.githubusercontent.com/Luna-CY/dem-repo/%s/index/.metadata.yaml", core.Version)
 
 		request, err := http.NewRequestWithContext(cmd.Context(), http.MethodGet, source, nil)
@@ -100,7 +95,12 @@ var indexUpdateCommand = &cobra.Command{
 
 		for _, name := range indexes.Files {
 			var remoteFilename = fmt.Sprintf("%s.%s.%s.%s.yaml", name, runtime.GOOS, runtime.GOARCH, indexes.Version)
+			var localFilename = fmt.Sprintf("%s.%s.%s.yaml", name, runtime.GOOS, runtime.GOARCH)
+			var localFilepath = filepath.Join(core.Home, "index", localFilename)
+
 			u.Path = filepath.Join(filepath.Dir(u.Path), remoteFilename)
+
+			echo.InfoLN(fmt.Sprintf("更新索引文件[%s] -> [%s]", u.String(), localFilepath))
 			request, err := http.NewRequestWithContext(cmd.Context(), http.MethodGet, u.String(), nil)
 			if nil != err {
 				echo.ErrorLN(err)
@@ -125,8 +125,7 @@ var indexUpdateCommand = &cobra.Command{
 				os.Exit(1)
 			}
 
-			var localFilename = fmt.Sprintf("%s.%s.%s.yaml", name, runtime.GOOS, runtime.GOARCH)
-			f, err := os.OpenFile(filepath.Join(core.Home, "index", localFilename), os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0644)
+			f, err := os.OpenFile(localFilepath, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0644)
 			if nil != err {
 				echo.ErrorLN(err)
 
@@ -143,5 +142,7 @@ var indexUpdateCommand = &cobra.Command{
 			_ = f.Close()
 			_ = response.Body.Close()
 		}
+
+		echo.InfoLN("更新索引完成")
 	},
 }

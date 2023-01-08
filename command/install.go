@@ -11,6 +11,7 @@ package command
 import (
 	"fmt"
 	"github.com/Luna-CY/dem/core"
+	"github.com/Luna-CY/dem/environment"
 	"github.com/Luna-CY/dem/index"
 	"github.com/Luna-CY/dem/installer"
 	"github.com/Luna-CY/dem/util/echo"
@@ -21,10 +22,11 @@ import (
 )
 
 var overwrite bool
+var switchTo bool
 
 var installCommand = &cobra.Command{
 	Use:   "install",
-	Short: "工具安装器",
+	Short: "安装指定的工具到本地环境",
 	Run: func(cmd *cobra.Command, args []string) {
 		if 2 != len(args) {
 			echo.ErrorLN("未指定工具名称或工具版本，可通过--help获取使用方法")
@@ -115,5 +117,24 @@ var installCommand = &cobra.Command{
 		}
 
 		echo.InfoLN("安装完成")
+		if !environment.IsSetUsedEnvironment(args[0]) {
+			echo.InfoLN("检测到该工具未配置运行时环境，将自动设置当前版本为运行时环境")
+
+			if err := environment.SwitchTo(args[0], args[1], "-"); nil != err {
+				echo.ErrorLN(err)
+
+				os.Exit(1)
+			}
+		}
+
+		if switchTo {
+			if err := environment.SwitchTo(args[0], args[1], "-"); nil != err {
+				echo.ErrorLN(err)
+
+				os.Exit(1)
+			}
+
+			echo.InfoLN(fmt.Sprintf("已将运行环境切换为工具[%s]的[%s]版本", args[0], args[1]))
+		}
 	},
 }

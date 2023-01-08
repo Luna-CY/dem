@@ -10,14 +10,11 @@ package command
 
 import (
 	"fmt"
-	"github.com/Luna-CY/dem/core"
 	"github.com/Luna-CY/dem/environment"
-	"github.com/Luna-CY/dem/index"
 	"github.com/Luna-CY/dem/util/echo"
 	"github.com/Luna-CY/dem/util/mapping"
 	"github.com/spf13/cobra"
 	"os"
-	"path/filepath"
 	"sort"
 	"strings"
 )
@@ -95,44 +92,6 @@ var environmentCopyCommand = &cobra.Command{
 		}
 
 		if err := environment.SetEnvironments(args[0], args[3], args[4], environments); nil != err {
-			echo.ErrorLN(err)
-
-			os.Exit(1)
-		}
-	},
-}
-
-var environmentSwitchToCommand = &cobra.Command{
-	Use:   "switch-to",
-	Short: "切换工具的版本及环境",
-	Run: func(cmd *cobra.Command, args []string) {
-		if 3 != len(args) {
-			echo.ErrorLN("参数数量不足，可通过--help获取使用方法")
-
-			return
-		}
-
-		var version, ok = index.GetVersion(args[0], args[1])
-		if !ok {
-			echo.ErrorLN(fmt.Sprintf("未找到[%s]的[%s]版本，请检查安装的工具名称与版本是否正确，或更新本地索引", args[0], args[1]))
-
-			return
-		}
-
-		var target = filepath.Join(core.Root, args[0], version.Version)
-		var keywords = []string{"{ROOT}", target, "{VERSION}", version.Version}
-
-		var paths []string
-		for _, path := range version.Paths {
-			paths = append(paths, strings.NewReplacer(keywords...).Replace(path))
-		}
-
-		var environments []string
-		for _, environment := range version.Environments {
-			environments = append(environments, strings.NewReplacer(keywords...).Replace(environment))
-		}
-
-		if err := environment.SwitchTo(args[0], args[1], args[2], paths, environments); nil != err {
 			echo.ErrorLN(err)
 
 			os.Exit(1)
