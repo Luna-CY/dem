@@ -29,7 +29,7 @@ func ToolsCommandExecute(ctx context.Context) error {
 }
 
 var tools = &cobra.Command{
-	Use:   "dem-tools",
+	Use:   "dem-utils",
 	Short: "环境管理工具集",
 	Args:  cobra.NoArgs,
 }
