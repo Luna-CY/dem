@@ -54,9 +54,9 @@ var environmentSetCommand = &cobra.Command{
 	},
 }
 
-var environmentListCommand = &cobra.Command{
-	Use:   "list",
-	Short: "环境变量列表",
+var environmentGetCommand = &cobra.Command{
+	Use:   "get",
+	Short: "获取工具指定标签配置的环境变量列表",
 	Run: func(cmd *cobra.Command, args []string) {
 		if 3 != len(args) {
 			echo.ErrorLN("参数数量不足，可通过--help获取使用方法")

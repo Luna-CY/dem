@@ -49,7 +49,7 @@ Additional help topics:{{range .Commands}}{{if .IsAdditionalHelpTopicCommand}}
 
 Use "{{.CommandPath}} [command] --help" for more information about a command.{{end}}
 `
-var EnvironmentListCommandUsage = `usage:{{if .Runnable}}
+var EnvironmentGetCommandUsage = `usage:{{if .Runnable}}
   {{.UseLine}}{{end}} NAME VERSION TAG{{if .HasExample}}
 
 example:

@@ -15,9 +15,9 @@ import (
 
 func ToolsCommandExecute(ctx context.Context) error {
 	environmentSetCommand.SetUsageTemplate(EnvironmentSetCommandUsage)
-	environmentListCommand.SetUsageTemplate(EnvironmentListCommandUsage)
+	environmentGetCommand.SetUsageTemplate(EnvironmentGetCommandUsage)
 	environmentCopyCommand.SetUsageTemplate(EnvironmentCopyCommandUsage)
-	environmentCommand.AddCommand(environmentSetCommand, environmentListCommand, environmentCopyCommand)
+	environmentCommand.AddCommand(environmentSetCommand, environmentGetCommand, environmentCopyCommand)
 
 	indexCommand.AddCommand(indexListCommand, indexUpdateCommand)
 	installCommand.SetUsageTemplate(InstallCommandUsage)
@@ -25,7 +25,7 @@ func ToolsCommandExecute(ctx context.Context) error {
 	installCommand.Flags().BoolVar(&switchTo, "switch-to", false, "安装完成后设置到运行时环境")
 	removeCommand.SetUsageTemplate(InstallCommandUsage)
 	switchToCommand.SetUsageTemplate(SwitchToCommandUsage)
-	tools.AddCommand(environmentCommand, indexCommand, installCommand, removeCommand, switchToCommand)
+	tools.AddCommand(environmentCommand, indexCommand, installCommand, removeCommand, switchToCommand, infoCommand)
 
 	return tools.ExecuteContext(ctx)
 }
