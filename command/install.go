@@ -85,9 +85,12 @@ var installCommand = &cobra.Command{
 			return
 		}
 
+		var installed = false
 		if version.Archive.Enable {
+			installed = true
 			// 通过打包的方式安装
 			if err := installer.Archive(cmd.Context(), target, version); nil != err {
+				installed = false
 				if installer.RemotePackageNotExists != err || !version.Source.Enable {
 					isFail = true
 					if installer.RemotePackageNotExists != err {
@@ -99,7 +102,7 @@ var installCommand = &cobra.Command{
 			}
 		}
 
-		if version.Source.Enable {
+		if version.Source.Enable && !installed {
 			// 通过源码的方式安装
 			if err := installer.Source(cmd.Context(), target, version); nil != err {
 				isFail = true
