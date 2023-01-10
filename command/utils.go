@@ -10,6 +10,7 @@ package command
 
 import (
 	"context"
+	"github.com/Luna-CY/dem/core"
 	"github.com/spf13/cobra"
 )
 
@@ -31,7 +32,8 @@ func ToolsCommandExecute(ctx context.Context) error {
 }
 
 var tools = &cobra.Command{
-	Use:   "dem-utils",
-	Short: "环境管理工具集",
-	Args:  cobra.NoArgs,
+	Use:     "dem-utils",
+	Short:   "环境管理工具集",
+	Args:    cobra.NoArgs,
+	Version: core.Version,
 }

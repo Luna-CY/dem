@@ -51,6 +51,12 @@ var main = &cobra.Command{
 			var names = mapping.Keys(used)
 			sort.Strings(names)
 
+			fmt.Printf("Version %s\n", core.Version)
+			fmt.Println()
+			fmt.Println("Usage:\n  dem CMD [options] [args]")
+			fmt.Println()
+			fmt.Println()
+
 			fmt.Println("当前环境所有工具及其可用的命令表:")
 			for _, name := range names {
 				var tool = used[name]
