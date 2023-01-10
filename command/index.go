@@ -77,8 +77,8 @@ var indexUpdateCommand = &cobra.Command{
 		defer response.Body.Close()
 
 		var indexes struct {
-			Version string   `yaml:"version"`
-			Files   []string `yaml:"files"`
+			Version string                         `yaml:"version"`
+			Index   map[string]map[string][]string `yaml:"index"`
 		}
 		if err := yaml.NewDecoder(response.Body).Decode(&indexes); nil != err {
 			echo.ErrorLN(err)
@@ -93,7 +93,21 @@ var indexUpdateCommand = &cobra.Command{
 			os.Exit(1)
 		}
 
-		for _, name := range indexes.Files {
+		var arch, ok = indexes.Index[runtime.GOOS]
+		if !ok {
+			echo.InfoLN("未支持该系统")
+
+			return
+		}
+
+		names, ok := arch[runtime.GOARCH]
+		if !ok {
+			echo.InfoLN("未支持该系统架构")
+
+			return
+		}
+
+		for _, name := range names {
 			var remoteFilename = fmt.Sprintf("%s.%s.%s.%s.yaml", name, runtime.GOOS, runtime.GOARCH, indexes.Version)
 			var localFilename = fmt.Sprintf("%s.%s.%s.yaml", name, runtime.GOOS, runtime.GOARCH)
 			var localFilepath = filepath.Join(core.Home, "index", localFilename)
