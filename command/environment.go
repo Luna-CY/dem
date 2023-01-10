@@ -11,6 +11,7 @@ package command
 import (
 	"fmt"
 	"github.com/Luna-CY/dem/environment"
+	"github.com/Luna-CY/dem/index"
 	"github.com/Luna-CY/dem/util/echo"
 	"github.com/Luna-CY/dem/util/mapping"
 	"github.com/spf13/cobra"
@@ -34,6 +35,10 @@ var environmentSetCommand = &cobra.Command{
 			echo.ErrorLN("参数数量不足，可通过--help获取使用方法")
 
 			return
+		}
+
+		if version, ok := index.GetVersion(args[0], args[1]); ok {
+			args[1] = version.Version
 		}
 
 		var kvs = map[string]string{}
@@ -84,11 +89,19 @@ var environmentCopyCommand = &cobra.Command{
 			return
 		}
 
+		if version, ok := index.GetVersion(args[0], args[1]); ok {
+			args[1] = version.Version
+		}
+
 		var environments = environment.GetEnvironments(args[0], args[1], args[2])
 		if 0 == len(environments) {
 			echo.InfoLN("源环境标签内没有配置任何环境变量，拷贝取消")
 
 			return
+		}
+
+		if version, ok := index.GetVersion(args[0], args[3]); ok {
+			args[3] = version.Version
 		}
 
 		if err := environment.SetEnvironments(args[0], args[3], args[4], environments); nil != err {
