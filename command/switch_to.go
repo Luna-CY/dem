@@ -27,14 +27,14 @@ var switchToCommand = &cobra.Command{
 			return
 		}
 
-		var _, ok = index.GetVersion(args[0], args[1])
+		var version, ok = index.GetVersion(args[0], args[1])
 		if !ok {
 			echo.ErrorLN(fmt.Sprintf("未找到[%s]的[%s]版本，请检查安装的工具名称与版本是否正确，或更新本地索引", args[0], args[1]))
 
 			return
 		}
 
-		if err := environment.SwitchTo(args[0], args[1], args[2]); nil != err {
+		if err := environment.SwitchTo(args[0], version.Version, args[2]); nil != err {
 			echo.ErrorLN(err)
 
 			os.Exit(1)
