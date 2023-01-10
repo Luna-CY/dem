@@ -35,7 +35,7 @@ func Chmod(path string, mode os.FileMode) error {
 
 func LockPath(name string, paths []string) (string, error) {
 	if strings.Contains(name, "/") {
-		if err := findExecutable(name); err == nil {
+		if err := Executable(name); err == nil {
 			return "", &exec.Error{Name: name, Err: err}
 		}
 
@@ -44,7 +44,7 @@ func LockPath(name string, paths []string) (string, error) {
 
 	for _, dir := range paths {
 		var path = filepath.Join(dir, name)
-		if err := findExecutable(path); err == nil {
+		if err := Executable(path); err == nil {
 			return path, nil
 		}
 	}
@@ -57,7 +57,7 @@ func LockPath(name string, paths []string) (string, error) {
 		}
 
 		var path = filepath.Join(dir, name)
-		if err := findExecutable(path); err == nil {
+		if err := Executable(path); err == nil {
 			return path, nil
 		}
 	}
@@ -65,7 +65,7 @@ func LockPath(name string, paths []string) (string, error) {
 	return "", &exec.Error{Name: name, Err: exec.ErrNotFound}
 }
 
-func findExecutable(file string) error {
+func Executable(file string) error {
 	d, err := os.Stat(file)
 
 	if err != nil {

@@ -15,11 +15,13 @@ import (
 	"github.com/Luna-CY/dem/environment"
 	"github.com/Luna-CY/dem/index"
 	"github.com/Luna-CY/dem/util/echo"
+	"github.com/Luna-CY/dem/util/mapping"
 	"github.com/Luna-CY/dem/util/system"
 	"github.com/spf13/cobra"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"sort"
 	"strings"
 )
 
@@ -34,9 +36,54 @@ var main = &cobra.Command{
 	Use: "dem",
 	Run: func(cmd *cobra.Command, args []string) {
 		if 0 == len(args) {
-			fmt.Println("未指定执行的命令")
+			var used = environment.GetUsed()
+			if 0 == len(used) {
+				fmt.Println("当前环境未配置工具")
+				fmt.Println()
+				fmt.Println("若要获取所有可用的工具，可使用命令 dem-utils index list 获取可用的所有工具信息")
+				fmt.Println("若未安装工具，可使用命令 dem-utils install TOOL VERSION 安装需要的工具及版本")
+				fmt.Println("如果已安装了工具，可使用命令 dem-utils switch-to TOOL VERSION ENV_TAG 可以切换当前环境生效的工具、版本及环境标签")
+				fmt.Println("其他可用命令可通过 dem-utils --help 获取")
 
-			os.Exit(1)
+				return
+			}
+
+			var names = mapping.Keys(used)
+			sort.Strings(names)
+
+			fmt.Println("当前环境所有工具及其可用的命令表:")
+			for _, name := range names {
+				var tool = used[name]
+
+				var version, ok = index.GetVersion(name, tool.Version)
+				if !ok {
+					continue
+				}
+
+				var target = filepath.Join(core.Root, name, version.Version)
+				var keywords = []string{"{ROOT}", target, "{VERSION}", version.Version}
+
+				var commands []string
+				for _, path := range version.Paths {
+					path = strings.NewReplacer(keywords...).Replace(path)
+					files, err := filepath.Glob(filepath.Join(path, "*"))
+					if nil != err {
+						echo.ErrorLN(err)
+
+						os.Exit(1)
+					}
+
+					for _, name := range files {
+						if nil == system.Executable(name) {
+							commands = append(commands, filepath.Base(name))
+						}
+					}
+				}
+
+				fmt.Printf("\t%-20s%v\n", name, commands)
+			}
+
+			return
 		}
 
 		var params []string

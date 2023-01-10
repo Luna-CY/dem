@@ -41,7 +41,7 @@ var indexListCommand = &cobra.Command{
 		var names = mapping.Keys(versions)
 		sort.Strings(names)
 		for _, name := range names {
-			fmt.Println(name, versions[name])
+			fmt.Printf("%-20s%v\n", name, versions[name])
 		}
 	},
 }
