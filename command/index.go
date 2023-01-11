@@ -18,7 +18,6 @@ import (
 	"gopkg.in/yaml.v3"
 	"io"
 	"net/http"
-	"net/url"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -106,17 +105,9 @@ var indexUpdateCommand = &cobra.Command{
 		defer response.Body.Close()
 
 		var indexes struct {
-			Version string                         `yaml:"version"`
-			Index   map[string]map[string][]string `yaml:"index"`
+			Index map[string]map[string][]string `yaml:"index"`
 		}
 		if err := yaml.NewDecoder(response.Body).Decode(&indexes); nil != err {
-			echo.ErrorLN(err)
-
-			os.Exit(1)
-		}
-
-		u, err := url.ParseRequestURI(source)
-		if nil != err {
 			echo.ErrorLN(err)
 
 			os.Exit(1)
@@ -137,14 +128,11 @@ var indexUpdateCommand = &cobra.Command{
 		}
 
 		for _, name := range names {
-			var remoteFilename = fmt.Sprintf("%s.%s.%s.%s.yaml", name, runtime.GOOS, runtime.GOARCH, indexes.Version)
-			var localFilename = fmt.Sprintf("%s.%s.%s.yaml", name, runtime.GOOS, runtime.GOARCH)
-			var localFilepath = filepath.Join(core.Home, "index", localFilename)
+			var remotePath = fmt.Sprintf("https://raw.githubusercontent.com/Luna-CY/dem-repo/%s/index/%s/%s/%s", core.Version, runtime.GOOS, runtime.GOARCH, name)
+			var localFilepath = filepath.Join(core.Home, "index", name)
 
-			u.Path = filepath.Join(filepath.Dir(u.Path), remoteFilename)
-
-			echo.InfoLN(fmt.Sprintf("更新索引文件[%s] -> [%s]", u.String(), localFilepath))
-			request, err := http.NewRequestWithContext(cmd.Context(), http.MethodGet, u.String(), nil)
+			echo.InfoLN(fmt.Sprintf("更新索引文件[%s] -> [%s]", remotePath, localFilepath))
+			request, err := http.NewRequestWithContext(cmd.Context(), http.MethodGet, remotePath, nil)
 			if nil != err {
 				echo.ErrorLN(err)
 
