@@ -120,7 +120,7 @@ func SwitchTo(name string, version string, tag string) error {
 func sync() error {
 	var path = filepath.Join(core.Home, "environment.json")
 
-	var file, err = os.OpenFile(path, os.O_CREATE|os.O_RDWR, 0644)
+	var file, err = os.OpenFile(path, os.O_CREATE|os.O_TRUNC|os.O_RDWR, 0644)
 	if nil != err {
 		return err
 	}
