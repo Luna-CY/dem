@@ -139,7 +139,7 @@ var main = &cobra.Command{
 
 		var name, err = system.LockPath(args[0], paths)
 		if nil != err {
-			fmt.Println(err)
+			echo.ErrorLN(err)
 
 			os.Exit(1)
 		}
