@@ -10,22 +10,16 @@ package command
 
 import (
 	"context"
+	"github.com/Luna-CY/cobra"
 	"github.com/Luna-CY/dem/core"
-	"github.com/spf13/cobra"
 )
 
 func ToolsCommandExecute(ctx context.Context) error {
-	environmentSetCommand.SetUsageTemplate(EnvironmentSetCommandUsage)
-	environmentGetCommand.SetUsageTemplate(EnvironmentGetCommandUsage)
-	environmentCopyCommand.SetUsageTemplate(EnvironmentCopyCommandUsage)
 	environmentCommand.AddCommand(environmentSetCommand, environmentGetCommand, environmentCopyCommand)
 
 	indexCommand.AddCommand(indexListCommand, indexUpdateCommand)
-	installCommand.SetUsageTemplate(InstallCommandUsage)
 	installCommand.Flags().BoolVar(&overwrite, "overwrite", false, "覆盖安装，设置该参数时将完全移除已安装的内容并重新安装，请谨慎使用")
 	installCommand.Flags().BoolVar(&switchTo, "switch-to", false, "安装完成后设置到运行时环境")
-	removeCommand.SetUsageTemplate(InstallCommandUsage)
-	switchToCommand.SetUsageTemplate(SwitchToCommandUsage)
 	tools.AddCommand(environmentCommand, indexCommand, installCommand, removeCommand, switchToCommand, infoCommand)
 
 	return tools.ExecuteContext(ctx)

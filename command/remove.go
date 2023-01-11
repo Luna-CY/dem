@@ -10,18 +10,20 @@ package command
 
 import (
 	"fmt"
+	"github.com/Luna-CY/cobra"
 	"github.com/Luna-CY/dem/core"
 	"github.com/Luna-CY/dem/index"
 	"github.com/Luna-CY/dem/util/echo"
 	"github.com/Luna-CY/dem/util/system"
-	"github.com/spf13/cobra"
 	"os"
 	"path/filepath"
 )
 
 var removeCommand = &cobra.Command{
-	Use:   "remove",
-	Short: "从本地移除已安装的工具",
+	Use:       "remove",
+	Short:     "从本地移除已安装的工具",
+	Args:      cobra.ExactArgs(2),
+	ValidArgs: []string{"NAME", "VERSION"},
 	Run: func(cmd *cobra.Command, args []string) {
 		if 2 != len(args) {
 			echo.ErrorLN("未指定工具名称或工具版本，可通过--help获取使用方法")

@@ -11,13 +11,13 @@ package command
 import (
 	"context"
 	"fmt"
+	"github.com/Luna-CY/cobra"
 	"github.com/Luna-CY/dem/core"
 	"github.com/Luna-CY/dem/environment"
 	"github.com/Luna-CY/dem/index"
 	"github.com/Luna-CY/dem/util/echo"
 	"github.com/Luna-CY/dem/util/mapping"
 	"github.com/Luna-CY/dem/util/system"
-	"github.com/spf13/cobra"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -26,7 +26,6 @@ import (
 )
 
 func MainCommandExecute(ctx context.Context) error {
-	main.SetUsageTemplate(MainCommandUsage)
 	main.DisableFlagParsing = true
 
 	return main.ExecuteContext(ctx)

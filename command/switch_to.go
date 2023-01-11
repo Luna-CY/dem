@@ -10,26 +10,43 @@ package command
 
 import (
 	"fmt"
+	"github.com/Luna-CY/cobra"
+	"github.com/Luna-CY/dem/core"
 	"github.com/Luna-CY/dem/environment"
 	"github.com/Luna-CY/dem/index"
 	"github.com/Luna-CY/dem/util/echo"
-	"github.com/spf13/cobra"
 	"os"
+	"path/filepath"
 )
 
 var switchToCommand = &cobra.Command{
-	Use:   "switch-to",
-	Short: "切换工具的版本及环境",
+	Use:       "switch-to",
+	Aliases:   []string{"s"},
+	Short:     "切换工具的版本及环境",
+	Args:      cobra.RangeArgs(2, 3),
+	ValidArgs: []string{"NAME", "VERSION", "TAG:-"},
 	Run: func(cmd *cobra.Command, args []string) {
-		if 3 != len(args) {
-			echo.ErrorLN("参数数量不足，可通过--help获取使用方法")
-
-			return
+		if 2 == len(args) {
+			args = append(args, "-")
 		}
 
 		var version, ok = index.GetVersion(args[0], args[1])
 		if !ok {
 			echo.ErrorLN(fmt.Sprintf("未找到[%s]的[%s]版本，请检查安装的工具名称与版本是否正确，或更新本地索引", args[0], args[1]))
+
+			return
+		}
+
+		var _, err = os.Stat(filepath.Join(core.Root, args[0], version.Version))
+		if nil != err {
+			if !os.IsNotExist(err) {
+				echo.ErrorLN(err)
+
+				os.Exit(1)
+			}
+
+			echo.InfoLN(fmt.Sprintf("当前环境未安装工具[%s]的[%s]版本", args[0], args[1]))
+			echo.InfoLN(fmt.Sprintf("若要安装请使用 dem-utils install --switch-to %s %s", args[0], args[1]))
 
 			return
 		}

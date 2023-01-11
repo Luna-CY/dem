@@ -10,12 +10,12 @@ package command
 
 import (
 	"fmt"
+	"github.com/Luna-CY/cobra"
 	"github.com/Luna-CY/dem/core"
 	"github.com/Luna-CY/dem/environment"
 	"github.com/Luna-CY/dem/index"
 	"github.com/Luna-CY/dem/util/echo"
 	"github.com/Luna-CY/dem/util/mapping"
-	"github.com/spf13/cobra"
 	"os"
 	"path/filepath"
 	"sort"
@@ -35,7 +35,10 @@ var infoCommand = &cobra.Command{
 		for _, name := range names {
 			var info = used[name]
 
-			fmt.Printf("\t名称: %-20s 版本: %-20s 环境标签: %s\n", name, info.Version, info.Tag)
+			var v, _ = index.GetVersion(name, info.Version)
+			var showVersion = info.Version + fmt.Sprintf("%v", v.Alias)
+
+			fmt.Printf("\t名称: %-30s 版本[别名]: %-30s 环境标签: %s\n", name, showVersion, info.Tag)
 		}
 
 		fmt.Println("当前环境已安装的工具及版本信息:")
@@ -60,7 +63,10 @@ var infoCommand = &cobra.Command{
 				}
 
 				if fs.IsDir() {
-					fmt.Printf("\t名称: %-20s 版本: %-20s 安装路径: %s\n", name, version, filepath.Join(core.Root, name, version))
+					var v, _ = index.GetVersion(name, version)
+					var showVersion = version + fmt.Sprintf("%v", v.Alias)
+
+					fmt.Printf("\t名称: %-30s 版本[别名]: %-30s 安装路径: %s\n", name, showVersion, filepath.Join(core.Root, name, version))
 				}
 			}
 		}

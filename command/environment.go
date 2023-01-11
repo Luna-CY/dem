@@ -10,26 +10,29 @@ package command
 
 import (
 	"fmt"
+	"github.com/Luna-CY/cobra"
 	"github.com/Luna-CY/dem/environment"
 	"github.com/Luna-CY/dem/index"
 	"github.com/Luna-CY/dem/util/echo"
 	"github.com/Luna-CY/dem/util/mapping"
-	"github.com/spf13/cobra"
 	"os"
 	"sort"
 	"strings"
 )
 
 var environmentCommand = &cobra.Command{
-	Use:   "env",
-	Short: "运行环境管理器",
-	Args:  cobra.NoArgs,
+	Use:     "env",
+	Aliases: []string{"e"},
+	Short:   "运行环境管理器",
+	Args:    cobra.NoArgs,
 }
 
 var environmentSetCommand = &cobra.Command{
-	Use:   "set",
-	Short: "设置环境变量",
-	Long:  "设置环境变量，前三个参数分别指定 {工具名称} {工具版本} {环境标签}，第四个及之后的所有参数为环境变量的KV对",
+	Use:       "set",
+	Short:     "设置环境变量",
+	Long:      "设置环境变量，前三个参数分别指定 {工具名称} {工具版本} {环境标签}，第四个及之后的所有参数为环境变量的KV对",
+	Args:      cobra.MinimumNArgs(4),
+	ValidArgs: []string{"NAME", "VERSION", "TAG", "KEY=VALUE", "[KEY=VALUE] ..."},
 	Run: func(cmd *cobra.Command, args []string) {
 		if 4 > len(args) {
 			echo.ErrorLN("参数数量不足，可通过--help获取使用方法")
@@ -60,13 +63,13 @@ var environmentSetCommand = &cobra.Command{
 }
 
 var environmentGetCommand = &cobra.Command{
-	Use:   "get",
-	Short: "获取工具指定标签配置的环境变量列表",
+	Use:       "get",
+	Short:     "获取工具指定标签配置的环境变量列表",
+	Args:      cobra.RangeArgs(2, 3),
+	ValidArgs: []string{"NAME", "VERSION", "TAG:-"},
 	Run: func(cmd *cobra.Command, args []string) {
-		if 3 != len(args) {
-			echo.ErrorLN("参数数量不足，可通过--help获取使用方法")
-
-			return
+		if 2 == len(args) {
+			args = append(args, "-")
 		}
 
 		var environments = environment.GetEnvironments(args[0], args[1], args[2])
@@ -80,8 +83,10 @@ var environmentGetCommand = &cobra.Command{
 }
 
 var environmentCopyCommand = &cobra.Command{
-	Use:   "copy",
-	Short: "拷贝环境变量",
+	Use:       "copy",
+	Short:     "拷贝环境变量",
+	Args:      cobra.ExactArgs(5),
+	ValidArgs: []string{"NAME", "SOURCE_VERSION", "SOURCE_TAG", "TARGET_VERSION", "TARGET_TAG"},
 	Run: func(cmd *cobra.Command, args []string) {
 		if 5 != len(args) {
 			echo.ErrorLN("参数数量不足，可通过--help获取使用方法")

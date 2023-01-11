@@ -10,11 +10,11 @@ package command
 
 import (
 	"fmt"
+	"github.com/Luna-CY/cobra"
 	"github.com/Luna-CY/dem/core"
 	"github.com/Luna-CY/dem/index"
 	"github.com/Luna-CY/dem/util/echo"
 	"github.com/Luna-CY/dem/util/mapping"
-	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 	"io"
 	"net/http"
@@ -36,12 +36,41 @@ var indexListCommand = &cobra.Command{
 	Short: "获取索引列表",
 	Args:  cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
-		var versions = index.GetVersions()
+		var tools = index.GetVersions()
 
-		var names = mapping.Keys(versions)
+		var names = mapping.Keys(tools)
 		sort.Strings(names)
+
 		for _, name := range names {
-			fmt.Printf("%-20s%v\n", name, versions[name])
+			var versions = tools[name]
+			var installed = make([]string, 0)
+			var available = make([]string, 0)
+
+			for _, version := range versions {
+				var v, _ = index.GetVersion(name, version)
+
+				var fs, err = os.Stat(filepath.Join(core.Root, name, v.Version))
+				if nil != err && !os.IsNotExist(err) {
+					echo.ErrorLN(err)
+
+					continue
+				}
+
+				if nil == fs {
+					available = append(available, version)
+
+					continue
+				}
+
+				if fs.IsDir() {
+					installed = append(installed, version)
+				}
+			}
+
+			var showInstalled = fmt.Sprintf("%v", installed)
+			var showAvailable = fmt.Sprintf("%v", available)
+
+			fmt.Printf("名称:%-30s 已安装:%-60s 可用:%-60v\n", name, showInstalled, showAvailable)
 		}
 	},
 }

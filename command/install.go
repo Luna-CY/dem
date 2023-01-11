@@ -10,13 +10,13 @@ package command
 
 import (
 	"fmt"
+	"github.com/Luna-CY/cobra"
 	"github.com/Luna-CY/dem/core"
 	"github.com/Luna-CY/dem/environment"
 	"github.com/Luna-CY/dem/index"
 	"github.com/Luna-CY/dem/installer"
 	"github.com/Luna-CY/dem/util/echo"
 	"github.com/Luna-CY/dem/util/system"
-	"github.com/spf13/cobra"
 	"os"
 	"path/filepath"
 )
@@ -25,8 +25,11 @@ var overwrite bool
 var switchTo bool
 
 var installCommand = &cobra.Command{
-	Use:   "install",
-	Short: "安装指定的工具到本地环境",
+	Use:       "install",
+	Aliases:   []string{"i"},
+	Short:     "安装指定的工具到本地环境",
+	Args:      cobra.ExactArgs(2),
+	ValidArgs: []string{"NAME", "VERSION"},
 	Run: func(cmd *cobra.Command, args []string) {
 		if 2 != len(args) {
 			echo.ErrorLN("未指定工具名称或工具版本，可通过--help获取使用方法")
