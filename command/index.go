@@ -22,6 +22,7 @@ import (
 	"path/filepath"
 	"runtime"
 	"sort"
+	"strings"
 )
 
 var indexCommand = &cobra.Command{
@@ -128,8 +129,11 @@ var indexUpdateCommand = &cobra.Command{
 		}
 
 		for _, name := range names {
+			var tokens = strings.Split(name, ".")
+			var localName = strings.Join([]string{tokens[0], tokens[2]}, ".")
+
 			var remotePath = fmt.Sprintf("https://raw.githubusercontent.com/Luna-CY/dem-repo/%s/index/%s/%s/%s", core.Version, runtime.GOOS, runtime.GOARCH, name)
-			var localFilepath = filepath.Join(core.Home, "index", name)
+			var localFilepath = filepath.Join(core.Home, "index", localName)
 
 			echo.InfoLN(fmt.Sprintf("更新索引文件[%s] -> [%s]", remotePath, localFilepath))
 			request, err := http.NewRequestWithContext(cmd.Context(), http.MethodGet, remotePath, nil)
