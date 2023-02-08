@@ -6,13 +6,12 @@
 // THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
 // See the Mulan PSL v2 for more details.
 
-package command
+package index
 
 import (
 	"fmt"
 	"github.com/Luna-CY/cobra"
 	"github.com/Luna-CY/dem/core"
-	"github.com/Luna-CY/dem/environment"
 	"github.com/Luna-CY/dem/index"
 	"github.com/Luna-CY/dem/util/echo"
 	"github.com/Luna-CY/dem/util/mapping"
@@ -21,37 +20,25 @@ import (
 	"sort"
 )
 
-var infoCommand = &cobra.Command{
-	Use:   "info",
-	Short: "查看当前环境配置的所有工具",
+var list = &cobra.Command{
+	Use:   "list",
+	Short: "获取索引列表",
 	Args:  cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("当前环境使用的工具及版本信息:")
-
-		var used = environment.GetUsed()
-		var names = mapping.Keys(used)
-		sort.Strings(names)
-
-		for _, name := range names {
-			var info = used[name]
-
-			var v, _ = index.GetVersion(name, info.Version)
-			var showVersion = info.Version + fmt.Sprintf("%v", v.Alias)
-
-			fmt.Printf("\t名称: %-30s 版本[别名]: %-30s 环境标签: %s\n", name, showVersion, info.Tag)
-		}
-
-		fmt.Println("当前环境已安装的工具及版本信息:")
-
 		var tools = index.GetVersions()
-		names = mapping.Keys(tools)
+
+		var names = mapping.Keys(tools)
 		sort.Strings(names)
 
 		for _, name := range names {
 			var versions = tools[name]
+			var installed = make([]string, 0)
+			var available = make([]string, 0)
 
 			for _, version := range versions {
-				var fs, err = os.Stat(filepath.Join(core.Root, name, version))
+				var v, _ = index.GetVersion(name, version)
+
+				var fs, err = os.Stat(filepath.Join(core.Root, name, v.Version))
 				if nil != err && !os.IsNotExist(err) {
 					echo.ErrorLN(err)
 
@@ -59,16 +46,20 @@ var infoCommand = &cobra.Command{
 				}
 
 				if nil == fs {
+					available = append(available, version)
+
 					continue
 				}
 
 				if fs.IsDir() {
-					var v, _ = index.GetVersion(name, version)
-					var showVersion = version + fmt.Sprintf("%v", v.Alias)
-
-					fmt.Printf("\t名称: %-30s 版本[别名]: %-30s 安装路径: %s\n", name, showVersion, filepath.Join(core.Root, name, version))
+					installed = append(installed, version)
 				}
 			}
+
+			var showInstalled = fmt.Sprintf("%v", installed)
+			var showAvailable = fmt.Sprintf("%v", available)
+
+			fmt.Printf("名称:%-30s 已安装:%-60s 可用:%-60v\n", name, showInstalled, showAvailable)
 		}
 	},
 }

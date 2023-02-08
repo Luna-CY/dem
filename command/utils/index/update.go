@@ -6,76 +6,23 @@
 // THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
 // See the Mulan PSL v2 for more details.
 
-package command
+package index
 
 import (
 	"fmt"
 	"github.com/Luna-CY/cobra"
 	"github.com/Luna-CY/dem/core"
-	"github.com/Luna-CY/dem/index"
 	"github.com/Luna-CY/dem/util/echo"
-	"github.com/Luna-CY/dem/util/mapping"
 	"gopkg.in/yaml.v3"
 	"io"
 	"net/http"
 	"os"
 	"path/filepath"
 	"runtime"
-	"sort"
 	"strings"
 )
 
-var indexCommand = &cobra.Command{
-	Use:   "index",
-	Short: "索引管理器",
-	Args:  cobra.NoArgs,
-}
-
-var indexListCommand = &cobra.Command{
-	Use:   "list",
-	Short: "获取索引列表",
-	Args:  cobra.NoArgs,
-	Run: func(cmd *cobra.Command, args []string) {
-		var tools = index.GetVersions()
-
-		var names = mapping.Keys(tools)
-		sort.Strings(names)
-
-		for _, name := range names {
-			var versions = tools[name]
-			var installed = make([]string, 0)
-			var available = make([]string, 0)
-
-			for _, version := range versions {
-				var v, _ = index.GetVersion(name, version)
-
-				var fs, err = os.Stat(filepath.Join(core.Root, name, v.Version))
-				if nil != err && !os.IsNotExist(err) {
-					echo.ErrorLN(err)
-
-					continue
-				}
-
-				if nil == fs {
-					available = append(available, version)
-
-					continue
-				}
-
-				if fs.IsDir() {
-					installed = append(installed, version)
-				}
-			}
-
-			var showInstalled = fmt.Sprintf("%v", installed)
-			var showAvailable = fmt.Sprintf("%v", available)
-
-			fmt.Printf("名称:%-30s 已安装:%-60s 可用:%-60v\n", name, showInstalled, showAvailable)
-		}
-	},
-}
-
-var indexUpdateCommand = &cobra.Command{
+var update = &cobra.Command{
 	Use:   "update",
 	Short: "更新本地索引",
 	Args:  cobra.NoArgs,

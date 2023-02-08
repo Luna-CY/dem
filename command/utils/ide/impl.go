@@ -6,13 +6,18 @@
 // THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
 // See the Mulan PSL v2 for more details.
 
-package command
+package ide
 
-import (
-	"context"
-	"github.com/Luna-CY/dem/command/utils"
-)
+import "github.com/Luna-CY/cobra"
 
-func ToolsCommandExecute(ctx context.Context) error {
-	return utils.NewUtilsCommand().ExecuteContext(ctx)
+func NewIdeCommand() *cobra.Command {
+	var command = &cobra.Command{
+		Use:   "ide",
+		Short: "集成开发工具支持",
+		Args:  cobra.NoArgs,
+	}
+
+	command.AddCommand(goland)
+
+	return command
 }
