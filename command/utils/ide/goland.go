@@ -18,6 +18,7 @@ import (
 	"github.com/beevik/etree"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 var goland = &cobra.Command{
@@ -88,7 +89,23 @@ func run(_ *cobra.Command, args []string) {
 	setGoLibraries(project, root)
 
 	// 设置环境变量
-	setGoEnvironments(project, environment.GetEnvironments("golang", args[0], args[1]))
+	var keywords = []string{"{ROOT}", root, "{VERSION}", version.Version}
+
+	var environments = map[string]string{}
+	for _, item := range version.Environments {
+		var tokens = strings.SplitN(item, "=", 2)
+		if 2 != len(tokens) {
+			continue
+		}
+
+		environments[tokens[0]] = strings.NewReplacer(keywords...).Replace(tokens[1])
+	}
+
+	for k, v := range environment.GetEnvironments("golang", args[0], args[1]) {
+		environments[k] = strings.NewReplacer(keywords...).Replace(v)
+	}
+
+	setGoEnvironments(project, environments)
 
 	document.Indent(2)
 	if err := document.WriteToFile(workspacePath); nil != err {
@@ -101,7 +118,7 @@ func run(_ *cobra.Command, args []string) {
 }
 
 func setGoRoot(root *etree.Element, path string) {
-	var component = root.FindElement("/component[@name='GOROOT']")
+	var component = root.FindElement("//component[@name='GOROOT']")
 	if nil == component {
 		component = etree.NewElement("component")
 		component.CreateAttr("name", "GOROOT")
@@ -112,13 +129,14 @@ func setGoRoot(root *etree.Element, path string) {
 }
 
 func setGoLibraries(root *etree.Element, path string) {
-	var component = root.FindElement("/component[@name='GoLibraries']")
+	var component = root.FindElement("//component[@name='GoLibraries']")
 	if nil == component {
 		component = etree.NewElement("component")
+		component.CreateAttr("name", "GoLibraries")
 		root.AddChild(component)
 	}
 
-	var pathOption = component.FindElement("/option[@name='useGoPathFromSystemEnvironment']")
+	var pathOption = component.FindElement("//component[@name='GoLibraries']/option[@name='useGoPathFromSystemEnvironment']")
 	if nil == pathOption {
 		pathOption = etree.NewElement("option")
 		pathOption.CreateAttr("name", "useGoPathFromSystemEnvironment")
@@ -127,17 +145,14 @@ func setGoLibraries(root *etree.Element, path string) {
 
 	pathOption.CreateAttr("value", "false")
 
-	var urlOption = component.FindElement("/option[@name='urls']")
+	var urlOption = component.FindElement("//component[@name='GoLibraries']/option[@name='urls']")
 	if nil == urlOption {
 		urlOption = etree.NewElement("option")
 		urlOption.CreateAttr("name", "urls")
 		component.AddChild(urlOption)
 	}
 
-	var url = etree.NewElement("option")
-	url.CreateAttr("value", filepath.Join(path, "data"))
-
-	var list = urlOption.FindElement("/list")
+	var list = urlOption.FindElement("//component[@name='GoLibraries']/option[@name='urls']/list")
 	if nil == list {
 		list = etree.NewElement("list")
 		urlOption.AddChild(list)
@@ -147,24 +162,27 @@ func setGoLibraries(root *etree.Element, path string) {
 		list.RemoveChild(e)
 	}
 
+	var url = etree.NewElement("option")
+	url.CreateAttr("value", "file://"+filepath.Join(path, "data"))
+
 	list.AddChild(url)
 }
 
-func setGoEnvironments(root *etree.Element, envs map[string]string) {
-	var component = root.FindElement("/component[@name='VgoProject']")
+func setGoEnvironments(root *etree.Element, environments map[string]string) {
+	var component = root.FindElement("//component[@name='VgoProject']")
 	if nil == component {
 		component = etree.NewElement("component")
 		component.CreateAttr("name", "VgoProject")
 		root.AddChild(component)
 	}
 
-	var env = component.FindElement("/environment")
+	var env = component.FindElement("//component[@name='VgoProject']/environment")
 	if nil == env {
 		env = etree.NewElement("environment")
 		component.AddChild(env)
 	}
 
-	var em = env.FindElement("/map")
+	var em = env.FindElement("//component[@name='VgoProject']/environment/map")
 	if nil == em {
 		em = etree.NewElement("map")
 		env.AddChild(em)
@@ -174,7 +192,7 @@ func setGoEnvironments(root *etree.Element, envs map[string]string) {
 		em.RemoveChild(e)
 	}
 
-	for key, value := range envs {
+	for key, value := range environments {
 		var entry = etree.NewElement("entry")
 		entry.CreateAttr("key", key)
 		entry.CreateAttr("value", value)
