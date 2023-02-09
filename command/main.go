@@ -138,6 +138,12 @@ var main = &cobra.Command{
 			for k, v := range environment.GetEnvironments(name, used.Version, used.Tag) {
 				environments[k] = strings.NewReplacer(keywords...).Replace(v)
 			}
+
+			if used.Version != version.Version {
+				for k, v := range environment.GetEnvironments(name, version.Version, used.Tag) {
+					environments[k] = strings.NewReplacer(keywords...).Replace(v)
+				}
+			}
 		}
 
 		paths = append(paths, filepath.SplitList(os.Getenv("PATH"))...)

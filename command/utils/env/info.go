@@ -37,7 +37,7 @@ var inf = &cobra.Command{
 			var info = used[name]
 
 			var v, _ = index.GetVersion(name, info.Version)
-			var showVersion = info.Version + fmt.Sprintf("%v", v.Alias)
+			var showVersion = v.Version + fmt.Sprintf("[%v]", info.Version)
 
 			fmt.Printf("\t名称: %-30s 版本[别名]: %-30s 环境标签: %s\n", name, showVersion, info.Tag)
 		}
@@ -53,7 +53,7 @@ var inf = &cobra.Command{
 				var info = used[name]
 
 				var v, _ = index.GetVersion(name, info.Version)
-				var showVersion = info.Version + fmt.Sprintf("%v", v.Alias)
+				var showVersion = v.Version + fmt.Sprintf("[%v]", info.Version)
 
 				fmt.Printf("\t名称: %-30s 版本[别名]: %-30s 环境标签: %s\n", name, showVersion, info.Tag)
 			}

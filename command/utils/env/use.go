@@ -50,7 +50,7 @@ var use = &cobra.Command{
 		}
 
 		if project {
-			if err := environment.SwitchToProject(args[0], version.Version, args[2]); nil != err {
+			if err := environment.SwitchToProject(args[0], args[1], args[2]); nil != err {
 				echo.ErrorLN(err)
 
 				os.Exit(1)
@@ -59,7 +59,7 @@ var use = &cobra.Command{
 			return
 		}
 
-		if err := environment.SwitchTo(args[0], version.Version, args[2]); nil != err {
+		if err := environment.SwitchTo(args[0], args[1], args[2]); nil != err {
 			echo.ErrorLN(err)
 
 			os.Exit(1)

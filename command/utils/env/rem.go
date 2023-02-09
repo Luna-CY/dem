@@ -10,7 +10,6 @@ package env
 
 import (
 	"github.com/Luna-CY/dem/environment"
-	"github.com/Luna-CY/dem/index"
 	"github.com/Luna-CY/dem/util/echo"
 	"github.com/spf13/cobra"
 	"os"
@@ -26,10 +25,6 @@ var rem = &cobra.Command{
 			echo.ErrorLN("参数数量不足，可通过--help获取使用方法")
 
 			return
-		}
-
-		if version, ok := index.GetVersion(args[0], args[1]); ok {
-			args[1] = version.Version
 		}
 
 		if err := environment.DelEnvironments(args[0], args[1], args[2]); nil != err {
