@@ -128,6 +128,48 @@ func SetEnvironments(name string, version string, tag string, kvs map[string]str
 	return sync()
 }
 
+func UnSetEnvironments(name string, version string, tag string, keys []string) error {
+	if nil == global.Environments {
+		return nil
+	}
+
+	if _, ok := global.Environments[name]; !ok {
+		return nil
+	}
+
+	if _, ok := global.Environments[name][version]; !ok {
+		return nil
+	}
+
+	if _, ok := global.Environments[name][version][tag]; !ok {
+		return nil
+	}
+
+	for _, key := range keys {
+		delete(global.Environments[name][version][tag], key)
+	}
+
+	return sync()
+}
+
+func DelEnvironments(name string, version string, tag string) error {
+	if nil == global.Environments {
+		return nil
+	}
+
+	if _, ok := global.Environments[name]; !ok {
+		return nil
+	}
+
+	if _, ok := global.Environments[name][version]; !ok {
+		return nil
+	}
+
+	delete(global.Environments[name][version], tag)
+
+	return sync()
+}
+
 func SwitchTo(name string, version string, tag string) error {
 	if nil == global.Used {
 		global.Used = map[string]Used{}
