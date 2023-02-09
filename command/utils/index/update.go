@@ -10,9 +10,9 @@ package index
 
 import (
 	"fmt"
-	"github.com/Luna-CY/cobra"
 	"github.com/Luna-CY/dem/core"
 	"github.com/Luna-CY/dem/util/echo"
+	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 	"io"
 	"net/http"
@@ -23,9 +23,10 @@ import (
 )
 
 var update = &cobra.Command{
-	Use:   "update",
-	Short: "更新本地索引",
-	Args:  cobra.NoArgs,
+	Use:     "upd",
+	Aliases: []string{"update"},
+	Short:   "更新本地索引",
+	Args:    cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
 		echo.InfoLN("读取元数据信息")
 		var source = fmt.Sprintf("https://raw.githubusercontent.com/Luna-CY/dem-repo/%s/index/.metadata.yaml", core.Version)

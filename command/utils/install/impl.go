@@ -10,13 +10,13 @@ package install
 
 import (
 	"fmt"
-	"github.com/Luna-CY/cobra"
 	"github.com/Luna-CY/dem/core"
 	"github.com/Luna-CY/dem/environment"
 	"github.com/Luna-CY/dem/index"
 	"github.com/Luna-CY/dem/installer"
 	"github.com/Luna-CY/dem/util/echo"
 	"github.com/Luna-CY/dem/util/system"
+	"github.com/spf13/cobra"
 	"os"
 	"path/filepath"
 )
@@ -26,12 +26,11 @@ var switchTo bool
 
 func NewInstallCommand() *cobra.Command {
 	var command = &cobra.Command{
-		Use:       "install",
-		Aliases:   []string{"i"},
-		Short:     "安装指定的工具到本地环境",
-		Args:      cobra.ExactArgs(2),
-		ValidArgs: []string{"NAME", "VERSION"},
-		Run:       run,
+		Use:     "ins NAME VERSION",
+		Aliases: []string{"install"},
+		Short:   "安装指定的工具到本地环境",
+		Args:    cobra.ExactArgs(2),
+		Run:     run,
 	}
 
 	command.Flags().BoolVar(&overwrite, "overwrite", false, "覆盖安装，设置该参数时将完全移除已安装的内容并重新安装，请谨慎使用")

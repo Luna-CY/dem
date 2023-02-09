@@ -10,22 +10,22 @@ package remove
 
 import (
 	"fmt"
-	"github.com/Luna-CY/cobra"
 	"github.com/Luna-CY/dem/core"
 	"github.com/Luna-CY/dem/index"
 	"github.com/Luna-CY/dem/util/echo"
 	"github.com/Luna-CY/dem/util/system"
+	"github.com/spf13/cobra"
 	"os"
 	"path/filepath"
 )
 
 func NewRemoveCommand() *cobra.Command {
 	var command = &cobra.Command{
-		Use:       "remove",
-		Short:     "从本地移除已安装的工具",
-		Args:      cobra.ExactArgs(2),
-		ValidArgs: []string{"NAME", "VERSION"},
-		Run:       run,
+		Use:     "rem NAME VERSION",
+		Aliases: []string{"remove"},
+		Short:   "从本地移除已安装的工具",
+		Args:    cobra.ExactArgs(2),
+		Run:     run,
 	}
 
 	return command

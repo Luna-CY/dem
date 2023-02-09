@@ -30,7 +30,18 @@ func Init() error {
 	}
 
 	if 0 < stat.Size() {
-		if err := json.NewDecoder(file).Decode(&environment); nil != err {
+		if err := json.NewDecoder(file).Decode(&global); nil != err {
+			return err
+		}
+	}
+
+	if st, err := os.Stat(filepath.Join(".dem", "environment.json")); nil == err && !st.IsDir() && 0 < st.Size() {
+		var content, err = os.ReadFile(filepath.Join(".dem", "environment.json"))
+		if nil != err {
+			return err
+		}
+
+		if err := json.Unmarshal(content, &project); nil != err {
 			return err
 		}
 	}
@@ -43,29 +54,39 @@ type Used struct {
 	Tag     string `json:"tag"`
 }
 
-var environment struct {
+var global struct {
 	// NAME -> STRUCT
 	Used map[string]Used `json:"used"`
 	// NAME -> VERSION -> TAG -> KEY -> VALUE
 	Environments map[string]map[string]map[string]map[string]string `json:"environments"`
 }
 
-func GetUsed() map[string]Used {
-	return environment.Used
+var project struct {
+	enabled bool
+	// NAME -> STRUCT
+	Used map[string]Used `json:"used"`
+}
+
+func GetGlobalUsed() map[string]Used {
+	return global.Used
+}
+
+func GetProjectUsed() map[string]Used {
+	return project.Used
 }
 
 func IsSetUsedEnvironment(name string) bool {
-	var _, ok = environment.Used[name]
+	var _, ok = global.Used[name]
 
 	return ok
 }
 
 func GetEnvironments(name string, version string, tag string) map[string]string {
-	if nil == environment.Environments {
+	if nil == global.Environments {
 		return map[string]string{}
 	}
 
-	versions, ok := environment.Environments[name]
+	versions, ok := global.Environments[name]
 	if !ok {
 		return map[string]string{}
 	}
@@ -84,50 +105,103 @@ func GetEnvironments(name string, version string, tag string) map[string]string 
 }
 
 func SetEnvironments(name string, version string, tag string, kvs map[string]string) error {
-	if nil == environment.Environments {
-		environment.Environments = map[string]map[string]map[string]map[string]string{}
+	if nil == global.Environments {
+		global.Environments = map[string]map[string]map[string]map[string]string{}
 	}
 
-	if _, ok := environment.Environments[name]; !ok {
-		environment.Environments[name] = map[string]map[string]map[string]string{}
+	if _, ok := global.Environments[name]; !ok {
+		global.Environments[name] = map[string]map[string]map[string]string{}
 	}
 
-	if _, ok := environment.Environments[name][version]; !ok {
-		environment.Environments[name][version] = map[string]map[string]string{}
+	if _, ok := global.Environments[name][version]; !ok {
+		global.Environments[name][version] = map[string]map[string]string{}
 	}
 
-	if _, ok := environment.Environments[name][version][tag]; !ok {
-		environment.Environments[name][version][tag] = map[string]string{}
+	if _, ok := global.Environments[name][version][tag]; !ok {
+		global.Environments[name][version][tag] = map[string]string{}
 	}
 
 	for k, v := range kvs {
-		environment.Environments[name][version][tag][k] = v
+		global.Environments[name][version][tag][k] = v
 	}
 
 	return sync()
 }
 
 func SwitchTo(name string, version string, tag string) error {
-	if nil == environment.Used {
-		environment.Used = map[string]Used{}
+	if nil == global.Used {
+		global.Used = map[string]Used{}
 	}
 
-	environment.Used[name] = Used{Version: version, Tag: tag}
+	global.Used[name] = Used{Version: version, Tag: tag}
+
+	return sync()
+}
+
+func UnsetTo(name string) error {
+	if nil == global.Used {
+		return nil
+	}
+
+	delete(global.Used, name)
+
+	return sync()
+}
+
+func SwitchToProject(name string, version string, tag string) error {
+	if nil == project.Used {
+		project.Used = map[string]Used{}
+	}
+
+	project.enabled = true
+	project.Used[name] = Used{Version: version, Tag: tag}
+
+	return sync()
+}
+
+func UnsetToProject(name string) error {
+	if nil == project.Used {
+		return nil
+	}
+
+	project.enabled = true
+	delete(project.Used, name)
 
 	return sync()
 }
 
 func sync() error {
-	var path = filepath.Join(core.Home, "environment.json")
+	{
+		var path = filepath.Join(core.Home, "environment.json")
 
-	var file, err = os.OpenFile(path, os.O_CREATE|os.O_TRUNC|os.O_RDWR, 0644)
-	if nil != err {
-		return err
+		var file, err = os.OpenFile(path, os.O_CREATE|os.O_TRUNC|os.O_RDWR, 0644)
+		if nil != err {
+			return err
+		}
+		defer file.Close()
+
+		if err := json.NewEncoder(file).Encode(global); nil != err {
+			return err
+		}
 	}
-	defer file.Close()
 
-	if err := json.NewEncoder(file).Encode(environment); nil != err {
-		return err
+	{
+		if project.enabled {
+			var path = filepath.Join(".dem", "environment.json")
+			if err := os.MkdirAll(".dem", 0755); nil != err {
+				return err
+			}
+
+			var file, err = os.OpenFile(path, os.O_CREATE|os.O_TRUNC|os.O_RDWR, 0644)
+			if nil != err {
+				return err
+			}
+			defer file.Close()
+
+			if err := json.NewEncoder(file).Encode(project); nil != err {
+				return err
+			}
+		}
 	}
 
 	return nil

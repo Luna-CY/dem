@@ -8,7 +8,7 @@
 
 package ide
 
-import "github.com/Luna-CY/cobra"
+import "github.com/spf13/cobra"
 
 func NewIdeCommand() *cobra.Command {
 	var command = &cobra.Command{

@@ -11,13 +11,13 @@ package command
 import (
 	"context"
 	"fmt"
-	"github.com/Luna-CY/cobra"
 	"github.com/Luna-CY/dem/core"
 	"github.com/Luna-CY/dem/environment"
 	"github.com/Luna-CY/dem/index"
 	"github.com/Luna-CY/dem/util/echo"
 	"github.com/Luna-CY/dem/util/mapping"
 	"github.com/Luna-CY/dem/util/system"
+	"github.com/spf13/cobra"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -34,9 +34,15 @@ func MainCommandExecute(ctx context.Context) error {
 var main = &cobra.Command{
 	Use: "dem",
 	Run: func(cmd *cobra.Command, args []string) {
+		var globalUsed = environment.GetGlobalUsed()
+		var projectUsed = environment.GetProjectUsed()
+
+		for k, v := range projectUsed {
+			globalUsed[k] = v
+		}
+
 		if 0 == len(args) {
-			var used = environment.GetUsed()
-			if 0 == len(used) {
+			if 0 == len(globalUsed) && 0 == len(projectUsed) {
 				fmt.Println("当前环境未配置工具")
 				fmt.Println()
 				fmt.Println("若要获取所有可用的工具，可使用命令 dem-utils index list 获取可用的所有工具信息")
@@ -47,7 +53,7 @@ var main = &cobra.Command{
 				return
 			}
 
-			var names = mapping.Keys(used)
+			var names = mapping.Keys(globalUsed)
 			sort.Strings(names)
 
 			fmt.Printf("Version %s\n", core.Version)
@@ -58,7 +64,7 @@ var main = &cobra.Command{
 
 			fmt.Println("当前环境所有工具及其可用的命令表:")
 			for _, name := range names {
-				var tool = used[name]
+				var tool = globalUsed[name]
 
 				var version, ok = index.GetVersion(name, tool.Version)
 				if !ok {
@@ -107,7 +113,7 @@ var main = &cobra.Command{
 		}
 
 		var paths []string
-		for name, used := range environment.GetUsed() {
+		for name, used := range globalUsed {
 			var version, ok = index.GetVersion(name, used.Version)
 			if !ok {
 				continue

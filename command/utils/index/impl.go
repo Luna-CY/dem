@@ -9,14 +9,15 @@
 package index
 
 import (
-	"github.com/Luna-CY/cobra"
+	"github.com/spf13/cobra"
 )
 
 func NewIndexCommand() *cobra.Command {
 	var command = &cobra.Command{
-		Use:   "index",
-		Short: "索引管理器",
-		Args:  cobra.NoArgs,
+		Use:     "ind",
+		Aliases: []string{"index"},
+		Short:   "索引管理器",
+		Args:    cobra.NoArgs,
 	}
 
 	command.AddCommand(list, update)

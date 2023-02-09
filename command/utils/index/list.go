@@ -10,20 +10,21 @@ package index
 
 import (
 	"fmt"
-	"github.com/Luna-CY/cobra"
 	"github.com/Luna-CY/dem/core"
 	"github.com/Luna-CY/dem/index"
 	"github.com/Luna-CY/dem/util/echo"
 	"github.com/Luna-CY/dem/util/mapping"
+	"github.com/spf13/cobra"
 	"os"
 	"path/filepath"
 	"sort"
 )
 
 var list = &cobra.Command{
-	Use:   "list",
-	Short: "获取索引列表",
-	Args:  cobra.NoArgs,
+	Use:     "lis",
+	Aliases: []string{"list"},
+	Short:   "获取索引列表",
+	Args:    cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
 		var tools = index.GetVersions()
 

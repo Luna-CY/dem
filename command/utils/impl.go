@@ -9,15 +9,13 @@
 package utils
 
 import (
-	"github.com/Luna-CY/cobra"
 	"github.com/Luna-CY/dem/command/utils/env"
 	"github.com/Luna-CY/dem/command/utils/ide"
 	"github.com/Luna-CY/dem/command/utils/index"
-	"github.com/Luna-CY/dem/command/utils/info"
 	"github.com/Luna-CY/dem/command/utils/install"
 	"github.com/Luna-CY/dem/command/utils/remove"
-	"github.com/Luna-CY/dem/command/utils/switch_to"
 	"github.com/Luna-CY/dem/core"
+	"github.com/spf13/cobra"
 )
 
 func NewUtilsCommand() *cobra.Command {
@@ -28,7 +26,7 @@ func NewUtilsCommand() *cobra.Command {
 		Version: core.Version,
 	}
 
-	command.AddCommand(index.NewIndexCommand(), env.NewEnvCommand(), info.NewInfoCommand(), install.NewInstallCommand(), remove.NewRemoveCommand(), switch_to.NewSwitchToCommand(), ide.NewIdeCommand())
+	command.AddCommand(index.NewIndexCommand(), env.NewEnvCommand(), install.NewInstallCommand(), remove.NewRemoveCommand(), ide.NewIdeCommand())
 
 	return command
 }

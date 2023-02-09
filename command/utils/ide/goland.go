@@ -10,23 +10,23 @@ package ide
 
 import (
 	"fmt"
-	"github.com/Luna-CY/cobra"
 	"github.com/Luna-CY/dem/core"
 	"github.com/Luna-CY/dem/environment"
 	"github.com/Luna-CY/dem/index"
 	"github.com/Luna-CY/dem/util/echo"
 	"github.com/beevik/etree"
+	"github.com/spf13/cobra"
 	"os"
 	"path/filepath"
 	"strings"
 )
 
 var goland = &cobra.Command{
-	Use:       "goland",
-	Short:     "设置GoLand的GO相关配置",
-	Args:      cobra.RangeArgs(1, 2),
-	ValidArgs: []string{"VERSION", "TAG:-"},
-	Run:       run,
+	Use:     "gol VERSION [TAG:-]",
+	Aliases: []string{"goland"},
+	Short:   "设置GoLand的GO相关配置",
+	Args:    cobra.RangeArgs(1, 2),
+	Run:     run,
 }
 
 func run(_ *cobra.Command, args []string) {

@@ -3,15 +3,15 @@ module github.com/Luna-CY/dem
 go 1.19
 
 require (
-	github.com/Luna-CY/cobra v0.0.0-20230111032527-b9974c321dd2
+	github.com/beevik/etree v1.1.0
 	github.com/cheggaaa/pb/v3 v3.1.0
+	github.com/spf13/cobra v1.6.1
 	github.com/ulikunitz/xz v0.5.11
 	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (
 	github.com/VividCortex/ewma v1.1.1 // indirect
-	github.com/beevik/etree v1.1.0 // indirect
 	github.com/fatih/color v1.10.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/mattn/go-colorable v0.1.8 // indirect

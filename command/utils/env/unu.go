@@ -9,29 +9,36 @@
 package env
 
 import (
-	"fmt"
 	"github.com/Luna-CY/dem/environment"
-	"github.com/Luna-CY/dem/util/mapping"
+	"github.com/Luna-CY/dem/util/echo"
 	"github.com/spf13/cobra"
-	"sort"
+	"os"
 )
 
-var get = &cobra.Command{
-	Use:       "get NAME VERSION [TAG:-]",
-	Short:     "获取工具指定标签配置的环境变量列表",
-	Args:      cobra.RangeArgs(2, 3),
-	ValidArgs: []string{"NAME", "VERSION", "TAG:-"},
-	Run: func(cmd *cobra.Command, args []string) {
+var unu = &cobra.Command{
+	Use:     "unu NAME",
+	Aliases: []string{"unuse"},
+	Short:   "移除工具的版本选择，使其为未设置状态",
+	Args:    cobra.ExactArgs(1),
+	Run: func(_ *cobra.Command, args []string) {
 		if 2 == len(args) {
 			args = append(args, "-")
 		}
 
-		var environments = environment.GetEnvironments(args[0], args[1], args[2])
-		var keys = mapping.Keys(environments)
+		if project {
+			if err := environment.UnsetToProject(args[0]); nil != err {
+				echo.ErrorLN(err)
 
-		sort.Strings(keys)
-		for _, key := range keys {
-			fmt.Printf("%s=%q\n", key, environments[key])
+				os.Exit(1)
+			}
+
+			return
+		}
+
+		if err := environment.UnsetTo(args[0]); nil != err {
+			echo.ErrorLN(err)
+
+			os.Exit(1)
 		}
 	},
 }

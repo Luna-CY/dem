@@ -8,17 +8,20 @@
 
 package env
 
-import "github.com/Luna-CY/cobra"
+import "github.com/spf13/cobra"
+
+var project bool
 
 func NewEnvCommand() *cobra.Command {
 	var command = &cobra.Command{
-		Use:     "env",
-		Aliases: []string{"e"},
-		Short:   "运行环境管理器",
-		Args:    cobra.NoArgs,
+		Use:   "env",
+		Short: "运行环境管理器",
+		Args:  cobra.NoArgs,
 	}
 
-	command.AddCommand(get, set, copyCommand)
+	use.Flags().BoolVarP(&project, "project", "p", false, "仅当前项目（当前目录）")
+	unu.Flags().BoolVarP(&project, "project", "p", false, "仅当前项目（当前目录）")
+	command.AddCommand(get, set, cop, inf, use, unu)
 
 	return command
 }
