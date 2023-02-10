@@ -28,10 +28,6 @@ var cop = &cobra.Command{
 			return
 		}
 
-		if version, ok := index.GetVersion(args[0], args[1]); ok {
-			args[1] = version.Version
-		}
-
 		var environments = environment.GetEnvironments(args[0], args[1], args[2])
 		if 0 == len(environments) {
 			echo.InfoLN("源环境标签内没有配置任何环境变量，拷贝取消")
