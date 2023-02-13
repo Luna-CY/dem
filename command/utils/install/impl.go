@@ -84,49 +84,10 @@ func run(cmd *cobra.Command, args []string) {
 		}
 	}
 
-	var isFail bool
-	defer func() {
-		if isFail {
-			_ = os.RemoveAll(target)
-		}
-	}()
-
-	if err := os.MkdirAll(target, os.ModeDir|0755); nil != err {
-		isFail = true
-
-		return
-	}
-
-	var installed = false
-	if version.Archive.Enable {
-		installed = true
-		// 通过打包的方式安装
-		if err := installer.Archive(cmd.Context(), target, version); nil != err {
-			installed = false
-			if installer.RemotePackageNotExists != err || !version.Source.Enable {
-				isFail = true
-				if installer.RemotePackageNotExists != err {
-					echo.ErrorLN(err)
-				}
-
-				return
-			}
-		}
-	}
-
-	if version.Source.Enable && !installed {
-		// 通过源码的方式安装
-		if err := installer.Source(cmd.Context(), target, version); nil != err {
-			isFail = true
+	if err := system.Install(cmd.Context(), args[0], version); nil != err {
+		if installer.RemotePackageNotExists != err {
 			echo.ErrorLN(err)
-
-			return
 		}
-	}
-
-	if !version.Archive.Enable && !version.Source.Enable {
-		isFail = true
-		echo.ErrorLN(fmt.Sprintf("工具[%s]的[%s]版本未配置有效的安装方式，请更新本地索引或进行反馈", args[0], args[1]))
 
 		return
 	}
