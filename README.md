@@ -19,10 +19,17 @@
 - OpenJDK
 - Mongodb Shell
 - Mongodb Command Tools
+- Chrome Driver
 
 **通过本工具安装的Python，使用pip安装工具包时不需要设置--user参数，默认安装在`/opt/dem/tools/python/{VERSION}/lib/python{SORT-VERSION}/site-packages`目录下**
 
-## 各工具编译备注
+## 部分工具使用说明
+
+### Chrome Driver
+
+Chrome Driver通常需要获取到安装路径，可以通过命令`dem which chromedriver`来获取命令路径
+
+## 部分工具编译备注
 
 ### python
 
@@ -65,6 +72,14 @@ DEM支持全局级别的环境配置与项目级别的环境配置
 通过DEM环境执行命令时将自动设置执行时的环境变量和命令查找的PATH列表
 
 - `dem CMD [FLAGS] [ARGS]`: 使用DEM环境执行命令
+
+## 关于DEM的PATH查找路径优先级说明
+
+通过DEM环境执行命令时，查找命令的优先级为：当前项目环境配置路径>全局环境配置路径>系统环境路径
+
+## 关于DEM的环境变量优先级说明
+
+通过DEM环境执行命令时，环境变量的覆盖顺序为：系统环境变量<全局环境变量<当前项目环境变量
 
 ## 贡献
 
