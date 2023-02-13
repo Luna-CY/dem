@@ -22,14 +22,32 @@ import (
 )
 
 var goland = &cobra.Command{
-	Use:     "gol VERSION [TAG:-]",
+	Use:     "gol [VERSION] [TAG:-]",
 	Aliases: []string{"goland"},
 	Short:   "设置GoLand的GO相关配置",
-	Args:    cobra.RangeArgs(1, 2),
+	Args:    cobra.RangeArgs(0, 2),
 	Run:     run,
 }
 
 func run(_ *cobra.Command, args []string) {
+	if 0 == len(args) {
+		if v, ok := environment.GetProjectUsed()["golang"]; ok {
+			args = append(args, v.Version)
+		}
+
+		if 0 == len(args) {
+			if v, ok := environment.GetGlobalUsed()["golang"]; ok {
+				args = append(args, v.Version)
+			}
+		}
+
+		if 0 == len(args) {
+			echo.ErrorLN("当前环境未配置有效的Golang版本")
+
+			os.Exit(1)
+		}
+	}
+
 	if 1 == len(args) {
 		args = append(args, "-")
 	}
