@@ -10,7 +10,7 @@
 
 ## 已支持的工具
 
-更多详细信息可通过`dem-tools index list`获取
+更多详细信息可通过`dem-tools ind lis`获取
 
 - Golang
 - Python
