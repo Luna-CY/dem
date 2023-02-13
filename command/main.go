@@ -144,6 +144,17 @@ var main = &cobra.Command{
 					environments[k] = strings.NewReplacer(keywords...).Replace(v)
 				}
 			}
+
+			// 这里不能合并，涉及到覆盖顺序的问题
+			for k, v := range environment.GetProjectEnvironments(name, used.Version, used.Tag) {
+				environments[k] = strings.NewReplacer(keywords...).Replace(v)
+			}
+
+			if used.Version != version.Version {
+				for k, v := range environment.GetProjectEnvironments(name, version.Version, used.Tag) {
+					environments[k] = strings.NewReplacer(keywords...).Replace(v)
+				}
+			}
 		}
 
 		paths = append(paths, filepath.SplitList(os.Getenv("PATH"))...)

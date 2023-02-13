@@ -15,19 +15,18 @@ import (
 	"os"
 )
 
-var uns = &cobra.Command{
-	Use:   "uns NAME VERSION TAG KEY [KEY [...]]",
-	Short: "移除环境变量",
-	Long:  "移除环境变量，前三个参数分别指定 {工具名称} {工具版本} {环境标签}，第四个及之后的所有参数为环境变量的KEY",
-	Args:  cobra.MinimumNArgs(4),
+var sav = &cobra.Command{
+	Use:     "sav NAME VERSION [TAG:-]",
+	Aliases: []string{"save"},
+	Short:   "将全局环境变量保存到当前项目",
+	Args:    cobra.RangeArgs(2, 3),
 	Run: func(cmd *cobra.Command, args []string) {
-		if 4 > len(args) {
-			echo.ErrorLN("参数数量不足，可通过--help获取使用方法")
-
-			return
+		if 2 == len(args) {
+			args = append(args, "-")
 		}
 
-		if err := environment.UnSetEnvironments(args[0], args[1], args[2], args[3:]); nil != err {
+		var environments = environment.GetEnvironments(args[0], args[1], args[2])
+		if err := environment.SetProjectEnvironments(args[0], args[1], args[2], environments); nil != err {
 			echo.ErrorLN(err)
 
 			os.Exit(1)

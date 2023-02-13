@@ -21,7 +21,11 @@ func NewEnvCommand() *cobra.Command {
 
 	use.Flags().BoolVarP(&project, "project", "p", false, "仅当前项目（当前目录）")
 	unu.Flags().BoolVarP(&project, "project", "p", false, "仅当前项目（当前目录）")
-	command.AddCommand(get, set, cop, inf, use, unu, uns, rem, ini)
+	set.Flags().BoolVarP(&project, "project", "p", false, "仅当前项目（当前目录）")
+	uns.Flags().BoolVarP(&project, "project", "p", false, "仅当前项目（当前目录）")
+	rem.Flags().BoolVarP(&project, "project", "p", false, "仅当前项目（当前目录）")
+
+	command.AddCommand(get, set, cop, inf, use, unu, uns, rem, ini, sav)
 
 	return command
 }

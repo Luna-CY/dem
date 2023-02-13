@@ -65,6 +65,8 @@ var project struct {
 	enabled bool
 	// NAME -> STRUCT
 	Used map[string]Used `json:"used"`
+	// NAME -> VERSION -> TAG -> KEY -> VALUE
+	Environments map[string]map[string]map[string]map[string]string `json:"environments"`
 }
 
 func GetGlobalUsed() map[string]Used {
@@ -87,6 +89,29 @@ func GetEnvironments(name string, version string, tag string) map[string]string 
 	}
 
 	versions, ok := global.Environments[name]
+	if !ok {
+		return map[string]string{}
+	}
+
+	tags, ok := versions[version]
+	if !ok {
+		return map[string]string{}
+	}
+
+	environments, ok := tags[tag]
+	if !ok {
+		return map[string]string{}
+	}
+
+	return environments
+}
+
+func GetProjectEnvironments(name string, version string, tag string) map[string]string {
+	if nil == project.Environments {
+		return map[string]string{}
+	}
+
+	versions, ok := project.Environments[name]
 	if !ok {
 		return map[string]string{}
 	}
@@ -128,6 +153,31 @@ func SetEnvironments(name string, version string, tag string, kvs map[string]str
 	return sync()
 }
 
+func SetProjectEnvironments(name string, version string, tag string, kvs map[string]string) error {
+	if nil == project.Environments {
+		project.Environments = map[string]map[string]map[string]map[string]string{}
+	}
+
+	if _, ok := project.Environments[name]; !ok {
+		project.Environments[name] = map[string]map[string]map[string]string{}
+	}
+
+	if _, ok := project.Environments[name][version]; !ok {
+		project.Environments[name][version] = map[string]map[string]string{}
+	}
+
+	if _, ok := project.Environments[name][version][tag]; !ok {
+		project.Environments[name][version][tag] = map[string]string{}
+	}
+
+	project.enabled = true
+	for k, v := range kvs {
+		project.Environments[name][version][tag][k] = v
+	}
+
+	return sync()
+}
+
 func UnSetEnvironments(name string, version string, tag string, keys []string) error {
 	if nil == global.Environments {
 		return nil
@@ -152,6 +202,31 @@ func UnSetEnvironments(name string, version string, tag string, keys []string) e
 	return sync()
 }
 
+func UnSetProjectEnvironments(name string, version string, tag string, keys []string) error {
+	if nil == project.Environments {
+		return nil
+	}
+
+	if _, ok := project.Environments[name]; !ok {
+		return nil
+	}
+
+	if _, ok := project.Environments[name][version]; !ok {
+		return nil
+	}
+
+	if _, ok := project.Environments[name][version][tag]; !ok {
+		return nil
+	}
+
+	project.enabled = true
+	for _, key := range keys {
+		delete(project.Environments[name][version][tag], key)
+	}
+
+	return sync()
+}
+
 func DelEnvironments(name string, version string, tag string) error {
 	if nil == global.Environments {
 		return nil
@@ -166,6 +241,25 @@ func DelEnvironments(name string, version string, tag string) error {
 	}
 
 	delete(global.Environments[name][version], tag)
+
+	return sync()
+}
+
+func DelProjectEnvironments(name string, version string, tag string) error {
+	if nil == project.Environments {
+		return nil
+	}
+
+	if _, ok := project.Environments[name]; !ok {
+		return nil
+	}
+
+	if _, ok := project.Environments[name][version]; !ok {
+		return nil
+	}
+
+	project.enabled = true
+	delete(project.Environments[name][version], tag)
 
 	return sync()
 }

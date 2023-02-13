@@ -13,33 +13,23 @@ import (
 	"github.com/Luna-CY/dem/util/echo"
 	"github.com/spf13/cobra"
 	"os"
-	"strings"
 )
 
-var set = &cobra.Command{
-	Use:   "set NAME VERSION TAG KEY=VALUE [KEY=VALUE [...]]",
-	Short: "设置环境变量",
-	Long:  "设置环境变量，前三个参数分别指定 {工具名称} {工具版本} {环境标签}，第四个及之后的所有参数为环境变量的KV对",
-	Args:  cobra.MinimumNArgs(4),
+var rem = &cobra.Command{
+	Use:     "rem NAME VERSION TAG",
+	Aliases: []string{"remove"},
+	Short:   "移除环境变量标签",
+	Long:    "移除环境变量标签，该操作将删除该标签下所有的环境变量",
+	Args:    cobra.ExactArgs(3),
 	Run: func(cmd *cobra.Command, args []string) {
-		if 4 > len(args) {
+		if 3 > len(args) {
 			echo.ErrorLN("参数数量不足，可通过--help获取使用方法")
 
 			return
 		}
 
-		var kvs = map[string]string{}
-		for _, kv := range args[3:] {
-			var tokens = strings.SplitN(kv, "=", 2)
-			if 2 != len(tokens) {
-				continue
-			}
-
-			kvs[tokens[0]] = tokens[1]
-		}
-
 		if project {
-			if err := environment.SetProjectEnvironments(args[0], args[1], args[2], kvs); nil != err {
+			if err := environment.DelProjectEnvironments(args[0], args[1], args[2]); nil != err {
 				echo.ErrorLN(err)
 
 				os.Exit(1)
@@ -48,7 +38,7 @@ var set = &cobra.Command{
 			return
 		}
 
-		if err := environment.SetEnvironments(args[0], args[1], args[2], kvs); nil != err {
+		if err := environment.DelEnvironments(args[0], args[1], args[2]); nil != err {
 			echo.ErrorLN(err)
 
 			os.Exit(1)

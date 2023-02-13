@@ -17,21 +17,34 @@ import (
 )
 
 var get = &cobra.Command{
-	Use:       "get NAME VERSION [TAG:-]",
-	Short:     "获取工具指定标签配置的环境变量列表",
-	Args:      cobra.RangeArgs(2, 3),
-	ValidArgs: []string{"NAME", "VERSION", "TAG:-"},
+	Use:   "get NAME VERSION [TAG:-]",
+	Short: "获取工具指定标签配置的环境变量列表",
+	Args:  cobra.RangeArgs(2, 3),
 	Run: func(cmd *cobra.Command, args []string) {
 		if 2 == len(args) {
 			args = append(args, "-")
 		}
 
-		var environments = environment.GetEnvironments(args[0], args[1], args[2])
-		var keys = mapping.Keys(environments)
+		{
+			var environments = environment.GetEnvironments(args[0], args[1], args[2])
+			var keys = mapping.Keys(environments)
+			sort.Strings(keys)
 
-		sort.Strings(keys)
-		for _, key := range keys {
-			fmt.Printf("%s=%q\n", key, environments[key])
+			fmt.Println("全局环境变量列表:")
+			for _, key := range keys {
+				fmt.Printf("%s=%q\n", key, environments[key])
+			}
+		}
+
+		if 0 != len(environment.GetProjectEnvironments(args[0], args[1], args[2])) {
+			var environments = environment.GetProjectEnvironments(args[0], args[1], args[2])
+			var keys = mapping.Keys(environments)
+			sort.Strings(keys)
+
+			fmt.Println("当前项目环境变量列表:")
+			for _, key := range keys {
+				fmt.Printf("%s=%q\n", key, environments[key])
+			}
 		}
 	},
 }
