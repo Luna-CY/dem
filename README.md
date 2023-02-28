@@ -21,7 +21,7 @@
 - Mongodb Command Tools
 - Chrome Driver
 
-**通过本工具安装的Python，使用pip安装工具包时不需要设置--user参数，默认安装在`/opt/dem/tools/python/{VERSION}/lib/python{SORT-VERSION}/site-packages`目录下**
+**通过本工具安装的Python，使用pip安装工具包时不需要设置--user参数，默认安装在`/opt/dem/python/{VERSION}/lib/python{SORT-VERSION}/site-packages`目录下**
 
 ## 部分工具使用说明
 
