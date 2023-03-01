@@ -22,6 +22,8 @@ import (
 	"strings"
 )
 
+var proxy bool
+
 var update = &cobra.Command{
 	Use:     "upd",
 	Aliases: []string{"update"},
@@ -29,9 +31,13 @@ var update = &cobra.Command{
 	Args:    cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
 		echo.InfoLN("读取元数据信息")
-		var source = fmt.Sprintf("https://raw.githubusercontent.com/Luna-CY/dem-repo/%s/index/.metadata.yaml", core.Version)
 
-		request, err := http.NewRequestWithContext(cmd.Context(), http.MethodGet, source, nil)
+		var manifest = fmt.Sprintf("https://raw.githubusercontent.com/Luna-CY/dem-repo/%s/index/manifest.yaml", core.Version)
+		if proxy {
+			manifest = core.GithubProxy + manifest
+		}
+
+		request, err := http.NewRequestWithContext(cmd.Context(), http.MethodGet, manifest, nil)
 		if nil != err {
 			echo.ErrorLN(err)
 
@@ -81,6 +87,10 @@ var update = &cobra.Command{
 			var localName = strings.Join([]string{tokens[0], tokens[2]}, ".")
 
 			var remotePath = fmt.Sprintf("https://raw.githubusercontent.com/Luna-CY/dem-repo/%s/index/%s/%s/%s", core.Version, runtime.GOOS, runtime.GOARCH, name)
+			if proxy {
+				remotePath = core.GithubProxy + remotePath
+			}
+
 			var localFilepath = filepath.Join(core.Home, "index", localName)
 
 			echo.InfoLN(fmt.Sprintf("更新索引文件[%s] -> [%s]", remotePath, localFilepath))

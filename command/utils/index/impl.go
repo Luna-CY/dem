@@ -20,6 +20,7 @@ func NewIndexCommand() *cobra.Command {
 		Args:    cobra.NoArgs,
 	}
 
+	update.Flags().BoolVar(&proxy, "proxy", false, "通过[https://ghproxy.com]进行代理，常规代理请设置SHELL的HTTP_PROXY与HTTPS_PROXY环境变量")
 	command.AddCommand(list, update)
 
 	return command

@@ -16,6 +16,7 @@ import (
 )
 
 const Version = "v0.1.0"
+const GithubProxy = "https://ghproxy.com/"
 
 // Home DEM用户主目录
 var Home = ""
