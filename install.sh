@@ -24,10 +24,13 @@ if [[ 0 == $USER ]]; then
   sudo chown -R $USER:$GROUP $ROOT_PATH
 fi
 
-tar -zxf /tmp/dem.tar.gz -C $ROOT_PATH/bin
+tar -zxf /tmp/dem.tar.gz -C $ROOT_PATH/bin && rm /tmp/dem.tar.gz
+echo "echo \"export PATH=${ROOT_PATH}/bin:\$PATH\" >> ${HOME}/.bashrc"
+echo "export PATH=${ROOT_PATH}/bin:\$PATH" >> ${HOME}/.bashrc
+echo "echo \"export PATH=${ROOT_PATH}/bin:\$PATH\" >> ${HOME}/.zshrc"
+echo "export PATH=${ROOT_PATH}/bin:\$PATH" >> ${HOME}/.zshrc
 
-echo "安装完成，请将下面的export命令加入到当前的SHELL环境配置文件中"
+echo "安装完成，已自动为您配置BASH与ZSH的PATH变量"
+echo "如果您使用非BASH与ZSH的SHELL环境，请将下面的export命令加入到当前的SHELL环境配置文件中"
 echo "    export PATH=${ROOT_PATH}/bin:\$PATH"
-echo "如果您使用BASH环境，可能的环境配置文件位置为${HOME}/.bashrc"
-echo "如果您使用ZSH环境，可能的环境配置文件位置为${HOME}/.zshrc"
 echo "祝您工作愉快"
