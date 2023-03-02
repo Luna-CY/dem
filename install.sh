@@ -33,4 +33,4 @@ echo "export PATH=${ROOT_PATH}/bin:\$PATH" >> ${HOME}/.zshrc
 echo "安装完成，已自动为您配置BASH与ZSH的PATH变量"
 echo "如果您使用非BASH与ZSH的SHELL环境，请将下面的export命令加入到当前的SHELL环境配置文件中"
 echo "    export PATH=${ROOT_PATH}/bin:\$PATH"
-echo "祝您工作愉快"
+echo "请重启SHELL以使DEM命令生效，祝您工作愉快"
