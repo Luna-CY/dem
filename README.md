@@ -60,7 +60,7 @@ DEM支持全局级别的环境配置与项目级别的环境配置
 ### 基础命令
 
 - `dem-utils ind lis`: 查看所有支持的工具及版本列表
-- `dem-utils ind upd`: 从远程更新本地索引
+- `dem-utils ind upd`: 从远程更新本地索引，索引更新支持添加`--proxy`参数通过[https://ghproxy.com](https://ghproxy.com)进行代理
 - `dem-utils env inf`: 查看当前环境信息
 - `dem-utils ins {工具名称} {版本号}`: 安装工具的版本
 - `dem-utils rem {工具名称} {版本号}`: 移除已安装工具的版本
