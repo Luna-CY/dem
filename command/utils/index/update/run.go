@@ -11,7 +11,7 @@ package update
 import (
 	"fmt"
 	"github.com/Luna-CY/dem/internal/core"
-	echo2 "github.com/Luna-CY/dem/internal/util/echo"
+	"github.com/Luna-CY/dem/internal/util/echo"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 	"io"
@@ -23,7 +23,7 @@ import (
 )
 
 func run(cmd *cobra.Command, _ []string) {
-	echo2.InfoLN("读取元数据信息")
+	echo.InfoLN("读取元数据信息")
 
 	var manifest = fmt.Sprintf("https://raw.githubusercontent.com/Luna-CY/dem-repo/%s/index/manifest.yaml", core.Version)
 	if proxy {
@@ -32,20 +32,20 @@ func run(cmd *cobra.Command, _ []string) {
 
 	request, err := http.NewRequestWithContext(cmd.Context(), http.MethodGet, manifest, nil)
 	if nil != err {
-		echo2.ErrorLN(err)
+		echo.ErrorLN(err)
 
 		os.Exit(1)
 	}
 
 	response, err := http.DefaultClient.Do(request)
 	if nil != err {
-		echo2.ErrorLN(err)
+		echo.ErrorLN(err)
 
 		os.Exit(1)
 	}
 
 	if http.StatusOK != response.StatusCode {
-		echo2.ErrorLN(response.Status)
+		echo.ErrorLN(response.Status)
 
 		os.Exit(1)
 	}
@@ -56,21 +56,21 @@ func run(cmd *cobra.Command, _ []string) {
 		Index map[string]map[string][]string `yaml:"index"`
 	}
 	if err := yaml.NewDecoder(response.Body).Decode(&indexes); nil != err {
-		echo2.ErrorLN(err)
+		echo.ErrorLN(err)
 
 		os.Exit(1)
 	}
 
 	var arch, ok = indexes.Index[runtime.GOOS]
 	if !ok {
-		echo2.InfoLN("未支持该系统")
+		echo.InfoLN("未支持该系统")
 
 		return
 	}
 
 	names, ok := arch[runtime.GOARCH]
 	if !ok {
-		echo2.InfoLN("未支持该系统架构")
+		echo.InfoLN("未支持该系统架构")
 
 		return
 	}
@@ -86,17 +86,17 @@ func run(cmd *cobra.Command, _ []string) {
 
 		var localFilepath = filepath.Join(core.Index, localName)
 
-		echo2.InfoLN(fmt.Sprintf("更新索引文件[%s] -> [%s]", remotePath, localFilepath))
+		echo.InfoLN(fmt.Sprintf("更新索引文件[%s] -> [%s]", remotePath, localFilepath))
 		request, err := http.NewRequestWithContext(cmd.Context(), http.MethodGet, remotePath, nil)
 		if nil != err {
-			echo2.ErrorLN(err)
+			echo.ErrorLN(err)
 
 			os.Exit(1)
 		}
 
 		response, err := http.DefaultClient.Do(request)
 		if nil != err {
-			echo2.ErrorLN(err)
+			echo.ErrorLN(err)
 
 			os.Exit(1)
 		}
@@ -106,21 +106,21 @@ func run(cmd *cobra.Command, _ []string) {
 		}
 
 		if http.StatusOK != response.StatusCode {
-			echo2.ErrorLN(response.Status)
+			echo.ErrorLN(response.Status)
 
 			os.Exit(1)
 		}
 
 		f, err := os.OpenFile(localFilepath, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0644)
 		if nil != err {
-			echo2.ErrorLN(err)
+			echo.ErrorLN(err)
 
 			os.Exit(1)
 		}
 
 		_, err = io.Copy(f, response.Body)
 		if nil != err {
-			echo2.ErrorLN(err)
+			echo.ErrorLN(err)
 
 			os.Exit(1)
 		}
@@ -129,5 +129,5 @@ func run(cmd *cobra.Command, _ []string) {
 		_ = response.Body.Close()
 	}
 
-	echo2.InfoLN("更新索引完成")
+	echo.InfoLN("更新索引完成")
 }

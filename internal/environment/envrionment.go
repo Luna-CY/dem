@@ -11,10 +11,8 @@ package environment
 import (
 	"encoding/json"
 	"github.com/Luna-CY/dem/internal/core"
-	"github.com/Luna-CY/dem/internal/index"
 	"os"
 	"path/filepath"
-	"strings"
 )
 
 // Load 加载环境配置信息
@@ -87,6 +85,22 @@ func GetSoftware() map[string]string {
 	return software
 }
 
+// Installed 检查工具是否已安装
+func Installed(name string, version string) bool {
+	var target = filepath.Join(core.Software, name, version)
+
+	st, err := os.Stat(target)
+	if nil != err && !os.IsNotExist(err) {
+		return false
+	}
+
+	if nil == st {
+		return false
+	}
+
+	return st.IsDir()
+}
+
 // IsSet 当前环境是否已启用工具的某个版本
 func IsSet(name string) bool {
 	var _, ok = global.Software[name]
@@ -99,34 +113,16 @@ func GetEnvironments(name string) map[string]string {
 	var environments = map[string]string{}
 
 	// 全局
-	if version, ok := global.Software[name]; ok {
-		if software, ok := index.GetSoftwareVersion(name, version); ok {
-			for _, env := range software.Environments {
-				var tokens = strings.SplitN(env, "=", 2)
-				environments[tokens[0]] = tokens[1]
-			}
-		}
-
-		if es, ok := global.Environments[name]; ok {
-			for key, value := range es {
-				environments[key] = value
-			}
+	if envs, ok := global.Environments[name]; ok {
+		for key, value := range envs {
+			environments[key] = value
 		}
 	}
 
 	// 项目
-	if version, ok := project.Software[name]; ok {
-		if software, ok := index.GetSoftwareVersion(name, version); ok {
-			for _, env := range software.Environments {
-				var tokens = strings.SplitN(env, "=", 2)
-				environments[tokens[0]] = tokens[1]
-			}
-		}
-
-		if es, ok := project.Environments[name]; ok {
-			for key, value := range es {
-				environments[key] = value
-			}
+	if envs, ok := project.Environments[name]; ok {
+		for key, value := range envs {
+			environments[key] = value
 		}
 	}
 

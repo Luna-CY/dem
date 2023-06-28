@@ -18,11 +18,10 @@ var switchToProject bool
 
 func NewInstallCommand() *cobra.Command {
 	var command = &cobra.Command{
-		Use:     "ins NAME VERSION",
-		Aliases: []string{"install"},
-		Short:   "安装指定的工具到本地环境",
-		Args:    cobra.ExactArgs(2),
-		Run:     run,
+		Use:   "install NAME [VERSION]",
+		Short: "安装指定的工具到本地环境，版本号可选，未指定版本时自动安装最新版本",
+		Args:  cobra.MinimumNArgs(1),
+		Run:   run,
 	}
 
 	command.Flags().BoolVar(&overwrite, "overwrite", false, "覆盖安装，设置该参数时将完全移除已安装的内容并重新安装，请谨慎使用")

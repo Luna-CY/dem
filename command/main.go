@@ -128,6 +128,10 @@ var main = &cobra.Command{
 			}
 
 			for k, v := range environment.GetEnvironments(name) {
+				if "DEMNULL" == v {
+					continue
+				}
+
 				environments[k] = strings.NewReplacer(keywords...).Replace(v)
 			}
 		}

@@ -13,7 +13,7 @@ import (
 	"github.com/Luna-CY/dem/internal/core"
 	"github.com/Luna-CY/dem/internal/environment"
 	"github.com/Luna-CY/dem/internal/index"
-	echo2 "github.com/Luna-CY/dem/internal/util/echo"
+	"github.com/Luna-CY/dem/internal/util/echo"
 	"github.com/beevik/etree"
 	"github.com/spf13/cobra"
 	"os"
@@ -28,7 +28,7 @@ func run(_ *cobra.Command, args []string) {
 		}
 
 		if 0 == len(args) {
-			echo2.ErrorLN("当前环境未配置有效的Golang版本")
+			echo.ErrorLN("当前环境未配置有效的Golang版本")
 
 			os.Exit(1)
 		}
@@ -36,7 +36,7 @@ func run(_ *cobra.Command, args []string) {
 
 	var version, ok = index.GetSoftwareVersion("golang", args[0])
 	if !ok {
-		echo2.ErrorLN(fmt.Sprintf("未找到[%s]的[%s]版本，请检查安装的工具名称与版本是否正确，或更新本地索引", "golang", args[0]))
+		echo.ErrorLN(fmt.Sprintf("未找到[%s]的[%s]版本，请检查安装的工具名称与版本是否正确，或更新本地索引", "golang", args[0]))
 
 		return
 	}
@@ -44,13 +44,13 @@ func run(_ *cobra.Command, args []string) {
 	var root = filepath.Join(core.Software, "golang", version.Version)
 	if _, err := os.Stat(root); nil != err {
 		if !os.IsNotExist(err) {
-			echo2.ErrorLN(err)
+			echo.ErrorLN(err)
 
 			os.Exit(1)
 		}
 
-		echo2.InfoLN(fmt.Sprintf("当前环境未安装工具[%s]的[%s]版本", "golang", args[0]))
-		echo2.InfoLN(fmt.Sprintf("若要安装请使用 dem-utils install %s %s", "golang", args[0]))
+		echo.InfoLN(fmt.Sprintf("当前环境未安装工具[%s]的[%s]版本", "golang", args[0]))
+		echo.InfoLN(fmt.Sprintf("若要安装请使用 dem-utils install %s %s", "golang", args[0]))
 
 		return
 	}
@@ -59,24 +59,24 @@ func run(_ *cobra.Command, args []string) {
 	var workspace, err = os.ReadFile(workspacePath)
 	if nil != err {
 		if os.IsNotExist(err) {
-			echo2.InfoLN("当前目录不是有效的GoLand项目，请在GoLand项目目录内执行此命令")
+			echo.InfoLN("当前目录不是有效的GoLand项目，请在GoLand项目目录内执行此命令")
 
 			return
 		}
 
-		echo2.ErrorLN(err)
+		echo.ErrorLN(err)
 	}
 
 	var document = etree.NewDocument()
 	if err := document.ReadFromBytes(workspace); nil != err {
-		echo2.ErrorLN(err)
+		echo.ErrorLN(err)
 
 		return
 	}
 
 	var project = document.SelectElement("project")
 	if "4" != project.SelectAttr("version").Value {
-		echo2.ErrorLN("未支持的GoLand版本")
+		echo.ErrorLN("未支持的GoLand版本")
 
 		return
 	}
@@ -108,12 +108,12 @@ func run(_ *cobra.Command, args []string) {
 
 	document.Indent(2)
 	if err := document.WriteToFile(workspacePath); nil != err {
-		echo2.ErrorLN(err)
+		echo.ErrorLN(err)
 
 		return
 	}
 
-	echo2.InfoLN("配置完成")
+	echo.InfoLN("配置完成")
 }
 
 func setGoRoot(root *etree.Element, path string) {

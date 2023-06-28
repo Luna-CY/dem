@@ -18,22 +18,6 @@ import (
 	"path/filepath"
 )
 
-// Installed 检查是否已安装
-func Installed(name string, version string) bool {
-	var target = filepath.Join(core.Software, name, version)
-
-	st, err := os.Stat(target)
-	if nil != err && !os.IsNotExist(err) {
-		return false
-	}
-
-	if nil == st {
-		return false
-	}
-
-	return st.IsDir()
-}
-
 // Install 安装工具
 func Install(ctx context.Context, name string, version index.Version) error {
 	var target = filepath.Join(core.Software, name, version.Version)

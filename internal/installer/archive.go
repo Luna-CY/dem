@@ -41,7 +41,7 @@ func Archive(ctx context.Context, target string, version index.Version) error {
 		return RemotePackageNotExists
 	}
 
-	// 执行安装后的脚本
+	// 执行安装前的脚本
 	if 0 != len(version.Archive.Script.Install.Before) {
 		for _, command := range version.Archive.Script.Install.Before {
 			if err := execute.RunCommand(ctx, target, strings.NewReplacer(keywords...).Replace(command)); nil != err {

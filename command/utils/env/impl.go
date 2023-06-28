@@ -11,7 +11,7 @@ package env
 import (
 	"fmt"
 	"github.com/Luna-CY/dem/command/utils/env/get"
-	"github.com/Luna-CY/dem/command/utils/env/init"
+	"github.com/Luna-CY/dem/command/utils/env/initproject"
 	"github.com/Luna-CY/dem/command/utils/env/set"
 	"github.com/Luna-CY/dem/command/utils/env/unset"
 	"github.com/Luna-CY/dem/command/utils/env/unuse"
@@ -44,7 +44,7 @@ func NewEnvCommand() *cobra.Command {
 		},
 	}
 
-	command.AddCommand(get.NewGetCommand(), set.NewSetCommand(), use.NewUseCommand(), unuse.NewUnUseCommand(), unset.NewUnsetCommand(), init.NewInitCommand())
+	command.AddCommand(get.NewGetCommand(), set.NewSetCommand(), use.NewUseCommand(), unuse.NewUnUseCommand(), unset.NewUnsetCommand(), initproject.NewInitCommand())
 
 	return command
 }

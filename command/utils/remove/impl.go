@@ -11,12 +11,15 @@ package remove
 import (
 	"fmt"
 	"github.com/Luna-CY/dem/internal/core"
+	"github.com/Luna-CY/dem/internal/environment"
 	"github.com/Luna-CY/dem/internal/index"
-	echo2 "github.com/Luna-CY/dem/internal/util/echo"
+	"github.com/Luna-CY/dem/internal/util/echo"
+	"github.com/Luna-CY/dem/internal/util/execute"
 	"github.com/Luna-CY/dem/internal/util/system"
 	"github.com/spf13/cobra"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 func NewRemoveCommand() *cobra.Command {
@@ -30,48 +33,48 @@ func NewRemoveCommand() *cobra.Command {
 	return command
 }
 
-func run(_ *cobra.Command, args []string) {
-	if 2 != len(args) {
-		echo2.ErrorLN("未指定工具名称或工具版本，可通过--help获取使用方法")
+func run(cmd *cobra.Command, args []string) {
+	var version, ok = index.GetSoftwareVersion(args[0], args[1])
+	if !ok {
+		echo.ErrorLN(fmt.Sprintf("未找到[%s]的[%s]版本，请检查安装的工具名称与版本是否正确，或更新本地索引", args[0], args[1]))
 
 		return
 	}
 
-	var version, ok = index.GetSoftwareVersion(args[0], args[1])
-	if !ok {
-		echo2.ErrorLN(fmt.Sprintf("未找到[%s]的[%s]版本，请检查安装的工具名称与版本是否正确，或更新本地索引", args[0], args[1]))
-
+	if !environment.Installed(args[0], args[1]) {
 		return
 	}
 
 	var target = filepath.Join(core.Software, args[0], version.Version)
+	var keywords = []string{"{VERSION}", version.Version, "{ROOT}", target}
 
-	// 检测是否已安装
-	st, err := os.Stat(target)
-	if nil != err && !os.IsNotExist(err) {
-		echo2.ErrorLN(err)
-
-		return
-	}
-
-	if nil == st {
-		echo2.InfoLN("本地未安装该工具")
-
-		return
+	// 执行删除前的脚本
+	if 0 != len(version.Archive.Script.Remove.Before) {
+		echo.InfoLN("执行删除前脚本...")
+		for _, command := range version.Archive.Script.Remove.Before {
+			if err := execute.RunCommand(cmd.Context(), target, strings.NewReplacer(keywords...).Replace(command)); nil != err {
+				echo.ErrorLN(fmt.Sprintf("执行删除前脚本失败: %s", err))
+			}
+		}
 	}
 
 	// 删除之前需要先提权，避免某些文件在只读权限下由于权限不足而失败
-	if err := system.Chmod(target, 0777); nil != err {
-		echo2.ErrorLN(err)
-
-		return
-	}
-
+	_ = system.Chmod(target, 0777)
 	if err := os.RemoveAll(target); nil != err {
-		echo2.ErrorLN(err)
+		echo.ErrorLN(err)
 
 		return
 	}
 
-	echo2.InfoLN(fmt.Sprintf("工具[%s]的版本[%s]已移除", args[0], args[1]))
+	// 执行删除前的脚本
+	if 0 != len(version.Archive.Script.Remove.After) {
+		echo.InfoLN("执行删除后脚本...")
+		for _, command := range version.Archive.Script.Remove.After {
+			if err := execute.RunCommand(cmd.Context(), target, strings.NewReplacer(keywords...).Replace(command)); nil != err {
+				echo.ErrorLN(fmt.Sprintf("执行删除后脚本失败: %s", err))
+			}
+		}
+	}
+
+	echo.InfoLN(fmt.Sprintf("工具[%s]的版本[%s]已移除", args[0], args[1]))
 }

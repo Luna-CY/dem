@@ -13,7 +13,7 @@ import (
 	"github.com/Luna-CY/dem/internal/core"
 	"github.com/Luna-CY/dem/internal/environment"
 	"github.com/Luna-CY/dem/internal/index"
-	echo2 "github.com/Luna-CY/dem/internal/util/echo"
+	"github.com/Luna-CY/dem/internal/util/echo"
 	"github.com/spf13/cobra"
 	"os"
 	"path/filepath"
@@ -22,7 +22,7 @@ import (
 func run(_ *cobra.Command, args []string) {
 	var version, ok = index.GetSoftwareVersion(args[0], args[1])
 	if !ok {
-		echo2.ErrorLN(fmt.Sprintf("未找到[%s]的[%s]版本，请检查安装的工具名称与版本是否正确，或更新本地索引", args[0], args[1]))
+		echo.ErrorLN(fmt.Sprintf("未找到[%s]的[%s]版本，请检查安装的工具名称与版本是否正确，或更新本地索引", args[0], args[1]))
 
 		return
 	}
@@ -30,19 +30,19 @@ func run(_ *cobra.Command, args []string) {
 	var _, err = os.Stat(filepath.Join(core.Software, args[0], version.Version))
 	if nil != err {
 		if !os.IsNotExist(err) {
-			echo2.ErrorLN(err)
+			echo.ErrorLN(err)
 
 			os.Exit(1)
 		}
 
-		echo2.InfoLN(fmt.Sprintf("当前环境未安装工具[%s]的[%s]版本", args[0], args[1]))
-		echo2.InfoLN(fmt.Sprintf("若要安装请使用 dem-utils install --switch-to %s %s", args[0], args[1]))
+		echo.InfoLN(fmt.Sprintf("当前环境未安装工具[%s]的[%s]版本", args[0], args[1]))
+		echo.InfoLN(fmt.Sprintf("若要安装请使用 dem-utils install --switch-to %s %s", args[0], args[1]))
 
 		return
 	}
 
 	if err := environment.SwitchTo(args[0], args[1], project); nil != err {
-		echo2.ErrorLN(err)
+		echo.ErrorLN(err)
 
 		os.Exit(1)
 	}

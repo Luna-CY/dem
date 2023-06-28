@@ -106,6 +106,10 @@ type Version struct {
 				Before []string `yaml:"before"` // 安装前执行的Shell命令列表
 				After  []string `yaml:"after"`  // 安装后执行的Shell命令列表
 			} `yaml:"install"` // 安装前后的钩子，source模式安装时此配置无效
+			Remove struct {
+				Before []string `yaml:"before"` // 删除前执行的Shell命令列表
+				After  []string `yaml:"after"`  // 删除后执行的Shell命令列表
+			} `yaml:"remove"` // 删除前后的钩子，source模式安装时此配置无效
 		} `yaml:"script"` // 脚本配置
 	} `yaml:"archive"` // 打包安装需要的配置
 	Source struct {
