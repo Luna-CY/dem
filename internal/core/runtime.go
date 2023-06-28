@@ -12,7 +12,7 @@ import (
 	"path/filepath"
 )
 
-const Version = "v0.1.0"
+const Version = "v0.2.0"
 const GithubProxy = "https://ghproxy.com/"
 
 // Root 根目录位置

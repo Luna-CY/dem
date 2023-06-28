@@ -23,12 +23,6 @@ func NewUnsetCommand() *cobra.Command {
 		Short: "移除环境变量",
 		Args:  cobra.MinimumNArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
-			if 4 > len(args) {
-				echo.ErrorLN("参数数量不足，可通过--help获取使用方法")
-
-				return
-			}
-
 			if err := environment.UnsetEnvironments(args[0], args[1:], project); nil != err {
 				echo.ErrorLN(err)
 

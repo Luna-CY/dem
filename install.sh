@@ -8,7 +8,7 @@
 
 OS=`uname | tr '[:upper:]' '[:lower:]'`
 ARCH=`uname -m | tr '[:upper:]' '[:lower:]'`
-VERSION="v0.1.0"
+VERSION="v0.2.0"
 USER=`id -u`
 GROUP=`id -g`
 ROOT_PATH=/opt/dem
