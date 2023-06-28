@@ -11,17 +11,16 @@ package main
 import (
 	"context"
 	"github.com/Luna-CY/dem/command"
-	"github.com/Luna-CY/dem/core"
-	"github.com/Luna-CY/dem/environment"
-	"github.com/Luna-CY/dem/index"
-	"github.com/Luna-CY/dem/util/echo"
+	"github.com/Luna-CY/dem/internal/environment"
+	"github.com/Luna-CY/dem/internal/index"
+	"github.com/Luna-CY/dem/internal/util/echo"
 	"os"
 	"os/signal"
 	"syscall"
 )
 
 func init() {
-	var initializer = []func() error{core.Init, environment.Init, index.Init}
+	var initializer = []func() error{environment.Load, index.Load}
 	for _, f := range initializer {
 		if err := f(); nil != err {
 			echo.ErrorLN(err)

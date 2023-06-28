@@ -6,27 +6,23 @@
 // THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
 // See the Mulan PSL v2 for more details.
 
-package utils
+package use
 
 import (
-	"github.com/Luna-CY/dem/command/utils/editor"
-	"github.com/Luna-CY/dem/command/utils/env"
-	"github.com/Luna-CY/dem/command/utils/index"
-	"github.com/Luna-CY/dem/command/utils/install"
-	"github.com/Luna-CY/dem/command/utils/remove"
-	"github.com/Luna-CY/dem/internal/core"
 	"github.com/spf13/cobra"
 )
 
-func NewUtilsCommand() *cobra.Command {
+var project bool
+
+func NewUseCommand() *cobra.Command {
 	var command = &cobra.Command{
-		Use:     "dem-utils",
-		Short:   "环境管理工具集",
-		Args:    cobra.NoArgs,
-		Version: core.Version,
+		Use:   "use NAME VERSION",
+		Short: "切换工具的版本及环境",
+		Args:  cobra.ExactArgs(2),
+		Run:   run,
 	}
 
-	command.AddCommand(index.NewIndexCommand(), env.NewEnvCommand(), install.NewInstallCommand(), remove.NewRemoveCommand(), editor.NewEditorCommand())
+	command.Flags().BoolVarP(&project, "project", "p", false, "仅当前项目")
 
 	return command
 }

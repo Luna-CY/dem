@@ -6,22 +6,28 @@
 // THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
 // See the Mulan PSL v2 for more details.
 
-package index
+package initproject
 
 import (
-	"github.com/Luna-CY/dem/command/utils/index/update"
+	"fmt"
+	"github.com/Luna-CY/dem/internal/environment"
+	"github.com/Luna-CY/dem/internal/util/echo"
 	"github.com/spf13/cobra"
 )
 
-func NewIndexCommand() *cobra.Command {
-	var command = &cobra.Command{
-		Use:   "index",
-		Short: "显示索引信息",
+func NewInitCommand() *cobra.Command {
+	return &cobra.Command{
+		Use:   "init-project",
+		Short: "初始化当前项目（当前目录）的运行环境",
 		Args:  cobra.NoArgs,
-		Run:   run,
+		Run: func(cmd *cobra.Command, args []string) {
+			if err := environment.InitProject(); nil != err {
+				echo.ErrorLN(fmt.Sprintf("保存项目配置信息失败: %s", err))
+
+				return
+			}
+
+			echo.InfoLN("项目环境初始化完成")
+		},
 	}
-
-	command.AddCommand(update.NewUpdateCommand())
-
-	return command
 }

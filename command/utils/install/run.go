@@ -6,34 +6,34 @@
 // THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
 // See the Mulan PSL v2 for more details.
 
-package remove
+package install
 
 import (
 	"fmt"
 	"github.com/Luna-CY/dem/internal/core"
 	"github.com/Luna-CY/dem/internal/environment"
 	"github.com/Luna-CY/dem/internal/index"
+	"github.com/Luna-CY/dem/internal/installer"
 	"github.com/Luna-CY/dem/internal/util/echo"
-	"github.com/Luna-CY/dem/internal/util/execute"
 	"github.com/Luna-CY/dem/internal/util/system"
 	"github.com/spf13/cobra"
 	"os"
 	"path/filepath"
-	"strings"
 )
 
-func NewRemoveCommand() *cobra.Command {
-	var command = &cobra.Command{
-		Use:   "remove NAME VERSION",
-		Short: "从本地移除已安装的工具",
-		Args:  cobra.ExactArgs(2),
-		Run:   run,
+func run(cmd *cobra.Command, args []string) {
+	if 2 != len(args) {
+		var software = index.GetSoftwareVersions()
+		var versions, ok = software[args[0]]
+		if !ok {
+			echo.ErrorLN(fmt.Sprintf("未知的工具名称: %s", args[0]))
+
+			return
+		}
+
+		args = append(args, versions[0])
 	}
 
-	return command
-}
-
-func run(cmd *cobra.Command, args []string) {
 	var version, ok = index.GetSoftwareVersion(args[0], args[1])
 	if !ok {
 		echo.ErrorLN(fmt.Sprintf("未找到[%s]的[%s]版本，请检查安装的工具名称与版本是否正确，或更新本地索引", args[0], args[1]))
@@ -41,22 +41,13 @@ func run(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	if !environment.Installed(args[0], args[1]) {
+	if environment.Installed(args[0], args[1]) && !overwrite {
+		echo.InfoLN(fmt.Sprintf("工具[%s]的[%s]版本已存在，若要重新安装可设置--overwrite参数", args[0], args[1]))
+
 		return
 	}
 
 	var target = filepath.Join(core.Software, args[0], version.Version)
-	var keywords = []string{"{VERSION}", version.Version, "{ROOT}", target}
-
-	// 执行删除前的脚本
-	if 0 != len(version.Archive.Script.Remove.Before) {
-		echo.InfoLN("执行删除前脚本...")
-		for _, command := range version.Archive.Script.Remove.Before {
-			if err := execute.RunCommand(cmd.Context(), target, strings.NewReplacer(keywords...).Replace(command)); nil != err {
-				echo.ErrorLN(fmt.Sprintf("执行删除前脚本失败: %s", err))
-			}
-		}
-	}
 
 	// 删除之前需要先提权，避免某些文件在只读权限下由于权限不足而失败
 	_ = system.Chmod(target, 0777)
@@ -66,15 +57,32 @@ func run(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	// 执行删除前的脚本
-	if 0 != len(version.Archive.Script.Remove.After) {
-		echo.InfoLN("执行删除后脚本...")
-		for _, command := range version.Archive.Script.Remove.After {
-			if err := execute.RunCommand(cmd.Context(), target, strings.NewReplacer(keywords...).Replace(command)); nil != err {
-				echo.ErrorLN(fmt.Sprintf("执行删除后脚本失败: %s", err))
-			}
+	if err := system.Install(cmd.Context(), args[0], version); nil != err {
+		if installer.RemotePackageNotExists != err {
+			echo.ErrorLN(err)
+		}
+
+		return
+	}
+
+	echo.InfoLN("安装完成")
+	if !environment.IsSet(args[0]) {
+		echo.InfoLN("检测到该工具未配置运行时环境，将自动设置当前版本为运行时环境")
+
+		if err := environment.SwitchTo(args[0], args[1], false); nil != err {
+			echo.ErrorLN(err)
+
+			os.Exit(1)
 		}
 	}
 
-	echo.InfoLN(fmt.Sprintf("工具[%s]的版本[%s]已移除", args[0], args[1]))
+	if switchTo || switchToProject {
+		if err := environment.SwitchTo(args[0], args[1], switchToProject); nil != err {
+			echo.ErrorLN(err)
+
+			os.Exit(1)
+		}
+
+		echo.InfoLN(fmt.Sprintf("已将运行环境切换为工具[%s]的[%s]版本", args[0], args[1]))
+	}
 }
