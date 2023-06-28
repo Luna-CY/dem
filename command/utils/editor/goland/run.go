@@ -23,7 +23,7 @@ import (
 
 func run(_ *cobra.Command, args []string) {
 	if 0 == len(args) {
-		if v, ok := environment.GetSoftware()["golang"]; ok {
+		if v, ok := environment.GetSoftware(false)["golang"]; ok {
 			args = append(args, v)
 		}
 

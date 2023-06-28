@@ -31,7 +31,7 @@ func NewEnvCommand() *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			fmt.Println("当前环境使用的工具及版本信息:")
 
-			var software = environment.GetSoftware()
+			var software = environment.GetSoftware(false)
 			var names = mapping.Keys(software)
 			sort.Strings(names)
 

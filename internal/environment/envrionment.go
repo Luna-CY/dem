@@ -76,8 +76,12 @@ var project struct {
 }
 
 // GetSoftware 获取当前环境使用的软件信息
-func GetSoftware() map[string]string {
-	var software = global.Software
+func GetSoftware(p bool) map[string]string {
+	var software = map[string]string{}
+	if !p {
+		software = global.Software
+	}
+
 	for name, version := range project.Software {
 		software[name] = version
 	}

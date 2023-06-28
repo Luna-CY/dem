@@ -34,7 +34,7 @@ func MainCommandExecute(ctx context.Context) error {
 var main = &cobra.Command{
 	Use: "dem",
 	Run: func(cmd *cobra.Command, args []string) {
-		var software = environment.GetSoftware()
+		var software = environment.GetSoftware(false)
 		if 0 == len(args) {
 			if 0 == len(software) {
 				fmt.Println("当前环境未配置工具")
