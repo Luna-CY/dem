@@ -11,20 +11,43 @@ package initproject
 import (
 	"fmt"
 	"github.com/Luna-CY/dem/internal/environment"
+	"github.com/Luna-CY/dem/internal/index"
+	"github.com/Luna-CY/dem/internal/installer"
 	"github.com/Luna-CY/dem/internal/util/echo"
+	"github.com/Luna-CY/dem/internal/util/system"
 	"github.com/spf13/cobra"
 )
 
 func NewInitCommand() *cobra.Command {
 	return &cobra.Command{
-		Use:   "init-project",
-		Short: "初始化当前项目（当前目录）的运行环境",
+		Use:   "init",
+		Short: "初始化当前项目的运行环境",
 		Args:  cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
-			if err := environment.InitProject(); nil != err {
-				echo.ErrorLN(fmt.Sprintf("保存项目配置信息失败: %s", err))
-
+			var software = environment.GetSoftware(true)
+			if 0 == len(software) {
 				return
+			}
+
+			for name, v := range software {
+				var version, ok = index.GetSoftwareVersion(name, v)
+				if !ok {
+					echo.ErrorLN(fmt.Sprintf("无效的自定义环境配置，未找到工具[%s]的[%s]版本信息，请检查项目配置是否正确", name, v))
+
+					continue
+				}
+
+				if environment.Installed(name, version.Version) {
+					continue
+				}
+
+				if err := system.Install(cmd.Context(), name, version); nil != err {
+					if installer.RemotePackageNotExists != err {
+						echo.ErrorLN(err)
+					}
+
+					continue
+				}
 			}
 
 			echo.InfoLN("项目环境初始化完成")
