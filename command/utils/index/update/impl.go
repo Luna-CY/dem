@@ -6,27 +6,23 @@
 // THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
 // See the Mulan PSL v2 for more details.
 
-package utils
+package update
 
 import (
-	"github.com/Luna-CY/dem/command/utils/editor"
-	"github.com/Luna-CY/dem/command/utils/env"
-	"github.com/Luna-CY/dem/command/utils/index"
-	"github.com/Luna-CY/dem/command/utils/install"
-	"github.com/Luna-CY/dem/command/utils/remove"
-	"github.com/Luna-CY/dem/internal/core"
 	"github.com/spf13/cobra"
 )
 
-func NewUtilsCommand() *cobra.Command {
+var proxy bool
+
+func NewUpdateCommand() *cobra.Command {
 	var command = &cobra.Command{
-		Use:     "dem-utils",
-		Short:   "环境管理工具集",
-		Args:    cobra.NoArgs,
-		Version: core.Version,
+		Use:   "update",
+		Short: "更新本地索引",
+		Args:  cobra.NoArgs,
+		Run:   run,
 	}
 
-	command.AddCommand(index.NewIndexCommand(), env.NewEnvCommand(), install.NewInstallCommand(), remove.NewRemoveCommand(), editor.NewEditorCommand())
+	command.Flags().BoolVar(&proxy, "proxy", false, "通过[https://ghproxy.com]进行代理，常规代理请设置SHELL的HTTP_PROXY与HTTPS_PROXY环境变量")
 
 	return command
 }

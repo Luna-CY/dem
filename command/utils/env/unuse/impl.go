@@ -6,22 +6,30 @@
 // THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
 // See the Mulan PSL v2 for more details.
 
-package index
+package unuse
 
 import (
-	"github.com/Luna-CY/dem/command/utils/index/update"
+	"github.com/Luna-CY/dem/internal/environment"
+	"github.com/Luna-CY/dem/internal/util/echo"
 	"github.com/spf13/cobra"
+	"os"
 )
 
-func NewIndexCommand() *cobra.Command {
-	var command = &cobra.Command{
-		Use:   "index",
-		Short: "显示索引信息",
-		Args:  cobra.NoArgs,
-		Run:   run,
+func NewUnUseCommand() *cobra.Command {
+	return &cobra.Command{
+		Use:   "unuse NAME",
+		Short: "移除工具的版本选择，使其为未设置状态，该命令仅对当前项目有效",
+		Args:  cobra.ExactArgs(1),
+		Run: func(_ *cobra.Command, args []string) {
+			if 2 == len(args) {
+				args = append(args, "-")
+			}
+
+			if err := environment.Remove(args[0]); nil != err {
+				echo.ErrorLN(err)
+
+				os.Exit(1)
+			}
+		},
 	}
-
-	command.AddCommand(update.NewUpdateCommand())
-
-	return command
 }

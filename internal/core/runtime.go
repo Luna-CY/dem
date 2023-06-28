@@ -6,14 +6,20 @@
 // THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
 // See the Mulan PSL v2 for more details.
 
-package command
+package core
 
 import (
-	"context"
-	"github.com/Luna-CY/dem/command/utils"
+	"path/filepath"
 )
 
-// UtilsCommandExecute 执行命令
-func UtilsCommandExecute(ctx context.Context) error {
-	return utils.NewUtilsCommand().ExecuteContext(ctx)
-}
+const Version = "v0.1.0"
+const GithubProxy = "https://ghproxy.com/"
+
+// Root 根目录位置
+var Root = filepath.Join("/opt", "dem")
+
+// Index 索引路径
+var Index = filepath.Join(Root, "index")
+
+// Software 软件工具路径
+var Software = filepath.Join(Root, "software")

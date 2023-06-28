@@ -11,12 +11,12 @@ package command
 import (
 	"context"
 	"fmt"
-	"github.com/Luna-CY/dem/core"
-	"github.com/Luna-CY/dem/environment"
-	"github.com/Luna-CY/dem/index"
-	"github.com/Luna-CY/dem/util/echo"
-	"github.com/Luna-CY/dem/util/mapping"
-	"github.com/Luna-CY/dem/util/system"
+	"github.com/Luna-CY/dem/internal/core"
+	"github.com/Luna-CY/dem/internal/environment"
+	"github.com/Luna-CY/dem/internal/index"
+	"github.com/Luna-CY/dem/internal/util/echo"
+	"github.com/Luna-CY/dem/internal/util/mapping"
+	"github.com/Luna-CY/dem/internal/util/system"
 	"github.com/spf13/cobra"
 	"os"
 	"os/exec"
@@ -34,15 +34,9 @@ func MainCommandExecute(ctx context.Context) error {
 var main = &cobra.Command{
 	Use: "dem",
 	Run: func(cmd *cobra.Command, args []string) {
-		var globalUsed = environment.GetGlobalUsed()
-		var projectUsed = environment.GetProjectUsed()
-
-		for k, v := range projectUsed {
-			globalUsed[k] = v
-		}
-
+		var software = environment.GetSoftware()
 		if 0 == len(args) {
-			if 0 == len(globalUsed) && 0 == len(projectUsed) {
+			if 0 == len(software) {
 				fmt.Println("当前环境未配置工具")
 				fmt.Println()
 				fmt.Println("若要获取所有可用的工具，可使用命令 dem-utils index list 获取可用的所有工具信息")
@@ -53,25 +47,23 @@ var main = &cobra.Command{
 				return
 			}
 
-			var names = mapping.Keys(globalUsed)
+			var names = mapping.Keys(software)
 			sort.Strings(names)
 
 			fmt.Printf("Version %s\n", core.Version)
 			fmt.Println()
-			fmt.Println("Usage:\n  dem CMD [options] [args]")
+			fmt.Println("Usage: dem CMD [options] [args]")
 			fmt.Println()
 			fmt.Println()
 
-			fmt.Println("当前环境所有工具及其可用的命令表:")
+			fmt.Println("当前环境已安装工具及其可用的命令表:")
 			for _, name := range names {
-				var tool = globalUsed[name]
-
-				var version, ok = index.GetVersion(name, tool.Version)
+				var version, ok = index.GetSoftwareVersion(name, software[name])
 				if !ok {
 					continue
 				}
 
-				var target = filepath.Join(core.Root, name, version.Version)
+				var target = filepath.Join(core.Software, name, version.Version)
 				var keywords = []string{"{ROOT}", target, "{VERSION}", version.Version}
 
 				var commands []string
@@ -113,13 +105,13 @@ var main = &cobra.Command{
 		}
 
 		var paths []string
-		for name, used := range globalUsed {
-			var version, ok = index.GetVersion(name, used.Version)
+		for name, v := range software {
+			var version, ok = index.GetSoftwareVersion(name, v)
 			if !ok {
 				continue
 			}
 
-			var target = filepath.Join(core.Root, name, version.Version)
+			var target = filepath.Join(core.Software, name, version.Version)
 			var keywords = []string{"{ROOT}", target, "{VERSION}", version.Version}
 
 			for _, path := range version.Paths {
@@ -135,29 +127,12 @@ var main = &cobra.Command{
 				environments[tokens[0]] = strings.NewReplacer(keywords...).Replace(tokens[1])
 			}
 
-			for k, v := range environment.GetEnvironments(name, used.Version, used.Tag) {
+			for k, v := range environment.GetEnvironments(name) {
 				environments[k] = strings.NewReplacer(keywords...).Replace(v)
-			}
-
-			if used.Version != version.Version {
-				for k, v := range environment.GetEnvironments(name, version.Version, used.Tag) {
-					environments[k] = strings.NewReplacer(keywords...).Replace(v)
-				}
-			}
-
-			// 这里不能合并，涉及到覆盖顺序的问题
-			for k, v := range environment.GetProjectEnvironments(name, used.Version, used.Tag) {
-				environments[k] = strings.NewReplacer(keywords...).Replace(v)
-			}
-
-			if used.Version != version.Version {
-				for k, v := range environment.GetProjectEnvironments(name, version.Version, used.Tag) {
-					environments[k] = strings.NewReplacer(keywords...).Replace(v)
-				}
 			}
 		}
 
-		paths = append(paths, filepath.SplitList(os.Getenv("PATH"))...)
+		paths = append(paths, strings.Split(os.Getenv("PATH"), ":")...)
 		environments["PATH"] = strings.Join(paths, string(filepath.ListSeparator))
 
 		var name, err = system.LockPath(args[0], paths)

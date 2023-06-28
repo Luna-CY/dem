@@ -6,22 +6,29 @@
 // THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
 // See the Mulan PSL v2 for more details.
 
-package index
+package get
 
 import (
-	"github.com/Luna-CY/dem/command/utils/index/update"
+	"fmt"
+	"github.com/Luna-CY/dem/internal/environment"
+	"github.com/Luna-CY/dem/internal/util/mapping"
 	"github.com/spf13/cobra"
+	"sort"
 )
 
-func NewIndexCommand() *cobra.Command {
-	var command = &cobra.Command{
-		Use:   "index",
-		Short: "显示索引信息",
-		Args:  cobra.NoArgs,
-		Run:   run,
+func NewGetCommand() *cobra.Command {
+	return &cobra.Command{
+		Use:   "get NAME",
+		Short: "获取工具的环境变量列表",
+		Args:  cobra.ExactArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			var environments = environment.GetEnvironments(args[0])
+			var keys = mapping.Keys(environments)
+			sort.Strings(keys)
+
+			for _, key := range keys {
+				fmt.Printf("%s=%q\n", key, environments[key])
+			}
+		},
 	}
-
-	command.AddCommand(update.NewUpdateCommand())
-
-	return command
 }

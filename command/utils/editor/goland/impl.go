@@ -6,14 +6,16 @@
 // THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
 // See the Mulan PSL v2 for more details.
 
-package command
+package goland
 
-import (
-	"context"
-	"github.com/Luna-CY/dem/command/utils"
-)
+import "github.com/spf13/cobra"
 
-// UtilsCommandExecute 执行命令
-func UtilsCommandExecute(ctx context.Context) error {
-	return utils.NewUtilsCommand().ExecuteContext(ctx)
+// NewGolandCommand 创建goland命令
+func NewGolandCommand() *cobra.Command {
+	return &cobra.Command{
+		Use:   "goland [VERSION]",
+		Short: "设置GoLand的GO相关配置",
+		Args:  cobra.RangeArgs(0, 1),
+		Run:   run,
+	}
 }

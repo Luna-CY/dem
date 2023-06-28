@@ -6,41 +6,38 @@
 // THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
 // See the Mulan PSL v2 for more details.
 
-package main
+package unset
 
 import (
-	"context"
-	"github.com/Luna-CY/dem/command"
 	"github.com/Luna-CY/dem/internal/environment"
-	"github.com/Luna-CY/dem/internal/index"
 	"github.com/Luna-CY/dem/internal/util/echo"
+	"github.com/spf13/cobra"
 	"os"
-	"os/signal"
-	"syscall"
 )
 
-func init() {
-	var initializer = []func() error{environment.Load, index.Load}
-	for _, f := range initializer {
-		if err := f(); nil != err {
-			echo.ErrorLN(err)
+var project bool
 
-			os.Exit(1)
-		}
+func NewUnsetCommand() *cobra.Command {
+	var command = &cobra.Command{
+		Use:   "unset NAME KEY [KEY [...]]",
+		Short: "移除环境变量",
+		Args:  cobra.MinimumNArgs(2),
+		Run: func(cmd *cobra.Command, args []string) {
+			if 4 > len(args) {
+				echo.ErrorLN("参数数量不足，可通过--help获取使用方法")
+
+				return
+			}
+
+			if err := environment.UnsetEnvironments(args[0], args[1:], project); nil != err {
+				echo.ErrorLN(err)
+
+				os.Exit(1)
+			}
+		},
 	}
-}
 
-func main() {
-	var ctx, cancel = context.WithCancel(context.Background())
+	command.Flags().BoolVarP(&project, "project", "p", false, "仅当前项目")
 
-	go func() {
-		var ch = make(chan os.Signal, 1)
-		signal.Notify(ch, os.Interrupt, syscall.SIGTERM)
-		<-ch
-		cancel()
-	}()
-
-	if err := command.MainCommandExecute(ctx); nil != err {
-		echo.ErrorLN(err)
-	}
+	return command
 }
