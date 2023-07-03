@@ -16,9 +16,7 @@ import (
 	"strings"
 )
 
-var project bool
-
-func NewSetCommand() *cobra.Command {
+func New() *cobra.Command {
 	var command = &cobra.Command{
 		Use:   "set NAME KEY=VALUE [KEY=VALUE [...]]",
 		Short: "设置工具的环境变量",
@@ -34,15 +32,13 @@ func NewSetCommand() *cobra.Command {
 				kvs[tokens[0]] = tokens[1]
 			}
 
-			if err := environment.SetEnvironments(args[0], kvs, project); nil != err {
+			if err := environment.SetEnvironments(args[0], kvs, false); nil != err {
 				echo.ErrorLN(err)
 
 				os.Exit(1)
 			}
 		},
 	}
-
-	command.Flags().BoolVarP(&project, "project", "p", false, "仅当前项目")
 
 	return command
 }

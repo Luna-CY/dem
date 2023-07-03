@@ -16,7 +16,7 @@ var overwrite bool
 var switchTo bool
 var switchToProject bool
 
-func NewInstallCommand() *cobra.Command {
+func New() *cobra.Command {
 	var command = &cobra.Command{
 		Use:   "install NAME [VERSION]",
 		Short: "安装指定的工具到本地环境，版本号可选，未指定版本时自动安装最新版本",

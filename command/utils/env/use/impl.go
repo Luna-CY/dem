@@ -12,17 +12,13 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var project bool
-
-func NewUseCommand() *cobra.Command {
+func New() *cobra.Command {
 	var command = &cobra.Command{
 		Use:   "use NAME VERSION",
-		Short: "切换工具的版本及环境",
+		Short: "切换工具的全局版本号",
 		Args:  cobra.ExactArgs(2),
 		Run:   run,
 	}
-
-	command.Flags().BoolVarP(&project, "project", "p", false, "仅当前项目")
 
 	return command
 }

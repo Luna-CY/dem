@@ -18,7 +18,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func NewInitCommand() *cobra.Command {
+func New() *cobra.Command {
 	return &cobra.Command{
 		Use:   "init",
 		Short: "初始化当前项目的运行环境",
@@ -38,6 +38,10 @@ func NewInitCommand() *cobra.Command {
 				}
 
 				if environment.Installed(name, version.Version) {
+					if err := environment.SwitchTo(name, version.Version, true); nil != err {
+						echo.ErrorLN(fmt.Sprintf("切换工具[%s]的[%s]版本失败，请重新尝试初始化", name, v))
+					}
+
 					continue
 				}
 
@@ -47,6 +51,10 @@ func NewInitCommand() *cobra.Command {
 					}
 
 					continue
+				}
+
+				if err := environment.SwitchTo(name, version.Version, true); nil != err {
+					echo.ErrorLN(fmt.Sprintf("切换工具[%s]的[%s]版本失败，请重新尝试初始化", name, v))
 				}
 			}
 

@@ -22,7 +22,7 @@ import (
 	"strings"
 )
 
-func NewRemoveCommand() *cobra.Command {
+func New() *cobra.Command {
 	var command = &cobra.Command{
 		Use:   "remove NAME VERSION",
 		Short: "从本地移除已安装的工具",

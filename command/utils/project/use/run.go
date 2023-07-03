@@ -41,7 +41,7 @@ func run(_ *cobra.Command, args []string) {
 		return
 	}
 
-	if err := environment.SwitchTo(args[0], args[1], false); nil != err {
+	if err := environment.SwitchTo(args[0], args[1], true); nil != err {
 		echo.ErrorLN(err)
 
 		os.Exit(1)

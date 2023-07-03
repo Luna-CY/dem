@@ -13,7 +13,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func NewIndexCommand() *cobra.Command {
+func New() *cobra.Command {
 	var command = &cobra.Command{
 		Use:   "index",
 		Short: "显示索引信息",

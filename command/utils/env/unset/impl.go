@@ -15,23 +15,19 @@ import (
 	"os"
 )
 
-var project bool
-
-func NewUnsetCommand() *cobra.Command {
+func New() *cobra.Command {
 	var command = &cobra.Command{
 		Use:   "unset NAME KEY [KEY [...]]",
 		Short: "移除环境变量",
 		Args:  cobra.MinimumNArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
-			if err := environment.UnsetEnvironments(args[0], args[1:], project); nil != err {
+			if err := environment.UnsetEnvironments(args[0], args[1:], false); nil != err {
 				echo.ErrorLN(err)
 
 				os.Exit(1)
 			}
 		},
 	}
-
-	command.Flags().BoolVarP(&project, "project", "p", false, "仅当前项目")
 
 	return command
 }

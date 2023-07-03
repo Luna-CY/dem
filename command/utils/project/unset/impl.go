@@ -6,28 +6,28 @@
 // THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
 // See the Mulan PSL v2 for more details.
 
-package utils
+package unset
 
 import (
-	"github.com/Luna-CY/dem/command/utils/editor"
-	"github.com/Luna-CY/dem/command/utils/env"
-	"github.com/Luna-CY/dem/command/utils/index"
-	"github.com/Luna-CY/dem/command/utils/install"
-	"github.com/Luna-CY/dem/command/utils/project"
-	"github.com/Luna-CY/dem/command/utils/remove"
-	"github.com/Luna-CY/dem/internal/core"
+	"github.com/Luna-CY/dem/internal/environment"
+	"github.com/Luna-CY/dem/internal/util/echo"
 	"github.com/spf13/cobra"
+	"os"
 )
 
-func NewUtilsCommand() *cobra.Command {
+func New() *cobra.Command {
 	var command = &cobra.Command{
-		Use:     "dem-utils",
-		Short:   "环境管理工具集",
-		Args:    cobra.NoArgs,
-		Version: core.Version,
-	}
+		Use:   "unset NAME KEY [KEY [...]]",
+		Short: "移除项目内环境变量",
+		Args:  cobra.MinimumNArgs(2),
+		Run: func(cmd *cobra.Command, args []string) {
+			if err := environment.UnsetEnvironments(args[0], args[1:], true); nil != err {
+				echo.ErrorLN(err)
 
-	command.AddCommand(index.New(), env.New(), install.New(), remove.New(), editor.New(), project.New())
+				os.Exit(1)
+			}
+		},
+	}
 
 	return command
 }

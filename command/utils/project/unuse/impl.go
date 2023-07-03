@@ -15,10 +15,10 @@ import (
 	"os"
 )
 
-func NewUnUseCommand() *cobra.Command {
+func New() *cobra.Command {
 	return &cobra.Command{
 		Use:   "unuse NAME",
-		Short: "移除工具的版本选择，使其为未设置状态，该命令仅对当前项目有效",
+		Short: "移除工具的版本选择，使其为未设置状态",
 		Args:  cobra.ExactArgs(1),
 		Run: func(_ *cobra.Command, args []string) {
 			if 2 == len(args) {

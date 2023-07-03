@@ -6,14 +6,16 @@
 // THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
 // See the Mulan PSL v2 for more details.
 
-package env
+package project
 
 import (
 	"fmt"
 	"github.com/Luna-CY/dem/command/utils/env/get"
-	"github.com/Luna-CY/dem/command/utils/env/set"
-	"github.com/Luna-CY/dem/command/utils/env/unset"
-	"github.com/Luna-CY/dem/command/utils/env/use"
+	"github.com/Luna-CY/dem/command/utils/project/initproject"
+	"github.com/Luna-CY/dem/command/utils/project/set"
+	"github.com/Luna-CY/dem/command/utils/project/unset"
+	"github.com/Luna-CY/dem/command/utils/project/unuse"
+	"github.com/Luna-CY/dem/command/utils/project/use"
 	"github.com/Luna-CY/dem/internal/environment"
 	"github.com/Luna-CY/dem/internal/index"
 	"github.com/Luna-CY/dem/internal/util/mapping"
@@ -23,8 +25,8 @@ import (
 
 func New() *cobra.Command {
 	var command = &cobra.Command{
-		Use:   "env",
-		Short: "运行环境管理器",
+		Use:   "project",
+		Short: "项目管理命令",
 		Args:  cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
 			fmt.Println("当前环境使用的工具及版本信息:")
@@ -42,7 +44,7 @@ func New() *cobra.Command {
 		},
 	}
 
-	command.AddCommand(get.New(), set.New(), use.New(), unset.New())
+	command.AddCommand(initproject.New(), get.New(), set.New(), unset.New(), unuse.New(), use.New())
 
 	return command
 }
