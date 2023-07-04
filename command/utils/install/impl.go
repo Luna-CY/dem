@@ -13,6 +13,7 @@ import (
 )
 
 var overwrite bool
+var source bool
 var switchTo bool
 var switchToProject bool
 
@@ -25,6 +26,7 @@ func New() *cobra.Command {
 	}
 
 	command.Flags().BoolVar(&overwrite, "overwrite", false, "覆盖安装，设置该参数时将完全移除已安装的内容并重新安装，请谨慎使用")
+	command.Flags().BoolVar(&source, "source", false, "从源码安装，这将跳过预构建的安装包，这仅对一些允许从源码编译的工具有效")
 	command.Flags().BoolVar(&switchTo, "switch-to", false, "安装完成后设置到运行时环境")
 	command.Flags().BoolVar(&switchToProject, "switch-to-project", false, "安装完成后设置到当前项目的运行时环境")
 

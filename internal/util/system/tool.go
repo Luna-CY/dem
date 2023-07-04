@@ -19,7 +19,7 @@ import (
 )
 
 // Install 安装工具
-func Install(ctx context.Context, name string, version index.Version) error {
+func Install(ctx context.Context, name string, version index.Version, source bool) error {
 	var target = filepath.Join(core.Software, name, version.Version)
 
 	var isFail bool
@@ -36,7 +36,7 @@ func Install(ctx context.Context, name string, version index.Version) error {
 	}
 
 	var installed = false
-	if version.Archive.Enable {
+	if version.Archive.Enable && !source {
 		installed = true
 		// 通过打包的方式安装
 		if err := installer2.Archive(ctx, target, version); nil != err {
@@ -47,6 +47,12 @@ func Install(ctx context.Context, name string, version index.Version) error {
 				return err
 			}
 		}
+	}
+
+	if !version.Source.Enable && source {
+		isFail = true
+
+		return fmt.Errorf("工具[%s]的[%s]版本不支持从源码安装，请更新本地索引或进行反馈", name, version.Version)
 	}
 
 	if version.Source.Enable && !installed {

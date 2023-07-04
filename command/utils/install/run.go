@@ -57,7 +57,7 @@ func run(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	if err := system.Install(cmd.Context(), args[0], version); nil != err {
+	if err := system.Install(cmd.Context(), args[0], version, source); nil != err {
 		if installer.RemotePackageNotExists != err {
 			echo.ErrorLN(err)
 		}
