@@ -91,7 +91,17 @@ var main = &cobra.Command{
 
 		var params []string
 		if 2 <= len(args) {
-			params = args[1:]
+			for _, arg := range args[1:] {
+				if strings.HasPrefix(arg, "demrs:") {
+					arg = strings.TrimPrefix(arg, "demrs:")
+					params = append(params, fmt.Sprintf("'%s'", arg))
+				} else if strings.HasPrefix(arg, "demqs:") {
+					arg = strings.TrimPrefix(arg, "demqs:")
+					params = append(params, fmt.Sprintf("\"%s\"", arg))
+				} else {
+					params = append(params, arg)
+				}
+			}
 		}
 
 		var environments = map[string]string{}
