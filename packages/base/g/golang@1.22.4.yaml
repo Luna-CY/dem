@@ -1,0 +1,15 @@
+home-page: ""
+description: ""
+version: "1.22.4"
+
+platforms:
+    darwin-arm64:
+        downloads:
+            - name: "Golang 1.22.4 Archive"
+              url: "https://go.dev/dl/go{VERSION}.darwin-arm64.tar.gz"
+              checksum: "242b78dc4c8f3d5435d28a0d2cec9b4c1aa999b601fb8aa59fb4e5a1364bf827"
+        install:
+            - "mkdir -p {ROOT}/data {ROOT}/cache"
+            - "tar -zxf {ROOT}/go{VERSION}.darwin-arm64.tar.gz -C {ROOT}/"
+        uninstall:
+            - "rm -rf {ROOT}/"

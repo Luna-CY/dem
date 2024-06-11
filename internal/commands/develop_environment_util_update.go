@@ -1,7 +1,6 @@
 package commands
 
 import (
-	"fmt"
 	"github.com/Luna-CY/dem/internal/echo"
 	"github.com/Luna-CY/dem/internal/system"
 	"github.com/Luna-CY/dem/internal/utils"
@@ -41,12 +40,13 @@ func NewDevelopEnvironmentUtilUpdateCommand() *cobra.Command {
 				var err error
 
 				if !local {
-					file, size, err = utils.DownloadRemoteWithProgress(cmd.Context(), fmt.Sprintf("下载[%s]索引库: %s", extension, url), extension+".tar.gz", url)
+					echo.Info("下载[%s]索引库: %s", extension, url)
+					file, size, err = utils.DownloadRemoteWithProgress(cmd.Context(), extension+".tar.gz", url)
 					if nil != err {
 						return echo.Error("下载[%s]索引库失败: %s", extension, err)
 					}
 				} else {
-					file, size, err = utils.DownloadLocalWithProgress(cmd.Context(), fmt.Sprintf("下载[%s]索引库: %s", extension, url), extension+".tar.gz", extension+".tar.gz")
+					file, size, err = utils.DownloadLocalWithProgress(cmd.Context(), url)
 					if nil != err {
 						return echo.Error("下载[%s]索引库失败: %s", extension, err)
 					}
