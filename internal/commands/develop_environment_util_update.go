@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/cobra"
 	"os"
 	"path"
+	"path/filepath"
 	"strings"
 )
 
@@ -33,7 +34,8 @@ func NewDevelopEnvironmentUtilUpdateCommand() *cobra.Command {
 			}
 
 			for _, extension := range exts {
-				var url = path.Join(repo, extension+".tar.gz")
+				var filename = extension + ".tar.gz"
+				var url = path.Join(repo, filename)
 
 				var file *os.File
 				var size int64
@@ -41,20 +43,29 @@ func NewDevelopEnvironmentUtilUpdateCommand() *cobra.Command {
 
 				if !local {
 					echo.Info("下载[%s]索引库: %s", extension, url)
-					file, size, err = utils.DownloadRemoteWithProgress(cmd.Context(), extension+".tar.gz", url)
+					file, size, err = utils.DownloadRemoteWithProgress(cmd.Context(), filename, url)
 					if nil != err {
 						return echo.Error("下载[%s]索引库失败: %s", extension, err)
 					}
 				} else {
-					file, size, err = utils.DownloadLocalWithProgress(cmd.Context(), url)
+					echo.Info("下载[%s]索引库: %s", extension, url)
+					file, size, err = utils.DownloadLocalWithProgress(cmd.Context(), filename, url)
 					if nil != err {
 						return echo.Error("下载[%s]索引库失败: %s", extension, err)
 					}
 				}
 
-				_ = size
+				if err := utils.GzipDecompressWithProgress(cmd.Context(), filepath.Join(system.GetRootPath(), "index"), filename, file, size); nil != err {
+					_ = file.Close()
+					_ = os.Remove(file.Name())
+
+					return echo.Error("解压[%s]索引库失败: %s", extension, err)
+				}
+
 				_ = file.Close()
 				_ = os.Remove(file.Name())
+
+				echo.Info("索引库[%s]更新完成", extension)
 			}
 
 			return nil
