@@ -5,7 +5,9 @@ type Index struct {
 	Description string `yaml:"description"` // 描述
 	Version     string `yaml:"version"`     // 版本号
 	Platforms   map[string]struct {
-		Downloads []struct {
+		Paths        []string          `yaml:"paths"`        // 查找路径
+		Environments map[string]string `yaml:"environments"` // 环境变量表
+		Downloads    []struct {
 			Name     string `yaml:"name"`     // 包名称
 			Url      string `yaml:"url"`      // 下载地址
 			Checksum string `yaml:"checksum"` // 校验和

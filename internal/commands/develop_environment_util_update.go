@@ -55,11 +55,11 @@ func NewDevelopEnvironmentUtilUpdateCommand() *cobra.Command {
 					}
 				}
 
-				if err := os.RemoveAll(filepath.Join(system.GetRootPath(), "index", extension)); nil != err {
+				if err := os.RemoveAll(filepath.Join(system.GetIndexPath(), extension)); nil != err {
 					return echo.Error("清理就的[%s]索引库失败: %s", extension, err)
 				}
 
-				if err := utils.GzipDecompressWithProgress(cmd.Context(), filepath.Join(system.GetRootPath(), "index"), filename, file, size); nil != err {
+				if err := utils.GzipDecompressWithProgress(cmd.Context(), system.GetIndexPath(), filename, file, size); nil != err {
 					_ = file.Close()
 					_ = os.Remove(file.Name())
 

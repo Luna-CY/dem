@@ -4,10 +4,18 @@ version: "1.22.4"
 
 platforms:
     darwin-arm64:
+        paths:
+            - "{ROOT}/go/bin"
+            - "{ROOT}/data/bin"
+        environments:
+            GOENV: "false"
+            GOPATH: "{ROOT}/data"
+            GOCACHE: "{ROOT}/cache"
+            GOMODCACHE: "{ROOT}/data/pkg/mod"
         downloads:
-            - name: "Golang 1.22.4 Archive"
-              url: "https://go.dev/dl/go{VERSION}.darwin-arm64.tar.gz"
-              checksum: "242b78dc4c8f3d5435d28a0d2cec9b4c1aa999b601fb8aa59fb4e5a1364bf827"
+            -   name: "Golang 1.22.4 Archive"
+                url: "https://go.dev/dl/go{VERSION}.darwin-arm64.tar.gz"
+                checksum: "242b78dc4c8f3d5435d28a0d2cec9b4c1aa999b601fb8aa59fb4e5a1364bf827"
         install:
             - "mkdir -p {ROOT}/data {ROOT}/cache"
             - "tar -zxf {ROOT}/go{VERSION}.darwin-arm64.tar.gz -C {ROOT}/"
