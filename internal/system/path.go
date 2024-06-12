@@ -3,6 +3,7 @@ package system
 import (
 	"github.com/Luna-CY/dem/internal/utils"
 	"path/filepath"
+	"strings"
 )
 
 const DemRootPath = "/opt/godem"
@@ -15,4 +16,14 @@ func GetRootPath() string {
 // GetIndexPath 获取DEM索引路径
 func GetIndexPath() string {
 	return filepath.Join(GetRootPath(), "index")
+}
+
+// GetPkgPath 获取包路径
+func GetPkgPath() string {
+	return filepath.Join(GetRootPath(), "packages")
+}
+
+// ReplaceVariables 替换变量
+func ReplaceVariables(s string, root string) string {
+	return strings.ReplaceAll(s, "{ROOT}", root)
 }

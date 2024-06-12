@@ -42,13 +42,13 @@ func NewDevelopEnvironmentUtilUpdateCommand() *cobra.Command {
 				var err error
 
 				if !local {
-					echo.Info("下载[%s]索引库: %s", extension, url)
-					file, size, err = utils.DownloadRemoteWithProgress(cmd.Context(), filename, url)
+					_ = echo.Info("下载[%s]索引库: %s", extension, url)
+					file, size, err = utils.DownloadRemoteWithTmpFileAndProgress(cmd.Context(), filename, url)
 					if nil != err {
 						return echo.Error("下载[%s]索引库失败: %s", extension, err)
 					}
 				} else {
-					echo.Info("下载[%s]索引库: %s", extension, url)
+					_ = echo.Info("下载[%s]索引库: %s", extension, url)
 					file, size, err = utils.DownloadLocalWithProgress(cmd.Context(), filename, url)
 					if nil != err {
 						return echo.Error("下载[%s]索引库失败: %s", extension, err)
@@ -69,7 +69,7 @@ func NewDevelopEnvironmentUtilUpdateCommand() *cobra.Command {
 				_ = file.Close()
 				_ = os.Remove(file.Name())
 
-				echo.Info("索引库[%s]更新完成", extension)
+				_ = echo.Info("索引库[%s]更新完成", extension)
 			}
 
 			return nil

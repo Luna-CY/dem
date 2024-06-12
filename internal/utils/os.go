@@ -1,6 +1,10 @@
 package utils
 
-import "os"
+import (
+	"io/fs"
+	"os"
+	"path/filepath"
+)
 
 // GetStringFromEnv 获取环境变量
 // 如果value不为空直接返回
@@ -17,4 +21,24 @@ func GetStringFromEnv(value string, key string, d string) string {
 	}
 
 	return d
+}
+
+// RemoveAll 删除路径
+func RemoveAll(path string) error {
+	// 提权
+	if err := filepath.Walk(path, func(path string, info fs.FileInfo, err error) error {
+		if nil != err {
+			return err
+		}
+
+		if err := os.Chmod(path, 0777); nil != err {
+			return err
+		}
+
+		return nil
+	}); nil != err && !os.IsNotExist(err) {
+		return err
+	}
+
+	return os.RemoveAll(path)
 }
