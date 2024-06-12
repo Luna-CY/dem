@@ -55,7 +55,7 @@ func install(ctx context.Context, name string, overwrite bool) error {
 	}
 
 	if nil != fi && !fi.IsDir() && !overwrite {
-		return echo.Info("工具包[%s]已安装，跳过")
+		return echo.Info("工具包[%s]已安装，跳过", name)
 	}
 
 	// 移除路径
@@ -76,6 +76,9 @@ func install(ctx context.Context, name string, overwrite bool) error {
 		}
 	}()
 
+	_ = echo.Info("安装工具包[%s]...", name)
+
+	_ = echo.Info("下载[%s]所需的资源...", name)
 	for _, download := range platform.Downloads {
 		f, _, err := utils.DownloadRemoteWithProgress(ctx, download.Name, system.ReplaceVariables(download.Target, path), download.Url)
 		if nil != err {
@@ -85,11 +88,21 @@ func install(ctx context.Context, name string, overwrite bool) error {
 		closer = append(closer, f)
 	}
 
+	_ = echo.Info("工具包[%s]安装中...", name)
 	for _, cmd := range platform.Install {
 		if err := utils.ExecuteShellCommand(ctx, system.ReplaceVariables(cmd, path)); nil != err {
 			return err
 		}
 	}
 
-	return echo.Info("安装工具包[%s]成功", name)
+	installedFile, err := os.Create(installed)
+	if nil != err {
+		return echo.Error("安装工具包[%s]失败: %s", name, err)
+	}
+
+	defer func() {
+		_ = installedFile.Close()
+	}()
+
+	return echo.Info("工具包[%s]安装成功", name)
 }
