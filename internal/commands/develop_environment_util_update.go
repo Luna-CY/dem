@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-const DemRepoPath = "https://github.com/Luna-CY/dem/raw/master/packages/"
+const DemRepoPath = "https://github.com/Luna-CY/dem/raw/main/packages/"
 
 func NewDevelopEnvironmentUtilUpdateCommand() *cobra.Command {
 	var repo = ""
