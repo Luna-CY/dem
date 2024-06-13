@@ -15,12 +15,14 @@ import (
 
 func NewDevelopEnvironmentManagementCommand() *cobra.Command {
 	return &cobra.Command{
-		Use:   "dem command [options] [args]",
-		Short: "通过DEM运行命令，[options]和[args]将被传递给command",
+		Use:                   "dem command [options] [args]",
+		Short:                 "通过DEM运行命令，[options]和[args]将被传递给command",
+		DisableFlagParsing:    true,
+		DisableAutoGenTag:     true,
+		DisableFlagsInUseLine: true,
+		DisableSuggestions:    true,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if 0 == len(args) {
-				fmt.Println("请指定要运行的命令")
-
 				return nil
 			}
 
