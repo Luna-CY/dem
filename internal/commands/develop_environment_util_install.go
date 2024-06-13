@@ -9,14 +9,13 @@ import (
 	"github.com/spf13/cobra"
 	"os"
 	"path/filepath"
-	"runtime"
 )
 
 func NewDevelopEnvironmentUtilInstallCommand() *cobra.Command {
 	var overwrite bool
 
 	var command = &cobra.Command{
-		Use:   "install [options] lib/name [lib/name [...]]",
+		Use:   "install [options] package [package [...]]",
 		Short: "安装工具包",
 		Args:  cobra.MinimumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -41,12 +40,12 @@ func install(ctx context.Context, name string, overwrite bool) error {
 		return echo.Error("查找工具包失败: %s", err)
 	}
 
-	platform, ok := ind.Platforms[runtime.GOOS+"-"+runtime.GOARCH]
+	platform, ok := ind.Platforms[system.GetSystemArch()]
 	if !ok {
-		return echo.Error("工具包[%s]不支持当前平台: %s %s", name, runtime.GOOS, runtime.GOARCH)
+		return echo.Error("工具包[%s]不支持当前平台: %s", name, system.GetSystemArch())
 	}
 
-	var path = filepath.Join(system.GetPkgPath(), ind.PackageName)
+	var path = system.GetPackageRootPath(ind.PackageName)
 	var installed = filepath.Join(path, ".installed")
 
 	fi, err := os.Stat(installed)

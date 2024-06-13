@@ -27,3 +27,13 @@ func GetPkgPath() string {
 func ReplaceVariables(s string, root string) string {
 	return strings.ReplaceAll(s, "{ROOT}", root)
 }
+
+// GetSystemEnvironmentPath 获取DEM系统环境文件路径
+func GetSystemEnvironmentPath() string {
+	return filepath.Join(GetRootPath(), "config", "environment.json")
+}
+
+// GetPackageRootPath 获取包的根目录
+func GetPackageRootPath(pkg string) string {
+	return filepath.Join(GetPkgPath(), pkg)
+}

@@ -9,6 +9,7 @@ platforms:
             - "{ROOT}/data/bin"
         environments:
             GOENV: "false"
+            GOROOT: "{ROOT}/go"
             GOPATH: "{ROOT}/data"
             GOCACHE: "{ROOT}/cache"
             GOMODCACHE: "{ROOT}/data/pkg/mod"

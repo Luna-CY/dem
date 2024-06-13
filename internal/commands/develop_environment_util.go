@@ -8,7 +8,7 @@ func NewDevelopEnvironmentUtilCommand() *cobra.Command {
 		Short: "DEM环境管理工具",
 	}
 
-	command.AddCommand(NewDevelopEnvironmentUtilUpdateCommand(), NewDevelopEnvironmentUtilSearchCommand(), NewDevelopEnvironmentUtilInstallCommand())
+	command.AddCommand(NewDevelopEnvironmentUtilUpdateCommand(), NewDevelopEnvironmentUtilSearchCommand(), NewDevelopEnvironmentUtilInstallCommand(), NewDevelopEnvironmentUtilEnvironmentCommand())
 
 	return command
 }

@@ -30,7 +30,7 @@ func NewDevelopEnvironmentUtilUpdateCommand() *cobra.Command {
 					continue
 				}
 
-				exts = append(exts, "e-"+extension)
+				exts = append(exts, extension)
 			}
 
 			for _, extension := range exts {
