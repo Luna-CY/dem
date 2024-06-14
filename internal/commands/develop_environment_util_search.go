@@ -18,8 +18,8 @@ func NewDevelopEnvironmentUtilSearchCommand() *cobra.Command {
 				return echo.Error("搜索索引库失败: %s", err)
 			}
 
-			for _, index := range indexes {
-				fmt.Printf("%s\t", index)
+			for _, ind := range indexes {
+				fmt.Printf("%s\t", ind)
 			}
 
 			fmt.Print("\n")

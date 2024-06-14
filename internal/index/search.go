@@ -21,7 +21,7 @@ func Search(keyword string) ([]string, error) {
 		}
 
 		if strings.Contains(info.Name(), keyword) {
-			indexes = append(indexes, filepath.Join(filepath.Base(filepath.Dir(filepath.Dir(path))), info.Name()))
+			indexes = append(indexes, strings.TrimSuffix(info.Name(), filepath.Ext(info.Name())))
 		}
 
 		return nil

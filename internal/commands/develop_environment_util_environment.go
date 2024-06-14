@@ -91,7 +91,7 @@ func NewDevelopEnvironmentUtilEnvironmentCommand() *cobra.Command {
 		},
 	}
 
-	command.AddCommand(NewDevelopEnvironmentUtilEnvironmentUseCommand(), NewDevelopEnvironmentUtilEnvironmentSetCommand(), NewDevelopEnvironmentUtilEnvironmentUnsetCommand())
+	command.AddCommand(NewDevelopEnvironmentUtilEnvironmentSetCommand(), NewDevelopEnvironmentUtilEnvironmentUnsetCommand())
 	command.Flags().BoolVar(&showIndexEnvironments, "show-index-envs", false, "显示索引中配置的环境变量")
 
 	return command

@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-func NewDevelopEnvironmentUtilEnvironmentUseCommand() *cobra.Command {
+func NewDevelopEnvironmentUtilUseCommand() *cobra.Command {
 	var system bool
 
 	var command = &cobra.Command{
