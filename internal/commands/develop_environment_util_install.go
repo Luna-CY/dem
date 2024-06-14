@@ -71,7 +71,12 @@ func NewDevelopEnvironmentUtilInstallCommand() *cobra.Command {
 					names = append(names, dep)
 				}
 
-				fmt.Printf("安装工具包[%s]及其依赖:[%s]\n", name, strings.Join(deps, ","))
+				if 0 == len(deps) {
+					fmt.Printf("安装工具包[%s]\n", name)
+				} else {
+					fmt.Printf("安装工具包[%s]及其依赖:[%s]\n", name, strings.Join(deps, ","))
+				}
+
 				names = append(names, name)
 
 				for _, name := range names {
