@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"path/filepath"
 )
 
 // DownloadRemoteWithProgress 下载远程文件
@@ -26,6 +27,10 @@ func DownloadRemoteWithProgress(ctx context.Context, filename string, target str
 
 	if 200 != response.StatusCode {
 		return fmt.Errorf("下载[%s]失败: %s", filename, response.Status)
+	}
+
+	if err := os.MkdirAll(filepath.Dir(target), 0755); nil != err {
+		return err
 	}
 
 	tf, err := os.OpenFile(target, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0644)

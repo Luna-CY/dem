@@ -35,7 +35,7 @@ func NewDevelopEnvironmentUtilUpdateCommand() *cobra.Command {
 			for _, extension := range exts {
 				var filename = extension + ".tar.gz"
 				var target = filepath.Join(system.GetIndexPath(), filename)
-				var url = strings.Trim(repo, "/") + "/" + filename
+				var url = strings.TrimSuffix(repo, "/") + "/" + filename
 
 				if !local {
 					_ = echo.Info("下载[%s]索引库: %s", extension, url)
