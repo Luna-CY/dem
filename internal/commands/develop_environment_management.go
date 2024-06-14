@@ -15,7 +15,7 @@ import (
 
 func NewDevelopEnvironmentManagementCommand() *cobra.Command {
 	return &cobra.Command{
-		Use:                   "dem command [options] [args]",
+		Use:                   "dem command [command options] [command args]",
 		Short:                 "通过DEM运行命令，[options]和[args]将被传递给command",
 		DisableFlagParsing:    true,
 		DisableAutoGenTag:     true,
@@ -23,6 +23,33 @@ func NewDevelopEnvironmentManagementCommand() *cobra.Command {
 		DisableSuggestions:    true,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if 0 == len(args) {
+				fmt.Printf("Develop Environment Management %s\n\n", system.Version)
+				fmt.Printf("Usage: dem command [command options] [command args]\n\n")
+				fmt.Printf("当前查找的路径及顺序\n")
+
+				me, err := environment.GetMixedEnvironment()
+				if nil != err {
+					return fmt.Errorf("查询环境配置失败: %s\n", err)
+				}
+
+				for pkg, version := range me.Packages {
+					ind, err := index.Lookup(pkg + "@" + version)
+					if nil != err {
+						return fmt.Errorf("查询工具包[%s@%s]索引失败: %s\n", pkg, version, err)
+					}
+
+					for _, fp := range ind.Platforms[system.GetSystemArch()].Paths {
+						fmt.Println(system.ReplaceVariables(fp, "{ROOT}", system.GetPackageRootPath(ind.PackageName)))
+					}
+				}
+
+				var paths = strings.Split(os.Getenv("PATH"), string(os.PathListSeparator))
+				for _, fp := range paths {
+					fmt.Println(fp)
+				}
+
+				fmt.Println("SHELL内置命令、别名等")
+
 				return nil
 			}
 
