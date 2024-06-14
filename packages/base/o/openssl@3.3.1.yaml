@@ -1,0 +1,31 @@
+home-page: ""
+description: ""
+package-name: "openssl@3.3.1"
+
+platforms:
+    darwin-arm64:
+        paths:
+            - "{ROOT}/bin"
+        downloads:
+            -   name: "OpenSSL 3.3.1 Source"
+                url: "https://github.com/openssl/openssl/archive/refs/tags/openssl-3.3.1.tar.gz"
+                target: "{ROOT}/source/openssl-3.3.1.tar.gz"
+        install:
+            - "tar -zxf {ROOT}/source/openssl-3.3.1.tar.gz -C {ROOT}/source/"
+            - "cd {ROOT}/source/openssl-openssl-3.3.1/ && ./Configure --prefix={ROOT} --openssldir={ROOT} --libdir=lib no-ssl3 no-ssl3-method no-zlib"
+            - "cd {ROOT}/source/openssl-openssl-3.3.1/ && make && make install"
+        uninstall:
+            - "rm -rf {ROOT}/"
+    darwin-amd64:
+        paths:
+            - "{ROOT}/bin"
+        downloads:
+            -   name: "OpenSSL 3.3.1 Source"
+                url: "https://github.com/openssl/openssl/archive/refs/tags/openssl-3.3.1.tar.gz"
+                target: "{ROOT}/source/openssl-3.3.1.tar.gz"
+        install:
+            - "tar -zxf {ROOT}/source/openssl-3.3.1.tar.gz -C {ROOT}/source/"
+            - "cd {ROOT}/source/openssl-openssl-3.3.1/ && ./Configure --prefix={ROOT} --openssldir={ROOT} --libdir=lib no-ssl3 no-ssl3-method no-zlib"
+            - "cd {ROOT}/source/openssl-openssl-3.3.1/ && make && make install"
+        uninstall:
+            - "rm -rf {ROOT}/"

@@ -1,0 +1,31 @@
+home-page: ""
+description: ""
+package-name: "readline@8.2"
+
+platforms:
+    darwin-arm64:
+        paths:
+            - "{ROOT}/bin"
+        downloads:
+            -   name: "ReadLine 8.2 Source"
+                url: "https://ftp.gnu.org/gnu/readline/readline-8.2.tar.gz"
+                target: "{ROOT}/source/readline-8.2.tar.gz"
+        install:
+            - "tar -zxf {ROOT}/source/readline-8.2.tar.gz -C {ROOT}/source/"
+            - "cd {ROOT}/source/readline-8.2/ && ./configure --prefix={ROOT}"
+            - "cd {ROOT}/source/readline-8.2/ && make && make install"
+        uninstall:
+            - "rm -rf {ROOT}/"
+    darwin-amd64:
+        paths:
+            - "{ROOT}/bin"
+        downloads:
+            -   name: "ReadLine 8.2 Source"
+                url: "https://ftp.gnu.org/gnu/readline/readline-8.2.tar.gz"
+                target: "{ROOT}/source/readline-8.2.tar.gz"
+        install:
+            - "tar -zxf {ROOT}/source/readline-8.2.tar.gz -C {ROOT}/source/"
+            - "cd {ROOT}/source/readline-8.2/ && ./configure --prefix={ROOT}"
+            - "cd {ROOT}/source/readline-8.2/ && make && make install"
+        uninstall:
+            - "rm -rf {ROOT}/"

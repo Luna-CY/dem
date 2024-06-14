@@ -7,6 +7,7 @@ type Index struct {
 	Platforms   map[string]struct {
 		Paths        []string          `yaml:"paths"`        // 查找路径
 		Environments map[string]string `yaml:"environments"` // 环境变量表
+		Depends      []string          `yaml:"depends"`      // 依赖包列表
 		Downloads    []struct {
 			Name     string `yaml:"name"`     // 包名称
 			Url      string `yaml:"url"`      // 下载地址

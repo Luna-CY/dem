@@ -88,7 +88,7 @@ func findCommand(name string) (string, error) {
 		}
 
 		for _, fp := range ind.Platforms[system.GetSystemArch()].Paths {
-			var file = filepath.Join(system.ReplaceVariables(fp, system.GetPackageRootPath(ind.PackageName)), name)
+			var file = filepath.Join(system.ReplaceVariables(fp, "{ROOT}", system.GetPackageRootPath(ind.PackageName)), name)
 			if system.Executable(file) {
 				command = file
 
@@ -128,11 +128,11 @@ func getEnvironments() (map[string]string, error) {
 
 		// 索引中的环境变量
 		for k, v := range ind.Platforms[system.GetSystemArch()].Environments {
-			environments[k] = system.ReplaceVariables(v, system.GetPackageRootPath(ind.PackageName))
+			environments[k] = system.ReplaceVariables(v, "{ROOT}", system.GetPackageRootPath(ind.PackageName))
 		}
 
 		for _, path := range ind.Platforms[system.GetSystemArch()].Paths {
-			paths = append(paths, system.ReplaceVariables(path, system.GetPackageRootPath(ind.PackageName)))
+			paths = append(paths, system.ReplaceVariables(path, "{ROOT}", system.GetPackageRootPath(ind.PackageName)))
 		}
 	}
 

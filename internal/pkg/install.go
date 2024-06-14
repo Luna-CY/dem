@@ -2,6 +2,7 @@ package pkg
 
 import (
 	"context"
+	"fmt"
 	"github.com/Luna-CY/dem/internal/echo"
 	"github.com/Luna-CY/dem/internal/index"
 	"github.com/Luna-CY/dem/internal/system"
@@ -55,15 +56,34 @@ func Install(ctx context.Context, name string) error {
 
 	_ = echo.Info("下载[%s]所需的资源...", name)
 	for _, download := range platform.Downloads {
-		if err := utils.DownloadRemoteWithProgress(ctx, download.Name, system.ReplaceVariables(download.Target, path), download.Url); nil != err {
+		if err := utils.DownloadRemoteWithProgress(ctx, download.Name, system.ReplaceVariables(download.Target, "{ROOT}", path), download.Url); nil != err {
 			return err
 		}
 	}
 
 	_ = echo.Info("工具包[%s]安装中...", name)
+	lf, err := os.OpenFile(filepath.Join(path, "install.log"), os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0644)
+	if nil != err {
+		return echo.Error("安装工具包[%s]失败: %s", name, err)
+	}
+
+	defer func() {
+		_ = lf.Close()
+	}()
+
 	for _, cmd := range platform.Install {
-		if err := utils.ExecuteShellCommand(ctx, system.ReplaceVariables(cmd, path)); nil != err {
-			return err
+		cmd = system.ReplaceVariables(cmd, "{ROOT}", path)
+
+		for _, dep := range platform.Depends {
+			cmd = system.ReplaceVariables(cmd, fmt.Sprintf("{PKG:%s}", dep), system.GetPackageRootPath(dep))
+		}
+
+		if _, err := lf.WriteString(cmd + "\n"); nil != err {
+			return echo.Error("安装工具包[%s]失败: %s", name, err)
+		}
+
+		if err := utils.ExecuteShellCommand(ctx, cmd, lf); nil != err {
+			return echo.Error("安装工具包[%s]失败: %s", name, err)
 		}
 	}
 
@@ -76,5 +96,5 @@ func Install(ctx context.Context, name string) error {
 		_ = installedFile.Close()
 	}()
 
-	return echo.Info("工具包[%s]安装成功", name)
+	return nil
 }

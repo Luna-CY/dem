@@ -24,8 +24,8 @@ func GetPkgPath() string {
 }
 
 // ReplaceVariables 替换变量
-func ReplaceVariables(s string, root string) string {
-	return strings.ReplaceAll(s, "{ROOT}", root)
+func ReplaceVariables(s string, name string, value string) string {
+	return strings.ReplaceAll(s, name, value)
 }
 
 // GetSystemEnvironmentPath 获取DEM系统环境文件路径

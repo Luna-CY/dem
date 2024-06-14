@@ -36,7 +36,7 @@ func NewDevelopEnvironmentUtilEnvironmentCommand() *cobra.Command {
 					}
 
 					for k, v := range ind.Platforms[system.GetSystemArch()].Environments {
-						environments[k] = system.ReplaceVariables(v, system.GetPackageRootPath(ind.PackageName))
+						environments[k] = system.ReplaceVariables(v, "{ROOT}", system.GetPackageRootPath(ind.PackageName))
 					}
 				}
 			}
