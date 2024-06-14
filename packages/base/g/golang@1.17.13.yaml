@@ -1,6 +1,6 @@
 home-page: ""
 description: ""
-package-name: "golang@1.22.4"
+package-name: "golang@1.17.13"
 
 platforms:
     darwin-arm64:
@@ -14,13 +14,13 @@ platforms:
             GOCACHE: "{ROOT}/cache"
             GOMODCACHE: "{ROOT}/data/pkg/mod"
         downloads:
-            -   name: "Golang 1.22.4 Archive"
-                url: "https://go.dev/dl/go1.22.4.darwin-arm64.tar.gz"
-                target: "{ROOT}/go1.22.4.darwin-arm64.tar.gz"
-                checksum: "242b78dc4c8f3d5435d28a0d2cec9b4c1aa999b601fb8aa59fb4e5a1364bf827"
+            -   name: "Golang 1.17.13 Archive"
+                url: "https://go.dev/dl/go1.17.13.darwin-arm64.tar.gz"
+                target: "{ROOT}/go1.17.13.darwin-arm64.tar.gz"
+                checksum: "e4ccc9c082d91eaa0b866078b591fc97d24b91495f12deb3dd2d8eda4e55a6ea"
         install:
             - "mkdir -p {ROOT}/data {ROOT}/cache"
-            - "tar -zxf {ROOT}/go1.22.4.darwin-arm64.tar.gz -C {ROOT}/"
+            - "tar -zxf {ROOT}/go1.17.13.darwin-arm64.tar.gz -C {ROOT}/"
         uninstall:
             - "rm -rf {ROOT}/"
     darwin-amd64:
@@ -34,12 +34,12 @@ platforms:
             GOCACHE: "{ROOT}/cache"
             GOMODCACHE: "{ROOT}/data/pkg/mod"
         downloads:
-            -   name: "Golang 1.22.4 Archive"
-                url: "https://go.dev/dl/go1.22.4.darwin-amd64.tar.gz"
-                target: "{ROOT}/go1.22.4.darwin-amd64.tar.gz"
-                checksum: "c95967f50aa4ace34af0c236cbdb49a9a3e80ee2ad09d85775cb4462a5c19ed3"
+            -   name: "Golang 1.17.13 Archive"
+                url: "https://go.dev/dl/go1.17.13.darwin-amd64.tar.gz"
+                target: "{ROOT}/go1.17.13.darwin-amd64.tar.gz"
+                checksum: "c101beaa232e0f448fab692dc036cd6b4677091ff89c4889cc8754b1b29c6608"
         install:
             - "mkdir -p {ROOT}/data {ROOT}/cache"
-            - "tar -zxf {ROOT}/go1.22.4.darwin-amd64.tar.gz -C {ROOT}/"
+            - "tar -zxf {ROOT}/go1.17.13.darwin-amd64.tar.gz -C {ROOT}/"
         uninstall:
             - "rm -rf {ROOT}/"
