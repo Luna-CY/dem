@@ -59,7 +59,9 @@ func NewDevelopEnvironmentManagementCommand() *cobra.Command {
 				systemCommand.Env = append(systemCommand.Env, fmt.Sprintf("%s=%s", k, v))
 			}
 
-			_ = systemCommand.Run()
+			if err := systemCommand.Run(); nil != err {
+				cmd.PrintErrln(err)
+			}
 
 			return nil
 		},
@@ -80,9 +82,9 @@ func findCommand(name string) (string, error) {
 		}
 
 		for _, fp := range ind.Platforms[system.GetSystemArch()].Paths {
-			var file = filepath.Join(fp, name)
+			var file = filepath.Join(system.ReplaceVariables(fp, system.GetPackageRootPath(ind.PackageName)), name)
 			if system.Executable(file) {
-				command = filepath.Join(file)
+				command = file
 
 				break
 			}
@@ -100,7 +102,7 @@ func findCommand(name string) (string, error) {
 		command = name
 	}
 
-	return name, nil
+	return command, nil
 }
 
 func getEnvironments() (map[string]string, error) {

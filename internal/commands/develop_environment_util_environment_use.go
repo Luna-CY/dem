@@ -3,7 +3,10 @@ package commands
 import (
 	"fmt"
 	"github.com/Luna-CY/dem/internal/environment"
+	system2 "github.com/Luna-CY/dem/internal/system"
 	"github.com/spf13/cobra"
+	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -17,6 +20,25 @@ func NewDevelopEnvironmentUtilEnvironmentUseCommand() *cobra.Command {
 			var tokens = strings.Split(args[0], "@")
 			if 2 != len(tokens) {
 				fmt.Println("工具包名称无效")
+
+				return nil
+			}
+
+			fi, err := os.Stat(filepath.Join(system2.GetPackageRootPath(args[0]), ".installed"))
+			if nil != err {
+				if os.IsNotExist(err) {
+					fmt.Printf("工具包[%s]未安装\n", args[0])
+
+					return nil
+				}
+
+				fmt.Printf("检查工具包[%s]安装状态失败: %s\n", args[0], err)
+
+				return nil
+			}
+
+			if fi.IsDir() {
+				fmt.Printf("检查工具包[%s]状态无效，请重新安装\n", args[0])
 
 				return nil
 			}

@@ -67,24 +67,13 @@ func install(ctx context.Context, name string, overwrite bool) error {
 		return echo.Error("安装工具包[%s]失败: %s", name, err)
 	}
 
-	var closer []*os.File
-	defer func() {
-		for _, c := range closer {
-			_ = c.Close()
-			_ = os.RemoveAll(c.Name())
-		}
-	}()
-
 	_ = echo.Info("安装工具包[%s]...", name)
 
 	_ = echo.Info("下载[%s]所需的资源...", name)
 	for _, download := range platform.Downloads {
-		f, _, err := utils.DownloadRemoteWithProgress(ctx, download.Name, system.ReplaceVariables(download.Target, path), download.Url)
-		if nil != err {
+		if err := utils.DownloadRemoteWithProgress(ctx, download.Name, system.ReplaceVariables(download.Target, path), download.Url); nil != err {
 			return err
 		}
-
-		closer = append(closer, f)
 	}
 
 	_ = echo.Info("工具包[%s]安装中...", name)

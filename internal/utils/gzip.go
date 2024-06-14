@@ -12,8 +12,22 @@ import (
 )
 
 // GzipDecompressWithProgress 解压文件
-func GzipDecompressWithProgress(_ context.Context, target string, filename string, file *os.File, size int64) error {
-	var bar = NewProgressWithBytes(size, fmt.Sprintf("%-50s", "Decompressing "+filename))
+func GzipDecompressWithProgress(_ context.Context, target string, filename string, path string) error {
+	file, err := os.Open(path)
+	if nil != err {
+		return err
+	}
+
+	defer func() {
+		_ = file.Close()
+	}()
+
+	fi, err := file.Stat()
+	if nil != err {
+		return err
+	}
+
+	var bar = NewProgressWithBytes(fi.Size(), fmt.Sprintf("%-50s", "Decompressing "+filename))
 	defer func() {
 		_ = bar.Finish()
 	}()

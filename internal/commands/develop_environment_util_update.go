@@ -6,12 +6,11 @@ import (
 	"github.com/Luna-CY/dem/internal/utils"
 	"github.com/spf13/cobra"
 	"os"
-	"path"
 	"path/filepath"
 	"strings"
 )
 
-const DemRepoPath = "https://github.com/Luna-CY/dem/raw/main/packages/"
+const DemRepoPath = "https://github.com/Luna-CY/dem/raw/main/packages"
 
 func NewDevelopEnvironmentUtilUpdateCommand() *cobra.Command {
 	var repo = ""
@@ -35,22 +34,19 @@ func NewDevelopEnvironmentUtilUpdateCommand() *cobra.Command {
 
 			for _, extension := range exts {
 				var filename = extension + ".tar.gz"
-				var url = path.Join(repo, filename)
-
-				var file *os.File
-				var size int64
-				var err error
+				var target = filepath.Join(system.GetIndexPath(), filename)
+				var url = strings.Trim(repo, "/") + "/" + filename
 
 				if !local {
 					_ = echo.Info("下载[%s]索引库: %s", extension, url)
-					file, size, err = utils.DownloadRemoteWithTmpFileAndProgress(cmd.Context(), filename, url)
-					if nil != err {
+
+					if err := utils.DownloadRemoteWithProgress(cmd.Context(), filename, target, url); nil != err {
 						return echo.Error("下载[%s]索引库失败: %s", extension, err)
 					}
 				} else {
 					_ = echo.Info("下载[%s]索引库: %s", extension, url)
-					file, size, err = utils.DownloadLocalWithProgress(cmd.Context(), filename, url)
-					if nil != err {
+
+					if err := utils.DownloadLocalWithProgress(cmd.Context(), filename, target, url); nil != err {
 						return echo.Error("下载[%s]索引库失败: %s", extension, err)
 					}
 				}
@@ -59,15 +55,9 @@ func NewDevelopEnvironmentUtilUpdateCommand() *cobra.Command {
 					return echo.Error("清理就的[%s]索引库失败: %s", extension, err)
 				}
 
-				if err := utils.GzipDecompressWithProgress(cmd.Context(), system.GetIndexPath(), filename, file, size); nil != err {
-					_ = file.Close()
-					_ = os.Remove(file.Name())
-
+				if err := utils.GzipDecompressWithProgress(cmd.Context(), system.GetIndexPath(), filename, target); nil != err {
 					return echo.Error("解压[%s]索引库失败: %s", extension, err)
 				}
-
-				_ = file.Close()
-				_ = os.Remove(file.Name())
 
 				_ = echo.Info("索引库[%s]更新完成", extension)
 			}
