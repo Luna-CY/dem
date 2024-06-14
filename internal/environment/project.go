@@ -2,7 +2,6 @@ package environment
 
 import (
 	"encoding/json"
-	"github.com/Luna-CY/dem/internal/system"
 	"os"
 )
 
@@ -20,7 +19,7 @@ func GetProjectEnvironment() (*Environment, error) {
 		_ = f.Close()
 	}()
 
-	var environment = NewEnvironment(system.GetSystemEnvironmentPath())
+	var environment = NewEnvironment(".dem.json")
 	if err := json.NewDecoder(f).Decode(&environment); nil != err {
 		return nil, err
 	}

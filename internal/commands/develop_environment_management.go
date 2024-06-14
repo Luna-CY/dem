@@ -113,6 +113,7 @@ func getEnvironments() (map[string]string, error) {
 		return nil, fmt.Errorf("查询环境配置失败: %s\n", err)
 	}
 
+	var paths []string
 	for pkg, version := range me.Packages {
 		ind, err := index.Lookup(pkg + "@" + version)
 		if nil != err {
@@ -122,6 +123,10 @@ func getEnvironments() (map[string]string, error) {
 		// 索引中的环境变量
 		for k, v := range ind.Platforms[system.GetSystemArch()].Environments {
 			environments[k] = system.ReplaceVariables(v, system.GetPackageRootPath(ind.PackageName))
+		}
+
+		for _, path := range ind.Platforms[system.GetSystemArch()].Paths {
+			paths = append(paths, system.ReplaceVariables(path, system.GetPackageRootPath(ind.PackageName)))
 		}
 	}
 
@@ -133,6 +138,8 @@ func getEnvironments() (map[string]string, error) {
 		var kv = strings.SplitN(env, "=", 2)
 		environments[kv[0]] = kv[1]
 	}
+
+	environments["PATH"] = strings.Join(paths, string(os.PathListSeparator)) + string(os.PathListSeparator) + environments["PATH"]
 
 	return environments, nil
 }

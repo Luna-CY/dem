@@ -6,6 +6,8 @@ import (
 	"github.com/Luna-CY/dem/internal/index"
 	"github.com/Luna-CY/dem/internal/system"
 	"github.com/spf13/cobra"
+	"os"
+	"path/filepath"
 )
 
 func NewDevelopEnvironmentUtilEnvironmentCommand() *cobra.Command {
@@ -43,14 +45,38 @@ func NewDevelopEnvironmentUtilEnvironmentCommand() *cobra.Command {
 				environments[k] = v
 			}
 
-			fmt.Printf("启用的工具包\n")
+			pkgs, err := os.ReadDir(system.GetPkgPath())
+			if nil != err {
+				fmt.Printf("查询系统工具包信息失败: %s\n", err)
+
+				return nil
+			}
+
+			fmt.Println("已安装的工具包")
+
+			for _, pkg := range pkgs {
+				fi, err := os.Stat(filepath.Join(system.GetPkgPath(), pkg.Name(), ".installed"))
+				if nil != err {
+					continue
+				}
+
+				if fi.IsDir() {
+					continue
+				}
+
+				fmt.Printf("%s\t", pkg.Name())
+			}
+
+			fmt.Print("\n\n")
+
+			fmt.Println("当前启用的工具包")
 			for pkg, version := range me.Packages {
 				fmt.Printf("%s@%s\t", pkg, version)
 			}
 
 			fmt.Print("\n\n")
 
-			fmt.Printf("设置的环境变量表\n")
+			fmt.Println("当前设置的环境变量表")
 			for k, v := range environments {
 				if environment.ValueNotSet == v {
 					continue
