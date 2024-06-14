@@ -60,6 +60,12 @@ func NewDevelopEnvironmentManagementCommand() *cobra.Command {
 			}
 
 			if err := systemCommand.Run(); nil != err {
+				if errors.Is(err, exec.ErrNotFound) {
+					cmd.PrintErrf("全部路径中未找到命令[%s]\n", command)
+
+					return nil
+				}
+
 				cmd.PrintErrln(err)
 			}
 
