@@ -67,10 +67,10 @@ func NewDevelopEnvironmentUtilInstallCommand() *cobra.Command {
 					names = append(names, dep)
 				}
 
-				if 0 == len(deps) {
+				if 0 == len(names) {
 					_ = echo.Info("安装工具包[%s]", name)
 				} else {
-					_ = echo.Info("安装工具包[%s]及其依赖:[%s]", name, strings.Join(deps, ","))
+					_ = echo.Info("安装工具包[%s]及其依赖:[%s]", name, strings.Join(names, ","))
 				}
 
 				names = append(names, name)
