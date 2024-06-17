@@ -1,7 +1,7 @@
 package commands
 
 import (
-	"fmt"
+	"github.com/Luna-CY/dem/internal/echo"
 	"github.com/Luna-CY/dem/internal/environment"
 	system2 "github.com/Luna-CY/dem/internal/system"
 	"github.com/spf13/cobra"
@@ -19,28 +19,20 @@ func NewDevelopEnvironmentUtilUseCommand() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			var tokens = strings.Split(args[0], "@")
 			if 2 != len(tokens) {
-				fmt.Println("工具包名称无效")
-
-				return nil
+				return echo.Error("工具包名称无效")
 			}
 
 			fi, err := os.Stat(filepath.Join(system2.GetPackageRootPath(args[0]), ".installed"))
 			if nil != err {
 				if os.IsNotExist(err) {
-					fmt.Printf("工具包[%s]未安装\n", args[0])
-
-					return nil
+					return echo.Error("工具包[%s]未安装", args[0])
 				}
 
-				fmt.Printf("检查工具包[%s]安装状态失败: %s\n", args[0], err)
-
-				return nil
+				return echo.Error("检查工具包[%s]安装状态失败: %s", args[0], err)
 			}
 
 			if fi.IsDir() {
-				fmt.Printf("检查工具包[%s]状态无效，请重新安装\n", args[0])
-
-				return nil
+				return echo.Error("检查工具包[%s]状态无效，请重新安装", args[0])
 			}
 
 			var env *environment.Environment
@@ -48,27 +40,21 @@ func NewDevelopEnvironmentUtilUseCommand() *cobra.Command {
 			if system {
 				se, err := environment.GetSystemEnvironment()
 				if nil != err {
-					fmt.Printf("查询全局环境配置失败: %s\n", err)
-
-					return nil
+					return echo.Error("查询全局环境配置失败: %s", err)
 				}
 
 				env = se
 			} else {
 				pe, err := environment.GetProjectEnvironment()
 				if nil != err {
-					fmt.Printf("查询项目环境配置失败: %s\n", err)
-
-					return nil
+					return echo.Error("查询项目环境配置失败: %s", err)
 				}
 
 				env = pe
 			}
 
 			if err := env.UsePackage(tokens[0], tokens[1]); nil != err {
-				fmt.Printf("设定环境工具包失败: %s\n", err)
-
-				return nil
+				return echo.Error("设定环境工具包失败: %s", err)
 			}
 
 			return nil

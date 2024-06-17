@@ -2,6 +2,7 @@ package commands
 
 import (
 	"fmt"
+	"github.com/Luna-CY/dem/internal/echo"
 	"github.com/Luna-CY/dem/internal/environment"
 	"github.com/Luna-CY/dem/internal/index"
 	"github.com/Luna-CY/dem/internal/system"
@@ -19,9 +20,7 @@ func NewDevelopEnvironmentUtilEnvironmentCommand() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			me, err := environment.GetMixedEnvironment()
 			if nil != err {
-				fmt.Printf("查询环境配置失败: %s\n", err)
-
-				return nil
+				return echo.Error("查询环境配置失败: %s", err)
 			}
 
 			// 覆盖变量: 项目、全局、索引
@@ -30,9 +29,7 @@ func NewDevelopEnvironmentUtilEnvironmentCommand() *cobra.Command {
 				for pkg, version := range me.Packages {
 					ind, err := index.Lookup(pkg + "@" + version)
 					if nil != err {
-						fmt.Printf("查询工具包[%s@%s]索引失败: %s\n", pkg, version, err)
-
-						return nil
+						return echo.Error("查询工具包[%s@%s]索引失败: %s", pkg, version, err)
 					}
 
 					for k, v := range ind.Platforms[system.GetSystemArch()].Environments {
@@ -47,12 +44,10 @@ func NewDevelopEnvironmentUtilEnvironmentCommand() *cobra.Command {
 
 			pkgs, err := os.ReadDir(system.GetPkgPath())
 			if nil != err {
-				fmt.Printf("查询系统工具包信息失败: %s\n", err)
-
-				return nil
+				return echo.Error("查询系统工具包信息失败: %s", err)
 			}
 
-			fmt.Println("已安装的工具包")
+			_ = echo.Info("已安装的工具包")
 
 			for _, pkg := range pkgs {
 				fi, err := os.Stat(filepath.Join(system.GetPkgPath(), pkg.Name(), ".installed"))
@@ -69,14 +64,14 @@ func NewDevelopEnvironmentUtilEnvironmentCommand() *cobra.Command {
 
 			fmt.Print("\n\n")
 
-			fmt.Println("当前项目或全局启用的工具包")
+			_ = echo.Info("当前项目或全局启用的工具包")
 			for pkg, version := range me.Packages {
 				fmt.Printf("%s@%s\t", pkg, version)
 			}
 
 			fmt.Print("\n\n")
 
-			fmt.Println("当前项目或全局设置的环境变量表")
+			_ = echo.Info("当前项目或全局设置的环境变量表")
 			for k, v := range environments {
 				if environment.ValueNotSet == v {
 					continue

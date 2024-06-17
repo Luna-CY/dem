@@ -1,7 +1,7 @@
 package commands
 
 import (
-	"fmt"
+	"github.com/Luna-CY/dem/internal/echo"
 	"github.com/Luna-CY/dem/internal/environment"
 	"github.com/spf13/cobra"
 	"strings"
@@ -20,18 +20,14 @@ func NewDevelopEnvironmentUtilEnvironmentSetCommand() *cobra.Command {
 			if system {
 				se, err := environment.GetSystemEnvironment()
 				if nil != err {
-					fmt.Printf("查询全局环境配置失败: %s\n", err)
-
-					return nil
+					return echo.Error("查询全局环境配置失败: %s", err)
 				}
 
 				env = se
 			} else {
 				pe, err := environment.GetProjectEnvironment()
 				if nil != err {
-					fmt.Printf("查询项目环境配置失败: %s\n", err)
-
-					return nil
+					return echo.Error("查询项目环境配置失败: %s", err)
 				}
 
 				env = pe
@@ -40,18 +36,14 @@ func NewDevelopEnvironmentUtilEnvironmentSetCommand() *cobra.Command {
 			for _, variable := range args {
 				var tokens = strings.Split(variable, "=")
 				if 2 != len(tokens) {
-					fmt.Printf("环境变量[%s]无效\n", variable)
-
-					return nil
+					return echo.Error("环境变量[%s]无效", variable)
 				}
 
 				env.Environments[tokens[0]] = tokens[1]
 			}
 
 			if err := env.Save(); nil != err {
-				fmt.Printf("设定环境变量失败: %s\n", err)
-
-				return nil
+				return echo.Error("设定环境变量失败: %s", err)
 			}
 
 			return nil
