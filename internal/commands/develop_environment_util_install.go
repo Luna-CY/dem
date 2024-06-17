@@ -22,9 +22,7 @@ func NewDevelopEnvironmentUtilInstallCommand() *cobra.Command {
 			for _, name := range args {
 				installed, err := pkg.Installed(name)
 				if nil != err {
-					cmd.PrintErrf("查询工具包[%s]索引失败: %s\n", name, err)
-
-					return nil
+					return echo.Error("检查工具包[%s]安装状态失败: %s", name, err)
 				}
 
 				if installed && !overwrite {
@@ -35,17 +33,15 @@ func NewDevelopEnvironmentUtilInstallCommand() *cobra.Command {
 
 				ind, err := index.Lookup(name)
 				if nil != err {
-					cmd.PrintErrf("查询工具包[%s]索引失败: %s\n", name, err)
-
-					return nil
+					return echo.Error("查询工具包[%s]索引失败: %s", name, err)
 				}
 
 				deps, err := DiscoverDepends(ind)
 				if nil != err {
-					cmd.PrintErrln(err)
-
-					return nil
+					return echo.Error(err.Error())
 				}
+
+				slices.Reverse(deps)
 
 				// 去重
 				var mapping = make(map[string]struct{})
@@ -71,14 +67,12 @@ func NewDevelopEnvironmentUtilInstallCommand() *cobra.Command {
 					names = append(names, dep)
 				}
 
-				fmt.Printf("安装工具包[%s]及其依赖:[%s]\n", name, strings.Join(deps, ","))
+				_ = echo.Info("安装工具包[%s]及其依赖:[%s]", name, strings.Join(deps, ","))
 				names = append(names, name)
 
 				for _, name := range names {
 					if err := pkg.Install(cmd.Context(), name); nil != err {
-						cmd.PrintErrln(err)
-
-						return nil
+						return echo.Error(err.Error())
 					}
 
 					_ = echo.Info("工具包[%s]安装成功", name)
@@ -118,8 +112,6 @@ func DiscoverDepends(ind *index.Index) ([]string, error) {
 
 		depends = append(depends, subs...)
 	}
-
-	slices.Reverse(depends)
 
 	return depends, nil
 }

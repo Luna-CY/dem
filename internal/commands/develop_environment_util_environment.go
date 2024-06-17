@@ -69,14 +69,14 @@ func NewDevelopEnvironmentUtilEnvironmentCommand() *cobra.Command {
 
 			fmt.Print("\n\n")
 
-			fmt.Println("当前启用的工具包")
+			fmt.Println("当前项目或全局启用的工具包")
 			for pkg, version := range me.Packages {
 				fmt.Printf("%s@%s\t", pkg, version)
 			}
 
 			fmt.Print("\n\n")
 
-			fmt.Println("当前设置的环境变量表")
+			fmt.Println("当前项目或全局设置的环境变量表")
 			for k, v := range environments {
 				if environment.ValueNotSet == v {
 					continue
