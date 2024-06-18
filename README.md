@@ -19,6 +19,7 @@
 
 ## 环境配置
 
+- 更新本地索引信息 `deu update`
 - 查找工具包 `deu search 工具包名称` ，示例 `deu search golang`
 - 安装工具包 `deu install 工具包名称` ，示例 `deu install golang@1.22.4`
 - 设置全局工具包版本 `deu use -s 工具包名称` ，示例 `deu use -s golang@1.22.4`
