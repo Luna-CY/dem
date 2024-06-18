@@ -60,7 +60,7 @@ func NewDevelopEnvironmentUtilInstallCommand() *cobra.Command {
 						return nil
 					}
 
-					if installed && !overwrite {
+					if installed {
 						continue
 					}
 
