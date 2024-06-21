@@ -1,7 +1,7 @@
 .PHONY: build
 build:
-	go build -ldflags="-s -w" -o dem ./bin/dem.go
-	go build -ldflags="-s -w" -o deu ./bin/deu.go
+	go build -ldflags "-s -w" -o dem ./bin/dem.go
+	go build -ldflags "-s -w" -o deu ./bin/deu.go
 
 .PHONY: install
 install:
