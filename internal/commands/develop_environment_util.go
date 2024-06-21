@@ -17,6 +17,7 @@ func NewDevelopEnvironmentUtilCommand() *cobra.Command {
 		NewDevelopEnvironmentUtilUnuseCommand(),
 		NewDevelopEnvironmentManagementUtilUninstallCommand(),
 		NewDevelopEnvironmentUtilInitCommand(),
+		NewDevelopEnvironmentUtilInfoCommand(),
 	)
 
 	return command
