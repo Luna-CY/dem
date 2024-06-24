@@ -25,7 +25,7 @@ case "$SYSTEM_TYPE" in
             x86_64)
                 DOWNLOAD_URL="${DOWNLOAD_URL}/linux-amd64-${VERSION}.tar.gz"
                 ;;
-            arm64)
+            aarch64)
                 DOWNLOAD_URL="${DOWNLOAD_URL}/linux-arm64-${VERSION}.tar.gz"
                 ;;
         esac
@@ -43,6 +43,7 @@ case "$SYSTEM_TYPE" in
 esac
 
 # Download and extract the file
+echo "curl -L -o /opt/godem/godem-${VERSION}.tar.gz $DOWNLOAD_URL"
 curl -L -o /opt/godem/godem-${VERSION}.tar.gz "$DOWNLOAD_URL"
 $SUDO mkdir -p /usr/local/bin
 $SUDO tar zxf /opt/godem/godem-${VERSION}.tar.gz -C /usr/local/bin
