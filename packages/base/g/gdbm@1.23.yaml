@@ -33,3 +33,33 @@ platforms:
             - "cd {ROOT}/source/gdbm-1.23/ && make && make install"
         uninstall:
             - "rm -rf {ROOT}/"
+    linux-arm64:
+        paths:
+            - "{ROOT}/bin"
+        downloads:
+            -   name: "Gdbm 1.23 Source"
+                url: "https://ftp.gnu.org/gnu/gdbm/gdbm-1.23.tar.gz"
+                target: "{ROOT}/source/gdbm-1.23.tar.gz"
+        depends:
+            - "readline@8.2"
+        install:
+            - "tar -zxf {ROOT}/source/gdbm-1.23.tar.gz -C {ROOT}/source/"
+            - "cd {ROOT}/source/gdbm-1.23/ && LDFLAGS='-L{PKG:readline@8.2}/lib' CFLAGS='-I{PKG:readline@8.2}/include' ./configure --prefix={ROOT} --disable-static --enable-libgdbm-compat"
+            - "cd {ROOT}/source/gdbm-1.23/ && make && make install"
+        uninstall:
+            - "rm -rf {ROOT}/"
+    linux-amd64:
+        paths:
+            - "{ROOT}/bin"
+        downloads:
+            -   name: "Gdbm 1.23 Source"
+                url: "https://ftp.gnu.org/gnu/gdbm/gdbm-1.23.tar.gz"
+                target: "{ROOT}/source/gdbm-1.23.tar.gz"
+        depends:
+            - "readline@8.2"
+        install:
+            - "tar -zxf {ROOT}/source/gdbm-1.23.tar.gz -C {ROOT}/source/"
+            - "cd {ROOT}/source/gdbm-1.23/ && LDFLAGS='-L{PKG:readline@8.2}/lib' CFLAGS='-I{PKG:readline@8.2}/include' ./configure --prefix={ROOT} --disable-static --enable-libgdbm-compat"
+            - "cd {ROOT}/source/gdbm-1.23/ && make && make install"
+        uninstall:
+            - "rm -rf {ROOT}/"

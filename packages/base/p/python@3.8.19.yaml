@@ -44,3 +44,41 @@ platforms:
             - "cd {ROOT}/source/Python-3.8.19/ && make && make install"
         uninstall:
             - "rm -rf {ROOT}/"
+    linux-arm64:
+        paths:
+            - "{ROOT}/bin"
+        downloads:
+            -   name: "Python 3.8.19 Source"
+                url: "https://www.python.org/ftp/python/3.8.19/Python-3.8.19.tgz"
+                target: "{ROOT}/source/Python-3.8.19.tar.gz"
+        depends:
+            - "xz@5.6.2"
+            - "zlib@1.3.1"
+            - "gdbm@1.23"
+            - "openssl@3.3.1"
+        install:
+            - "tar -zxf {ROOT}/source/Python-3.8.19.tar.gz -C {ROOT}/source/"
+            - "sed -i '' 's#libmpdec_machine=universal#libmpdec_machine=uint128#g' {ROOT}/source/Python-3.8.19/configure"
+            - "cd {ROOT}/source/Python-3.8.19/ && PYTHONHOME='' PYTHONPATH='' LDFLAGS='-L{PKG:xz@5.6.2}/lib -L{PKG:zlib@1.3.1}/lib -L{PKG:gdbm@1.23}/lib' CFLAGS='-I{PKG:xz@5.6.2}/include -I{PKG:zlib@1.3.1}/include -I{PKG:gdbm@1.23}/include' ./configure --prefix={ROOT} --with-openssl={PKG:openssl@3.3.1}/ --with-lto --enable-optimizations --with-dtrace --with-dbmliborder=gdbm py_cv_module__tkinter=disabled"
+            - "cd {ROOT}/source/Python-3.8.19/ && make && make install"
+        uninstall:
+            - "rm -rf {ROOT}/"
+    linux-amd64:
+        paths:
+            - "{ROOT}/bin"
+        downloads:
+            -   name: "Python 3.8.19 Source"
+                url: "https://www.python.org/ftp/python/3.8.19/Python-3.8.19.tgz"
+                target: "{ROOT}/source/Python-3.8.19.tar.gz"
+        depends:
+            - "xz@5.6.2"
+            - "zlib@1.3.1"
+            - "gdbm@1.23"
+            - "openssl@3.3.1"
+        install:
+            - "tar -zxf {ROOT}/source/Python-3.8.19.tar.gz -C {ROOT}/source/"
+            - "sed -i '' 's#libmpdec_machine=universal#libmpdec_machine=uint128#g' {ROOT}/source/Python-3.8.19/configure"
+            - "cd {ROOT}/source/Python-3.8.19/ && PYTHONHOME='' PYTHONPATH='' LDFLAGS='-L{PKG:xz@5.6.2}/lib -L{PKG:zlib@1.3.1}/lib -L{PKG:gdbm@1.23}/lib' CFLAGS='-I{PKG:xz@5.6.2}/include -I{PKG:zlib@1.3.1}/include -I{PKG:gdbm@1.23}/include' ./configure --prefix={ROOT} --with-openssl={PKG:openssl@3.3.1}/ --with-lto --enable-optimizations --with-dtrace --with-dbmliborder=gdbm py_cv_module__tkinter=disabled"
+            - "cd {ROOT}/source/Python-3.8.19/ && make && make install"
+        uninstall:
+            - "rm -rf {ROOT}/"

@@ -49,3 +49,43 @@ platforms:
             - "tar -zxf {ROOT}/go1.20.14.darwin-amd64.tar.gz -C {ROOT}/"
         uninstall:
             - "rm -rf {ROOT}/"
+    linux-arm64:
+        paths:
+            - "{ROOT}/go/bin"
+            - "{ROOT}/data/bin"
+        environments:
+            GOENV: "false"
+            GOROOT: "{ROOT}/go"
+            GOPATH: "{ROOT}/data"
+            GOCACHE: "{ROOT}/cache"
+            GOMODCACHE: "{ROOT}/data/pkg/mod"
+        downloads:
+            -   name: "Golang 1.20.14 Archive"
+                url: "https://go.dev/dl/go1.20.14.linux-arm64.tar.gz"
+                target: "{ROOT}/go1.20.14.linux-arm64.tar.gz"
+                checksum: "6da3f76164b215053daf730a9b8f1d673dbbaa4c61031374a6744b75cb728641"
+        install:
+            - "mkdir -p {ROOT}/data {ROOT}/cache"
+            - "tar -zxf {ROOT}/go1.20.14.linux-arm64.tar.gz -C {ROOT}/"
+        uninstall:
+            - "rm -rf {ROOT}/"
+    linux-amd64:
+        paths:
+            - "{ROOT}/go/bin"
+            - "{ROOT}/data/bin"
+        environments:
+            GOENV: "false"
+            GOROOT: "{ROOT}/go"
+            GOPATH: "{ROOT}/data"
+            GOCACHE: "{ROOT}/cache"
+            GOMODCACHE: "{ROOT}/data/pkg/mod"
+        downloads:
+            -   name: "Golang 1.20.14 Archive"
+                url: "https://go.dev/dl/go1.20.14.linux-amd64.tar.gz"
+                target: "{ROOT}/go1.20.14.linux-amd64.tar.gz"
+                checksum: "754363489e2244e72cb49b4ec6ddfd6a2c60b0700f8c4876e11befb1913b11c5"
+        install:
+            - "mkdir -p {ROOT}/data {ROOT}/cache"
+            - "tar -zxf {ROOT}/go1.20.14.linux-amd64.tar.gz -C {ROOT}/"
+        uninstall:
+            - "rm -rf {ROOT}/"

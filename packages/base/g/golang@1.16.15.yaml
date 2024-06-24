@@ -49,3 +49,43 @@ platforms:
             - "tar -zxf {ROOT}/go1.16.15.darwin-amd64.tar.gz -C {ROOT}/"
         uninstall:
             - "rm -rf {ROOT}/"
+    linux-arm64:
+        paths:
+            - "{ROOT}/go/bin"
+            - "{ROOT}/data/bin"
+        environments:
+            GOENV: "false"
+            GOROOT: "{ROOT}/go"
+            GOPATH: "{ROOT}/data"
+            GOCACHE: "{ROOT}/cache"
+            GOMODCACHE: "{ROOT}/data/pkg/mod"
+        downloads:
+            -   name: "Golang 1.16.15 Archive"
+                url: "https://go.dev/dl/go1.16.15.linux-arm64.tar.gz"
+                target: "{ROOT}/go1.16.15.linux-arm64.tar.gz"
+                checksum: "28365c5c252970c10f2627dc0aa63a2ec3df04a92df4d45ed83dbe464732c3e0"
+        install:
+            - "mkdir -p {ROOT}/data {ROOT}/cache"
+            - "tar -zxf {ROOT}/go1.16.15.linux-arm64.tar.gz -C {ROOT}/"
+        uninstall:
+            - "rm -rf {ROOT}/"
+    linux-amd64:
+        paths:
+            - "{ROOT}/go/bin"
+            - "{ROOT}/data/bin"
+        environments:
+            GOENV: "false"
+            GOROOT: "{ROOT}/go"
+            GOPATH: "{ROOT}/data"
+            GOCACHE: "{ROOT}/cache"
+            GOMODCACHE: "{ROOT}/data/pkg/mod"
+        downloads:
+            -   name: "Golang 1.16.15 Archive"
+                url: "https://go.dev/dl/go1.16.15.linux-amd64.tar.gz"
+                target: "{ROOT}/go1.16.15.linux-amd64.tar.gz"
+                checksum: "4f16a427ea513892b7be6646ca26159223d404193ef28c5c45c5f2ec9a0f03d1"
+        install:
+            - "mkdir -p {ROOT}/data {ROOT}/cache"
+            - "tar -zxf {ROOT}/go1.16.15.linux-amd64.tar.gz -C {ROOT}/"
+        uninstall:
+            - "rm -rf {ROOT}/"
