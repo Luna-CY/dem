@@ -8,6 +8,10 @@
 
 此工具将所有版本的工具隔离在各自的根目录下，通过统一的命令入口预配置环境信息来解决依赖、缓存等共用的问题
 
+## 安装脚本
+
+`curl -L https://raw.githubusercontent.com/Luna-CY/dem/main/install.sh | sh`
+
 ## 手动安装
 
 - 下载源码 `git clone https://github.com/Luna-CY/dem.git`
