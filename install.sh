@@ -16,6 +16,9 @@ fi
 # Create root directory
 $SUDO mkdir -p /opt/godem
 
+# Change ownership of /opt/godem to the current logged-in user
+$SUDO chown "$(id -u):$(id -g)" /opt/godem
+
 # Construct the download URL based on system type and architecture type
 DOWNLOAD_URL="https://github.com/Luna-CY/dem/releases/download/${VERSION}"
 
