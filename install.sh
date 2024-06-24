@@ -8,8 +8,13 @@ SYSTEM_TYPE=$(uname -s)
 # Determine architecture type
 ARCH_TYPE=$(uname -m)
 
+# Check if the script is being run with root privileges
+if [ "$(id -u)" -ne 0 ]; then
+    SUDO="sudo"
+fi
+
 # Create root directory
-sudo mkdir -p /opt/godem
+$SUDO mkdir -p /opt/godem
 
 # Construct the download URL based on system type and architecture type
 DOWNLOAD_URL="https://github.com/Luna-CY/dem/releases/download/${VERSION}"
@@ -39,5 +44,5 @@ esac
 
 # Download and extract the file
 curl -L -o /opt/godem/godem-${VERSION}.tar.gz "$DOWNLOAD_URL"
-sudo mkdir -p /usr/local/bin
-sudo tar zxf /opt/godem/godem-${VERSION}.tar.gz -C /usr/local/bin
+$SUDO mkdir -p /usr/local/bin
+$SUDO tar zxf /opt/godem/godem-${VERSION}.tar.gz -C /usr/local/bin
