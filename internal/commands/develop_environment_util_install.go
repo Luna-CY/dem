@@ -7,6 +7,7 @@ import (
 	"github.com/Luna-CY/dem/internal/pkg"
 	"github.com/Luna-CY/dem/internal/system"
 	"github.com/spf13/cobra"
+	"os"
 	"slices"
 	"strings"
 )
@@ -22,7 +23,9 @@ func NewDevelopEnvironmentUtilInstallCommand() *cobra.Command {
 			for _, name := range args {
 				installed, err := pkg.Installed(name)
 				if nil != err {
-					return echo.Error("检查工具包[%s]安装状态失败: %s", name, err)
+					_ = echo.Error("检查工具包[%s]安装状态失败: %s", name, err)
+
+					os.Exit(1)
 				}
 
 				if installed && !overwrite {
@@ -33,12 +36,16 @@ func NewDevelopEnvironmentUtilInstallCommand() *cobra.Command {
 
 				ind, err := index.Lookup(name)
 				if nil != err {
-					return echo.Error("查询工具包[%s]索引失败: %s", name, err)
+					_ = echo.Error("查询工具包[%s]索引失败: %s", name, err)
+
+					os.Exit(1)
 				}
 
 				deps, err := DiscoverDepends(ind)
 				if nil != err {
-					return echo.Error(err.Error())
+					_ = echo.Error(err.Error())
+
+					os.Exit(1)
 				}
 
 				slices.Reverse(deps)
@@ -55,7 +62,7 @@ func NewDevelopEnvironmentUtilInstallCommand() *cobra.Command {
 
 					installed, err := pkg.Installed(dep)
 					if nil != err {
-						cmd.PrintErrf("查询工具包[%s]索引失败: %s\n", name, err)
+						_ = echo.Error("查询工具包[%s]索引失败: %s\n", name, err)
 
 						return nil
 					}
@@ -77,7 +84,9 @@ func NewDevelopEnvironmentUtilInstallCommand() *cobra.Command {
 
 				for _, name := range names {
 					if err := pkg.Install(cmd.Context(), name); nil != err {
-						return echo.Error(err.Error())
+						_ = echo.Error(err.Error())
+
+						os.Exit(1)
 					}
 
 					_ = echo.Info("工具包[%s]安装成功", name)

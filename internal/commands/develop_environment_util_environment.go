@@ -20,7 +20,9 @@ func NewDevelopEnvironmentUtilEnvironmentCommand() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			me, err := environment.GetMixedEnvironment()
 			if nil != err {
-				return echo.Error("查询环境配置失败: %s", err)
+				_ = echo.Error("查询环境配置失败: %s", err)
+
+				os.Exit(1)
 			}
 
 			// 覆盖变量: 项目、全局、索引
@@ -29,7 +31,9 @@ func NewDevelopEnvironmentUtilEnvironmentCommand() *cobra.Command {
 				for pkg, version := range me.Packages {
 					ind, err := index.Lookup(pkg + "@" + version)
 					if nil != err {
-						return echo.Error("查询工具包[%s@%s]索引失败: %s", pkg, version, err)
+						_ = echo.Error("查询工具包[%s@%s]索引失败: %s", pkg, version, err)
+
+						os.Exit(1)
 					}
 
 					for k, v := range ind.Platforms[system.GetSystemArch()].Environments {
@@ -44,7 +48,9 @@ func NewDevelopEnvironmentUtilEnvironmentCommand() *cobra.Command {
 
 			pkgs, err := os.ReadDir(system.GetPkgPath())
 			if nil != err {
-				return echo.Error("查询系统工具包信息失败: %s", err)
+				_ = echo.Error("查询系统工具包信息失败: %s", err)
+
+				os.Exit(1)
 			}
 
 			_ = echo.Info("已安装的工具包")

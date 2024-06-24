@@ -19,20 +19,28 @@ func NewDevelopEnvironmentUtilUseCommand() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			var tokens = strings.Split(args[0], "@")
 			if 2 != len(tokens) {
-				return echo.Error("工具包名称无效")
+				_ = echo.Error("工具包名称无效")
+
+				os.Exit(1)
 			}
 
 			fi, err := os.Stat(filepath.Join(system2.GetPackageRootPath(args[0]), ".installed"))
 			if nil != err {
 				if os.IsNotExist(err) {
-					return echo.Error("工具包[%s]未安装", args[0])
+					_ = echo.Error("工具包[%s]未安装", args[0])
+
+					os.Exit(1)
 				}
 
-				return echo.Error("检查工具包[%s]安装状态失败: %s", args[0], err)
+				_ = echo.Error("检查工具包[%s]安装状态失败: %s", args[0], err)
+
+				os.Exit(1)
 			}
 
 			if fi.IsDir() {
-				return echo.Error("检查工具包[%s]状态无效，请重新安装", args[0])
+				_ = echo.Error("检查工具包[%s]状态无效，请重新安装", args[0])
+
+				os.Exit(1)
 			}
 
 			var env *environment.Environment
@@ -40,21 +48,27 @@ func NewDevelopEnvironmentUtilUseCommand() *cobra.Command {
 			if system {
 				se, err := environment.GetSystemEnvironment()
 				if nil != err {
-					return echo.Error("查询全局环境配置失败: %s", err)
+					_ = echo.Error("查询全局环境配置失败: %s", err)
+
+					os.Exit(1)
 				}
 
 				env = se
 			} else {
 				pe, err := environment.GetProjectEnvironment()
 				if nil != err {
-					return echo.Error("查询项目环境配置失败: %s", err)
+					_ = echo.Error("查询项目环境配置失败: %s", err)
+
+					os.Exit(1)
 				}
 
 				env = pe
 			}
 
 			if err := env.UsePackage(tokens[0], tokens[1]); nil != err {
-				return echo.Error("设定环境工具包失败: %s", err)
+				_ = echo.Error("设定环境工具包失败: %s", err)
+
+				os.Exit(1)
 			}
 
 			return nil

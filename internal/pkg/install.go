@@ -15,7 +15,7 @@ import (
 func Installed(name string) (bool, error) {
 	ind, err := index.Lookup(name)
 	if nil != err {
-		return false, echo.Error("查找工具包失败: %s", err)
+		return false, fmt.Errorf("查找工具包失败: %s", err)
 	}
 
 	var path = system.GetPackageRootPath(ind.PackageName)
@@ -23,7 +23,7 @@ func Installed(name string) (bool, error) {
 
 	fi, err := os.Stat(installed)
 	if nil != err && !os.IsNotExist(err) {
-		return false, echo.Error("检查工具包[%s]状态失败: %s", name, err)
+		return false, fmt.Errorf("检查工具包[%s]状态失败: %s", name, err)
 	}
 
 	return nil != fi && !fi.IsDir(), nil
@@ -33,12 +33,12 @@ func Installed(name string) (bool, error) {
 func Install(ctx context.Context, name string) error {
 	ind, err := index.Lookup(name)
 	if nil != err {
-		return echo.Error("查找工具包失败: %s", err)
+		return fmt.Errorf("查找工具包失败: %s", err)
 	}
 
 	platform, ok := ind.Platforms[system.GetSystemArch()]
 	if !ok {
-		return echo.Error("工具包[%s]不支持当前平台: %s", name, system.GetSystemArch())
+		return fmt.Errorf("工具包[%s]不支持当前平台: %s", name, system.GetSystemArch())
 	}
 
 	var path = system.GetPackageRootPath(ind.PackageName)
@@ -46,12 +46,12 @@ func Install(ctx context.Context, name string) error {
 
 	// 移除路径
 	if err := utils.RemoveAll(path); nil != err {
-		return echo.Error("安装工具包[%s]失败: %s", name, err)
+		return fmt.Errorf("安装工具包[%s]失败: %s", name, err)
 	}
 
 	// 重建路径
 	if err := os.MkdirAll(path, 0755); nil != err {
-		return echo.Error("安装工具包[%s]失败: %s", name, err)
+		return fmt.Errorf("安装工具包[%s]失败: %s", name, err)
 	}
 
 	_ = echo.Info("下载[%s]所需的资源...", name)
@@ -64,7 +64,7 @@ func Install(ctx context.Context, name string) error {
 	_ = echo.Info("工具包[%s]安装中...", name)
 	lf, err := os.OpenFile(filepath.Join(path, "install.log"), os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0644)
 	if nil != err {
-		return echo.Error("安装工具包[%s]失败: %s", name, err)
+		return fmt.Errorf("安装工具包[%s]失败: %s", name, err)
 	}
 
 	defer func() {
@@ -79,17 +79,21 @@ func Install(ctx context.Context, name string) error {
 		}
 
 		if _, err := lf.WriteString(cmd + "\n"); nil != err {
-			return echo.Error("安装工具包[%s]失败: %s", name, err)
+			_ = echo.Error("安装工具包[%s]失败: %s", name, err)
+
+			return fmt.Errorf("如果需要更多的详细信息，请查看安装日志[%s]", filepath.Join(path, "install.log"))
 		}
 
 		if err := utils.ExecuteShellCommand(ctx, cmd, lf); nil != err {
-			return echo.Error("安装工具包[%s]失败: %s", name, err)
+			_ = echo.Error("安装工具包[%s]失败: %s", name, err)
+
+			return fmt.Errorf("如果需要更多的详细信息，请查看安装日志[%s]", filepath.Join(path, "install.log"))
 		}
 	}
 
 	installedFile, err := os.Create(installed)
 	if nil != err {
-		return echo.Error("安装工具包[%s]失败: %s", name, err)
+		return fmt.Errorf("安装工具包[%s]失败: %s", name, err)
 	}
 
 	defer func() {

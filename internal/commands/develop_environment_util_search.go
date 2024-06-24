@@ -5,6 +5,7 @@ import (
 	"github.com/Luna-CY/dem/internal/echo"
 	"github.com/Luna-CY/dem/internal/index"
 	"github.com/spf13/cobra"
+	"os"
 )
 
 func NewDevelopEnvironmentUtilSearchCommand() *cobra.Command {
@@ -15,7 +16,9 @@ func NewDevelopEnvironmentUtilSearchCommand() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			indexes, err := index.Search(args[0])
 			if nil != err {
-				return echo.Error("搜索索引库失败: %s", err)
+				_ = echo.Error("搜索索引库失败: %s", err)
+
+				os.Exit(1)
 			}
 
 			for _, ind := range indexes {

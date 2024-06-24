@@ -2,6 +2,7 @@ package utils
 
 import (
 	"context"
+	"github.com/Luna-CY/dem/internal/echo"
 	"io"
 	"os"
 	"os/exec"
@@ -11,10 +12,11 @@ import (
 // ExecuteShellCommand 执行Shell命令
 func ExecuteShellCommand(ctx context.Context, command string, output io.Writer) error {
 	var shell = filepath.Base(os.Getenv("SHELL"))
-	if "" == shell {
-		shell = "sh"
+	if !Executable(shell) {
+		shell = "/bin/sh"
 	}
 
+	_ = echo.Info("执行命令: %s -c %s", shell, command)
 	var cmd = exec.CommandContext(ctx, shell, "-c", command)
 
 	if nil != output {

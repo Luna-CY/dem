@@ -41,22 +41,30 @@ func NewDevelopEnvironmentUtilUpdateCommand() *cobra.Command {
 					_ = echo.Info("下载[%s]索引库: %s", extension, url)
 
 					if err := utils.DownloadRemoteWithProgress(cmd.Context(), filename, target, url); nil != err {
-						return echo.Error("下载[%s]索引库失败: %s", extension, err)
+						_ = echo.Error("下载[%s]索引库失败: %s", extension, err)
+
+						os.Exit(1)
 					}
 				} else {
 					_ = echo.Info("下载[%s]索引库: %s", extension, url)
 
 					if err := utils.DownloadLocalWithProgress(cmd.Context(), filename, target, url); nil != err {
-						return echo.Error("下载[%s]索引库失败: %s", extension, err)
+						_ = echo.Error("下载[%s]索引库失败: %s", extension, err)
+
+						os.Exit(1)
 					}
 				}
 
 				if err := os.RemoveAll(filepath.Join(system.GetIndexPath(), extension)); nil != err {
-					return echo.Error("清理就的[%s]索引库失败: %s", extension, err)
+					_ = echo.Error("清理就的[%s]索引库失败: %s", extension, err)
+
+					os.Exit(1)
 				}
 
 				if err := utils.GzipDecompressWithProgress(cmd.Context(), system.GetIndexPath(), filename, target); nil != err {
-					return echo.Error("解压[%s]索引库失败: %s", extension, err)
+					_ = echo.Error("解压[%s]索引库失败: %s", extension, err)
+
+					os.Exit(1)
 				}
 
 				_ = echo.Info("索引库[%s]更新完成", extension)

@@ -7,6 +7,7 @@ import (
 	"github.com/Luna-CY/dem/internal/pkg"
 	"github.com/Luna-CY/dem/internal/system"
 	"github.com/spf13/cobra"
+	"os"
 	"strings"
 )
 
@@ -18,12 +19,16 @@ func NewDevelopEnvironmentUtilInfoCommand() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			ind, err := index.Lookup(args[0])
 			if nil != err {
-				return echo.Error("查询工具包[%s]索引失败: %s", args[0], err)
+				_ = echo.Error("查询工具包[%s]索引失败: %s", args[0], err)
+
+				os.Exit(1)
 			}
 
 			installed, err := pkg.Installed(args[0])
 			if nil != err {
-				return echo.Error("检查工具包[%s]安装状态失败: %s", args[0], err)
+				_ = echo.Error("检查工具包[%s]安装状态失败: %s", args[0], err)
+
+				os.Exit(1)
 			}
 
 			var platform = ind.Platforms[system.GetSystemArch()]

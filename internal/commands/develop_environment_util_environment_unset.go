@@ -4,6 +4,7 @@ import (
 	"github.com/Luna-CY/dem/internal/echo"
 	"github.com/Luna-CY/dem/internal/environment"
 	"github.com/spf13/cobra"
+	"os"
 )
 
 func NewDevelopEnvironmentUtilEnvironmentUnsetCommand() *cobra.Command {
@@ -19,14 +20,18 @@ func NewDevelopEnvironmentUtilEnvironmentUnsetCommand() *cobra.Command {
 			if system {
 				se, err := environment.GetSystemEnvironment()
 				if nil != err {
-					return echo.Error("查询全局环境配置失败: %s", err)
+					_ = echo.Error("查询全局环境配置失败: %s", err)
+
+					os.Exit(1)
 				}
 
 				env = se
 			} else {
 				pe, err := environment.GetProjectEnvironment()
 				if nil != err {
-					return echo.Error("查询项目环境配置失败: %s", err)
+					_ = echo.Error("查询项目环境配置失败: %s", err)
+
+					os.Exit(1)
 				}
 
 				env = pe
@@ -37,7 +42,9 @@ func NewDevelopEnvironmentUtilEnvironmentUnsetCommand() *cobra.Command {
 			}
 
 			if err := env.Save(); nil != err {
-				return echo.Error("移除环境变量失败: %s", err)
+				_ = echo.Error("移除环境变量失败: %s", err)
+
+				os.Exit(1)
 			}
 
 			return nil

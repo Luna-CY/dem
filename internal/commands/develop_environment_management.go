@@ -6,6 +6,7 @@ import (
 	"github.com/Luna-CY/dem/internal/environment"
 	"github.com/Luna-CY/dem/internal/index"
 	"github.com/Luna-CY/dem/internal/system"
+	"github.com/Luna-CY/dem/internal/utils"
 	"github.com/spf13/cobra"
 	"os"
 	"os/exec"
@@ -116,7 +117,7 @@ func findCommand(name string) (string, error) {
 
 		for _, fp := range ind.Platforms[system.GetSystemArch()].Paths {
 			var file = filepath.Join(system.ReplaceVariables(fp, "{ROOT}", system.GetPackageRootPath(ind.PackageName)), name)
-			if system.Executable(file) {
+			if utils.Executable(file) {
 				command = file
 
 				break
