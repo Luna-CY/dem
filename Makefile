@@ -1,3 +1,6 @@
+.PHONY: pkg
+pkg:
+	cd packages && tar -z -c -f base.tar.gz base
 .PHONY: build
 build:
 	go build -ldflags "-s -w" -o dem ./bin/dem.go

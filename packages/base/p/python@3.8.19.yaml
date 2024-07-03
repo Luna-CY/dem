@@ -8,6 +8,7 @@ package-name: "python@3.8.19"
 platforms:
     darwin-arm64:
         paths:
+            - "./venv/bin" # 项目私有解释器优先级最高
             - "{ROOT}/bin"
         downloads:
             -   name: "Python 3.8.19 Source"
@@ -27,6 +28,7 @@ platforms:
             - "rm -rf {ROOT}/"
     darwin-amd64:
         paths:
+            - "./venv/bin" # 项目私有解释器优先级最高
             - "{ROOT}/bin"
         downloads:
             -   name: "Python 3.8.19 Source"
