@@ -3,6 +3,7 @@ package commands
 import (
 	"errors"
 	"fmt"
+	"github.com/Luna-CY/dem/internal/echo"
 	"github.com/Luna-CY/dem/internal/environment"
 	"github.com/Luna-CY/dem/internal/index"
 	"github.com/Luna-CY/dem/internal/system"
@@ -26,17 +27,21 @@ func NewDevelopEnvironmentManagementCommand() *cobra.Command {
 			if 0 == len(args) {
 				fmt.Printf("Develop Environment Management %s\n\n", system.Version)
 				fmt.Printf("Usage: dem command [command options] [command args]\n\n")
-				fmt.Printf("当前查找的路径及顺序\n")
+				_ = echo.Info("当前查找的路径及顺序")
 
 				me, err := environment.GetMixedEnvironment()
 				if nil != err {
-					return fmt.Errorf("查询环境配置失败: %s\n", err)
+					_ = echo.Error("查询环境配置失败: %s", err)
+
+					os.Exit(1)
 				}
 
 				for pkg, version := range me.Packages {
 					ind, err := index.Lookup(pkg + "@" + version)
 					if nil != err {
-						return fmt.Errorf("查询工具包[%s@%s]索引失败: %s\n", pkg, version, err)
+						_ = echo.Error("查询工具包[%s@%s]索引失败: %s", pkg, version, err)
+
+						os.Exit(1)
 					}
 
 					for _, fp := range ind.Platforms[system.GetSystemArch()].Paths {
@@ -56,16 +61,16 @@ func NewDevelopEnvironmentManagementCommand() *cobra.Command {
 
 			command, err := findCommand(args[0])
 			if nil != err {
-				fmt.Println(err)
+				_ = echo.Error("%s", err)
 
-				return nil
+				os.Exit(1)
 			}
 
 			pwd, err := os.Getwd()
 			if nil != err {
-				fmt.Printf("获取当前工作目录失败: %s\n", err)
+				_ = echo.Error("获取当前工作目录失败: %s", err)
 
-				return nil
+				os.Exit(1)
 			}
 
 			var systemCommand = exec.Command(command, args[1:]...)
@@ -78,9 +83,9 @@ func NewDevelopEnvironmentManagementCommand() *cobra.Command {
 
 			environments, err := getEnvironments()
 			if nil != err {
-				fmt.Printf("获取环境变量失败: %s\n", err)
+				_ = echo.Error("获取环境变量失败: %s", err)
 
-				return nil
+				os.Exit(1)
 			}
 
 			for k, v := range environments {
@@ -89,12 +94,12 @@ func NewDevelopEnvironmentManagementCommand() *cobra.Command {
 
 			if err := systemCommand.Run(); nil != err {
 				if errors.Is(err, exec.ErrNotFound) {
-					cmd.PrintErrf("全部路径中未找到命令[%s]\n", command)
+					_ = echo.Error("全部路径中未找到命令[%s]", command)
 
-					return nil
+					os.Exit(1)
 				}
 
-				cmd.PrintErrln(err)
+				_ = echo.Error("%s", err)
 			}
 
 			return nil

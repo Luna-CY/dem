@@ -56,7 +56,7 @@ func NewDevelopEnvironmentUtilUpdateCommand() *cobra.Command {
 				}
 
 				if err := os.RemoveAll(filepath.Join(system.GetIndexPath(), extension)); nil != err {
-					_ = echo.Error("清理就的[%s]索引库失败: %s", extension, err)
+					_ = echo.Error("清理旧的[%s]索引库失败: %s", extension, err)
 
 					os.Exit(1)
 				}
