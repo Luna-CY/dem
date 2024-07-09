@@ -41,11 +41,11 @@ func NewDevelopEnvironmentUtilInfoCommand() *cobra.Command {
 				fmt.Print("\n")
 			}
 
+			fmt.Printf("是否已安装: %t\n", installed)
 			if 0 != len(platform.Depends) {
 				fmt.Printf("依赖的工具包: %s\n", strings.Join(platform.Depends, ", "))
 			}
 
-			fmt.Printf("是否已安装: %t\n", installed)
 			if installed {
 				fmt.Printf("安装路径: %s\n", system.GetPackageRootPath(ind.PackageName))
 
