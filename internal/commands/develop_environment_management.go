@@ -27,7 +27,7 @@ func NewDevelopEnvironmentManagementCommand() *cobra.Command {
 			if 0 == len(args) {
 				fmt.Printf("Develop Environment Management %s\n\n", system.Version)
 				fmt.Printf("Usage: dem command [command options] [command args]\n\n")
-				_ = echo.Info("当前查找的路径及顺序")
+				_ = echo.Info("当前查找的DEM工具路径及顺序")
 
 				me, err := environment.GetMixedEnvironment()
 				if nil != err {
@@ -48,6 +48,9 @@ func NewDevelopEnvironmentManagementCommand() *cobra.Command {
 						fmt.Println(system.ReplaceVariables(fp, "{ROOT}", system.GetPackageRootPath(ind.PackageName)))
 					}
 				}
+
+				fmt.Println("")
+				_ = echo.Info("当前查找的系统路径及顺序")
 
 				var paths = strings.Split(os.Getenv("PATH"), string(os.PathListSeparator))
 				for _, fp := range paths {
