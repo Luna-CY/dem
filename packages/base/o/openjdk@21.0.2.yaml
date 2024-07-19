@@ -1,0 +1,54 @@
+home-page: "https://openjdk.org/"
+description: |-
+    The place to collaborate on an open-source implementation of the Java Platform, Standard Edition, and related projects.
+package-name: "openjdk@21.0.2"
+
+platforms:
+    darwin-arm64:
+        paths:
+            - "{ROOT}/jdk-21.0.2.jdk/Contents/Home/bin"
+        downloads:
+            -   name: "OpenJDK 21.0.2 Archive"
+                url: "https://download.java.net/java/GA/jdk21.0.2/c7ec1332f7bb44aeba2eb341ae18aca4/8/GPL/openjdk-21.0.2_macos-aarch64_bin.tar.gz"
+                target: "{ROOT}/openjdk-21.0.2_macos-aarch64_bin.tar.gz"
+                checksum: "b3d588e16ec1e0ef9805d8a696591bd518a5cea62567da8f53b5ce32d11d22e4"
+        install:
+            - "tar -zxf {ROOT}/openjdk-21.0.2_macos-aarch64_bin.tar.gz -C {ROOT}/"
+        uninstall:
+            - "rm -rf {ROOT}/"
+    darwin-amd64:
+        paths:
+            - "{ROOT}/jdk-21.0.2.jdk/Contents/Home/bin"
+        downloads:
+            -   name: "OpenJDK 21.0.2 Archive"
+                url: "https://download.java.net/java/GA/jdk21.0.2/c7ec1332f7bb44aeba2eb341ae18aca4/8/GPL/openjdk-21.0.2_macos-x64_bin.tar.gz"
+                target: "{ROOT}/openjdk-21.0.2_macos-x64_bin.tar.gz"
+                checksum: "8fd09e15dc406387a0aba70bf5d99692874e999bf9cd9208b452b5d76ac922d3"
+        install:
+            - "tar -zxf {ROOT}/openjdk-21.0.2_macos-x64_bin.tar.gz -C {ROOT}/"
+        uninstall:
+            - "rm -rf {ROOT}/"
+    linux-arm64:
+        paths:
+            - "{ROOT}/jdk-21.0.2/bin"
+        downloads:
+            -   name: "OpenJDK 21.0.2 Archive"
+                url: "https://download.java.net/java/GA/jdk21.0.2/c7ec1332f7bb44aeba2eb341ae18aca4/8/GPL/openjdk-21.0.2_linux-aarch64_bin.tar.gz"
+                target: "{ROOT}/openjdk-21.0.2_linux-aarch64_bin.tar.gz"
+                checksum: "08db1392a48d4eb5ea5315cf8f18b89dbaf36cda663ba882cf03c704c9257ec2"
+        install:
+            - "tar -zxf {ROOT}/openjdk-21.0.2_linux-aarch64_bin.tar.gz -C {ROOT}/"
+        uninstall:
+            - "rm -rf {ROOT}/"
+    linux-amd64:
+        paths:
+            - "{ROOT}/jdk-21.0.2/bin"
+        downloads:
+            -   name: "OpenJDK 21.0.2 Archive"
+                url: "https://download.java.net/java/GA/jdk21.0.2/c7ec1332f7bb44aeba2eb341ae18aca4/8/GPL/openjdk-21.0.2_linux-x64_bin.tar.gz"
+                target: "{ROOT}/openjdk-21.0.2_linux-x64_bin.tar.gz"
+                checksum: "a2def047a73941e01a73739f92755f86b895811afb1f91243db214cff5bdac3f"
+        install:
+            - "tar -zxf {ROOT}/openjdk-21.0.2_linux-x64_bin.tar.gz -C {ROOT}/"
+        uninstall:
+            - "rm -rf {ROOT}/"
