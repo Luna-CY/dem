@@ -1,6 +1,9 @@
 package utils
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
+	"io"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -41,4 +44,23 @@ func RemoveAll(path string) error {
 	}
 
 	return os.RemoveAll(path)
+}
+
+// Checksum 计算文件的校验和
+func Checksum(path string) (string, error) {
+	var file, err = os.Open(path)
+	if nil != err {
+		return "", err
+	}
+
+	defer func() {
+		_ = file.Close()
+	}()
+
+	var hash = sha256.New()
+	if _, err := io.Copy(hash, file); nil != err {
+		return "", err
+	}
+
+	return hex.EncodeToString(hash.Sum(nil)), nil
 }

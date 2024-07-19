@@ -63,7 +63,7 @@ platforms:
             -   name: "Golang 1.18.10 Archive"
                 url: "https://go.dev/dl/go1.18.10.linux-arm64.tar.gz"
                 target: "{ROOT}/go1.18.10.linux-arm64.tar.gz"
-                checksum: "718b32cb2c1d203ba2c5e6d2fc3cf96a6952b38e389d94ff6cdb099eb959dade"
+                checksum: "160497c583d4c7cbc1661230e68b758d01f741cf4bece67e48edc4fdd40ed92d"
         install:
             - "mkdir -p {ROOT}/data {ROOT}/cache"
             - "tar -zxf {ROOT}/go1.18.10.linux-arm64.tar.gz -C {ROOT}/"
@@ -83,7 +83,7 @@ platforms:
             -   name: "Golang 1.18.10 Archive"
                 url: "https://go.dev/dl/go1.18.10.linux-amd64.tar.gz"
                 target: "{ROOT}/go1.18.10.linux-amd64.tar.gz"
-                checksum: "5614904f2b0b546b1493f294122fea7d67b2fbfc2efe84b1ab560fb678502e1f"
+                checksum: "5e05400e4c79ef5394424c0eff5b9141cb782da25f64f79d54c98af0a37f8d49"
         install:
             - "mkdir -p {ROOT}/data {ROOT}/cache"
             - "tar -zxf {ROOT}/go1.18.10.linux-amd64.tar.gz -C {ROOT}/"

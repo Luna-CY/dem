@@ -56,7 +56,7 @@ func Install(ctx context.Context, name string) error {
 
 	_ = echo.Info("下载[%s]所需的资源...", name)
 	for _, download := range platform.Downloads {
-		if err := utils.DownloadRemoteWithProgress(ctx, download.Name, system.ReplaceVariables(download.Target, "{ROOT}", path), download.Url); nil != err {
+		if err := utils.DownloadRemoteWithProgress(ctx, download.Name, system.ReplaceVariables(download.Target, "{ROOT}", path), download.Url, download.Checksum); nil != err {
 			return err
 		}
 	}

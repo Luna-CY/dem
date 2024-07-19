@@ -40,7 +40,7 @@ func NewDevelopEnvironmentUtilUpdateCommand() *cobra.Command {
 				if !local {
 					_ = echo.Info("下载[%s]索引库: %s", extension, url)
 
-					if err := utils.DownloadRemoteWithProgress(cmd.Context(), filename, target, url); nil != err {
+					if err := utils.DownloadRemoteWithProgress(cmd.Context(), filename, target, url, ""); nil != err {
 						_ = echo.Error("下载[%s]索引库失败: %s", extension, err)
 
 						os.Exit(1)
