@@ -2,8 +2,6 @@ package echo
 
 import "fmt"
 
-func Info(message string, args ...interface{}) error {
+func Infoln(message string, args ...any) {
 	fmt.Printf("==> "+message+"\n", args...)
-
-	return nil
 }

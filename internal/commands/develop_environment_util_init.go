@@ -11,12 +11,12 @@ import (
 func NewDevelopEnvironmentUtilInitCommand() *cobra.Command {
 	return &cobra.Command{
 		Use:   "init",
-		Short: "初始化当前项目环境",
+		Short: "initialize current project environment",
 		Args:  cobra.NoArgs,
-		RunE: func(cmd *cobra.Command, args []string) error {
+		Run: func(cmd *cobra.Command, args []string) {
 			pe, err := environment.GetProjectEnvironment()
 			if nil != err {
-				_ = echo.Error("查询当前项目环境信息失败: %s", err)
+				echo.Errorln("find current project environment failed: %s", true, err)
 
 				os.Exit(1)
 			}
@@ -26,7 +26,7 @@ func NewDevelopEnvironmentUtilInitCommand() *cobra.Command {
 
 				installed, err := pkg.Installed(pkgName)
 				if nil != err {
-					_ = echo.Error("检查工具包[%s]安装状态失败: %s", pkgName, err)
+					echo.Errorln("check package[%s] installed status failed: %s", true, pkgName, err)
 
 					os.Exit(1)
 				}
@@ -35,17 +35,15 @@ func NewDevelopEnvironmentUtilInitCommand() *cobra.Command {
 					continue
 				}
 
-				_ = echo.Info("安装工具包[%s]...", pkgName)
+				echo.Infoln("install package[%s]...", pkgName)
 				if err := pkg.Install(cmd.Context(), pkgName); nil != err {
-					_ = echo.Error("安装工具包[%s]失败: %s", pkgName, err)
+					echo.Errorln("package[%s] installed failed: %s", true, pkgName, err)
 
 					os.Exit(1)
 				}
 
-				_ = echo.Info("工具包[%s]安装成功", name)
+				echo.Infoln("package[%s] installed successfully", pkgName)
 			}
-
-			return nil
 		},
 	}
 }

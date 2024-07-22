@@ -14,19 +14,19 @@ import (
 func NewDevelopEnvironmentUtilInfoCommand() *cobra.Command {
 	return &cobra.Command{
 		Use:   "info pkg",
-		Short: "查看工具包信息",
+		Short: "show package info",
 		Args:  cobra.ExactArgs(1),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		Run: func(cmd *cobra.Command, args []string) {
 			ind, err := index.Lookup(args[0])
 			if nil != err {
-				_ = echo.Error("查询工具包[%s]索引失败: %s", args[0], err)
+				echo.Errorln("find package index failed: %s", true, err)
 
 				os.Exit(1)
 			}
 
 			installed, err := pkg.Installed(args[0])
 			if nil != err {
-				_ = echo.Error("检查工具包[%s]安装状态失败: %s", args[0], err)
+				echo.Errorln("check package[%s] installed status failed: %s", true, args[0], err)
 
 				os.Exit(1)
 			}
@@ -41,13 +41,13 @@ func NewDevelopEnvironmentUtilInfoCommand() *cobra.Command {
 				fmt.Print("\n")
 			}
 
-			_ = echo.Info("是否已安装: %t", installed)
+			echo.Infoln("installed: %t", installed)
 			if 0 != len(platform.Depends) {
-				_ = echo.Info("依赖的工具包: %s", strings.Join(platform.Depends, ", "))
+				echo.Infoln("depends: %s", strings.Join(platform.Depends, ", "))
 			}
 
 			if installed {
-				_ = echo.Info("安装路径: %s", system.GetPackageRootPath(ind.PackageName))
+				echo.Infoln("install path: %s", system.GetPackageRootPath(ind.PackageName))
 
 				var paths []string
 				for _, p := range platform.Paths {
@@ -55,19 +55,17 @@ func NewDevelopEnvironmentUtilInfoCommand() *cobra.Command {
 				}
 
 				if 0 != len(paths) {
-					fmt.Printf("命令搜索路径: %s\n", strings.Join(paths, ":"))
+					fmt.Printf("command find path: %s\n", strings.Join(paths, ":"))
 				}
 
 				if 0 != len(platform.Environments) {
 					fmt.Print("\n")
-					fmt.Printf("预配置的环境变量: \n")
+					fmt.Printf("pre-defined environment variables: \n")
 					for k, v := range platform.Environments {
 						fmt.Printf("%s=%s\n", k, system.ReplaceVariables(v, "{ROOT}", system.GetPackageRootPath(ind.PackageName)))
 					}
 				}
 			}
-
-			return nil
 		},
 	}
 }

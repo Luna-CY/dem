@@ -26,7 +26,7 @@ func DownloadRemoteWithProgress(ctx context.Context, filename string, target str
 	}()
 
 	if 200 != response.StatusCode {
-		return fmt.Errorf("下载[%s]失败: %s", filename, response.Status)
+		return fmt.Errorf("download [%s] failed: %s", filename, response.Status)
 	}
 
 	if err := os.MkdirAll(filepath.Dir(target), 0755); nil != err {
@@ -60,7 +60,7 @@ func DownloadRemoteWithProgress(ctx context.Context, filename string, target str
 		}
 
 		if cs != checksum {
-			return fmt.Errorf("远程文件[%s]的checksum值不匹配", url)
+			return fmt.Errorf("remote file [%s] checksum mismatch", url)
 		}
 	}
 
