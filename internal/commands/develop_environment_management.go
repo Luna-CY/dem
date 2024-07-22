@@ -25,7 +25,7 @@ func NewDevelopEnvironmentManagementCommand() *cobra.Command {
 		DisableSuggestions:    true,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if 0 == len(args) {
-				fmt.Printf("develop Environment Management %s\n\n", system.Version)
+				fmt.Printf("develop environment management %s\n\n", system.Version)
 				fmt.Printf("usage: dem command [command options] [command args]\n\n")
 
 				echo.Infoln("command find path of dem")
@@ -58,7 +58,8 @@ func NewDevelopEnvironmentManagementCommand() *cobra.Command {
 					fmt.Println(fp)
 				}
 
-				fmt.Println("build in command or alias of shell")
+				fmt.Println("")
+				echo.Infoln("build-in command or alias of shell")
 
 				return nil
 			}
