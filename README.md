@@ -31,10 +31,10 @@ This tool isolates all versions of tools in their respective root directories, a
 
 ## Manual Install
 
-- download source code `git clone https://github.com/Luna-CY/dem.git`
-- build `make build`
-- install `make install`
-- create root directory `sudo mkdir -p /opt/godem/`
+- Download source code `git clone https://github.com/Luna-CY/dem.git`
+- Build `make build`
+- Install `make install`
+- Create root directory `sudo mkdir -p /opt/godem/`
 
 Need to rely on `go 1.22+`, `make install` will install the command to the `/usr/local/bin` directory, generally need `root` permission
 
