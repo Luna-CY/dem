@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-VERSION=V1.0.0
+VERSION=V1.1.0
 
 # Determine system type
 SYSTEM_TYPE=$(uname -s)
