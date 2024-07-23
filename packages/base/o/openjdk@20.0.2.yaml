@@ -9,7 +9,7 @@ platforms:
             - "{ROOT}/jdk-20.0.2.jdk/Contents/Home/bin"
         downloads:
             -   name: "OpenJDK 20.0.2 Archive"
-                url: "https://download.java.net/java/GA/jdk20.0.2/c7ec1332f7bb44aeba2eb341ae18aca4/8/GPL/openjdk-20.0.2_macos-aarch64_bin.tar.gz"
+                url: "https://download.java.net/java/GA/jdk20.0.2/6e380f22cbe7469fa75fb448bd903d8e/9/GPL/openjdk-20.0.2_macos-aarch64_bin.tar.gz"
                 target: "{ROOT}/openjdk-20.0.2_macos-aarch64_bin.tar.gz"
                 checksum: "2e6522bb574f76cd3f81156acd59115a014bf452bbe4107f0d31ff9b41b3da57"
         install:
@@ -21,7 +21,7 @@ platforms:
             - "{ROOT}/jdk-20.0.2.jdk/Contents/Home/bin"
         downloads:
             -   name: "OpenJDK 20.0.2 Archive"
-                url: "https://download.java.net/java/GA/jdk20.0.2/c7ec1332f7bb44aeba2eb341ae18aca4/8/GPL/openjdk-20.0.2_macos-x64_bin.tar.gz"
+                url: "https://download.java.net/java/GA/jdk20.0.2/6e380f22cbe7469fa75fb448bd903d8e/9/GPL/openjdk-20.0.2_macos-x64_bin.tar.gz"
                 target: "{ROOT}/openjdk-20.0.2_macos-x64_bin.tar.gz"
                 checksum: "c65ba92b73d8076e2a10029a0674d40ce45c3e0183a8063dd51281e92c9f43fc"
         install:
@@ -33,7 +33,7 @@ platforms:
             - "{ROOT}/jdk-20.0.2/bin"
         downloads:
             -   name: "OpenJDK 20.0.2 Archive"
-                url: "https://download.java.net/java/GA/jdk20.0.2/c7ec1332f7bb44aeba2eb341ae18aca4/8/GPL/openjdk-20.0.2_linux-aarch64_bin.tar.gz"
+                url: "https://download.java.net/java/GA/jdk20.0.2/6e380f22cbe7469fa75fb448bd903d8e/9/GPL/openjdk-20.0.2_linux-aarch64_bin.tar.gz"
                 target: "{ROOT}/openjdk-20.0.2_linux-aarch64_bin.tar.gz"
                 checksum: "3238c93267c663dbca00f5d5b0e3fbba40e1eea2b4281612f40542d208b6dd9a"
         install:
@@ -45,7 +45,7 @@ platforms:
             - "{ROOT}/jdk-20.0.2/bin"
         downloads:
             -   name: "OpenJDK 20.0.2 Archive"
-                url: "https://download.java.net/java/GA/jdk20.0.2/c7ec1332f7bb44aeba2eb341ae18aca4/8/GPL/openjdk-20.0.2_linux-x64_bin.tar.gz"
+                url: "https://download.java.net/java/GA/jdk20.0.2/6e380f22cbe7469fa75fb448bd903d8e/9/GPL/openjdk-20.0.2_linux-x64_bin.tar.gz"
                 target: "{ROOT}/openjdk-20.0.2_linux-x64_bin.tar.gz"
                 checksum: "beaf61959c2953310595e1162b0c626aef33d58628771033ff2936609661956c"
         install:
