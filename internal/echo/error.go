@@ -3,10 +3,13 @@ package echo
 import (
 	"fmt"
 	"os"
+	"runtime/debug"
 )
 
-func Error(message string, args ...interface{}) error {
+func Errorln(message string, ps bool, args ...any) {
 	_, _ = fmt.Fprintf(os.Stderr, "==> "+message+"\n", args...)
 
-	return fmt.Errorf(message, args...)
+	if ps {
+		debug.PrintStack()
+	}
 }

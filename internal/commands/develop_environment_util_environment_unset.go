@@ -12,15 +12,15 @@ func NewDevelopEnvironmentUtilEnvironmentUnsetCommand() *cobra.Command {
 
 	var command = &cobra.Command{
 		Use:   "unset [options] K [K [...]]",
-		Short: "移除环境变量",
+		Short: "remove environment variables",
 		Args:  cobra.MinimumNArgs(1),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		Run: func(cmd *cobra.Command, args []string) {
 			var env *environment.Environment
 
 			if system {
 				se, err := environment.GetSystemEnvironment()
 				if nil != err {
-					_ = echo.Error("查询全局环境配置失败: %s", err)
+					echo.Errorln("find global environment configuration failed: %s", true, err)
 
 					os.Exit(1)
 				}
@@ -29,7 +29,7 @@ func NewDevelopEnvironmentUtilEnvironmentUnsetCommand() *cobra.Command {
 			} else {
 				pe, err := environment.GetProjectEnvironment()
 				if nil != err {
-					_ = echo.Error("查询项目环境配置失败: %s", err)
+					echo.Errorln("find project environment configuration failed: %s", true, err)
 
 					os.Exit(1)
 				}
@@ -42,16 +42,14 @@ func NewDevelopEnvironmentUtilEnvironmentUnsetCommand() *cobra.Command {
 			}
 
 			if err := env.Save(); nil != err {
-				_ = echo.Error("移除环境变量失败: %s", err)
+				echo.Errorln("remove environment variables failed: %s", true, err)
 
 				os.Exit(1)
 			}
-
-			return nil
 		},
 	}
 
-	command.Flags().BoolVarP(&system, "system", "s", false, "移除全局环境")
+	command.Flags().BoolVarP(&system, "system", "s", false, "remove environment variables from system")
 
 	return command
 }

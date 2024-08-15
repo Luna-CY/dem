@@ -6,7 +6,7 @@ description: |-
     Easy to learn and great for teams
     Built-in concurrency and a robust standard library
     Large ecosystem of partners, communities, and tools
-package-name: "golang@1.20.14"
+package-name: "golang@1.22.5"
 
 platforms:
     darwin-arm64:
@@ -20,13 +20,13 @@ platforms:
             GOCACHE: "{ROOT}/cache"
             GOMODCACHE: "{ROOT}/data/pkg/mod"
         downloads:
-            -   name: "Golang 1.20.14 Archive"
-                url: "https://go.dev/dl/go1.20.14.darwin-arm64.tar.gz"
-                target: "{ROOT}/go1.20.14.darwin-arm64.tar.gz"
-                checksum: "6da3f76164b215053daf730a9b8f1d673dbbaa4c61031374a6744b75cb728641"
+            -   name: "Golang 1.22.5 Archive"
+                url: "https://go.dev/dl/go1.22.5.darwin-arm64.tar.gz"
+                target: "{ROOT}/go1.22.5.darwin-arm64.tar.gz"
+                checksum: "4cd1bcb05be03cecb77bccd765785d5ff69d79adf4dd49790471d00c06b41133"
         install:
             - "mkdir -p {ROOT}/data {ROOT}/cache"
-            - "tar -zxf {ROOT}/go1.20.14.darwin-arm64.tar.gz -C {ROOT}/"
+            - "tar -zxf {ROOT}/go1.22.5.darwin-arm64.tar.gz -C {ROOT}/"
         uninstall:
             - "rm -rf {ROOT}/"
     darwin-amd64:
@@ -40,13 +40,13 @@ platforms:
             GOCACHE: "{ROOT}/cache"
             GOMODCACHE: "{ROOT}/data/pkg/mod"
         downloads:
-            -   name: "Golang 1.20.14 Archive"
-                url: "https://go.dev/dl/go1.20.14.darwin-amd64.tar.gz"
-                target: "{ROOT}/go1.20.14.darwin-amd64.tar.gz"
-                checksum: "754363489e2244e72cb49b4ec6ddfd6a2c60b0700f8c4876e11befb1913b11c5"
+            -   name: "Golang 1.22.5 Archive"
+                url: "https://go.dev/dl/go1.22.5.darwin-amd64.tar.gz"
+                target: "{ROOT}/go1.22.5.darwin-amd64.tar.gz"
+                checksum: "95d9933cdcf45f211243c42c7705c37353cccd99f27eb4d8e2d1bf2f4165cb50"
         install:
             - "mkdir -p {ROOT}/data {ROOT}/cache"
-            - "tar -zxf {ROOT}/go1.20.14.darwin-amd64.tar.gz -C {ROOT}/"
+            - "tar -zxf {ROOT}/go1.22.5.darwin-amd64.tar.gz -C {ROOT}/"
         uninstall:
             - "rm -rf {ROOT}/"
     linux-arm64:
@@ -60,13 +60,13 @@ platforms:
             GOCACHE: "{ROOT}/cache"
             GOMODCACHE: "{ROOT}/data/pkg/mod"
         downloads:
-            -   name: "Golang 1.20.14 Archive"
-                url: "https://go.dev/dl/go1.20.14.linux-arm64.tar.gz"
-                target: "{ROOT}/go1.20.14.linux-arm64.tar.gz"
-                checksum: "2096507509a98782850d1f0669786c09727053e9fe3c92b03c0d96f48700282b"
+            -   name: "Golang 1.22.5 Archive"
+                url: "https://go.dev/dl/go1.22.5.linux-arm64.tar.gz"
+                target: "{ROOT}/go1.22.5.linux-arm64.tar.gz"
+                checksum: "8d21325bfcf431be3660527c1a39d3d9ad71535fabdf5041c826e44e31642b5a"
         install:
             - "mkdir -p {ROOT}/data {ROOT}/cache"
-            - "tar -zxf {ROOT}/go1.20.14.linux-arm64.tar.gz -C {ROOT}/"
+            - "tar -zxf {ROOT}/go1.22.5.linux-arm64.tar.gz -C {ROOT}/"
         uninstall:
             - "rm -rf {ROOT}/"
     linux-amd64:
@@ -80,12 +80,12 @@ platforms:
             GOCACHE: "{ROOT}/cache"
             GOMODCACHE: "{ROOT}/data/pkg/mod"
         downloads:
-            -   name: "Golang 1.20.14 Archive"
-                url: "https://go.dev/dl/go1.20.14.linux-amd64.tar.gz"
-                target: "{ROOT}/go1.20.14.linux-amd64.tar.gz"
-                checksum: "ff445e48af27f93f66bd949ae060d97991c83e11289009d311f25426258f9c44"
+            -   name: "Golang 1.22.5 Archive"
+                url: "https://go.dev/dl/go1.22.5.linux-amd64.tar.gz"
+                target: "{ROOT}/go1.22.5.linux-amd64.tar.gz"
+                checksum: "904b924d435eaea086515bc63235b192ea441bd8c9b198c507e85009e6e4c7f0"
         install:
             - "mkdir -p {ROOT}/data {ROOT}/cache"
-            - "tar -zxf {ROOT}/go1.20.14.linux-amd64.tar.gz -C {ROOT}/"
+            - "tar -zxf {ROOT}/go1.22.5.linux-amd64.tar.gz -C {ROOT}/"
         uninstall:
             - "rm -rf {ROOT}/"

@@ -63,7 +63,7 @@ platforms:
             -   name: "Golang 1.21.11 Archive"
                 url: "https://go.dev/dl/go1.21.11.linux-arm64.tar.gz"
                 target: "{ROOT}/go1.21.11.linux-arm64.tar.gz"
-                checksum: "0142f5ac9f9a1bf19b826ee08a8c7955a745f7a2e62d36e0566d29fcac4d88e0"
+                checksum: "715d9a7ff72e4e0e3378c48318c52c6e4dd32a47c4136f3c08846f89b2ee2241"
         install:
             - "mkdir -p {ROOT}/data {ROOT}/cache"
             - "tar -zxf {ROOT}/go1.21.11.linux-arm64.tar.gz -C {ROOT}/"
@@ -83,7 +83,7 @@ platforms:
             -   name: "Golang 1.21.11 Archive"
                 url: "https://go.dev/dl/go1.21.11.linux-amd64.tar.gz"
                 target: "{ROOT}/go1.21.11.linux-amd64.tar.gz"
-                checksum: "a3efff72f7aba31c85b53ebfd3985d0e3157a87b0e69e178161ba7097c197885"
+                checksum: "54a87a9325155b98c85bc04dc50298ddd682489eb47f486f2e6cb0707554abf0"
         install:
             - "mkdir -p {ROOT}/data {ROOT}/cache"
             - "tar -zxf {ROOT}/go1.21.11.linux-amd64.tar.gz -C {ROOT}/"

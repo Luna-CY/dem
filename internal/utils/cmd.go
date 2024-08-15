@@ -16,7 +16,7 @@ func ExecuteShellCommand(ctx context.Context, command string, output io.Writer) 
 		shell = "/bin/sh"
 	}
 
-	_ = echo.Info("执行命令: %s -c %s", shell, command)
+	echo.Infoln("run shell command: %s -c %s", shell, command)
 	var cmd = exec.CommandContext(ctx, shell, "-c", command)
 
 	if nil != output {

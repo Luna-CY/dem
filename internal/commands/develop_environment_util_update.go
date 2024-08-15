@@ -19,8 +19,8 @@ func NewDevelopEnvironmentUtilUpdateCommand() *cobra.Command {
 
 	var command = &cobra.Command{
 		Use:   "update",
-		Short: "更新DEM索引数据",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		Short: "update dem index",
+		Run: func(cmd *cobra.Command, args []string) {
 			repo = utils.GetStringFromEnv(repo, system.DemEnvPrefix+"REPO_PATH", DemRepoPath)
 
 			var exts = []string{"base"}
@@ -38,45 +38,43 @@ func NewDevelopEnvironmentUtilUpdateCommand() *cobra.Command {
 				var url = strings.TrimSuffix(repo, "/") + "/" + filename
 
 				if !local {
-					_ = echo.Info("下载[%s]索引库: %s", extension, url)
+					echo.Infoln("download [%s] index: %s", extension, url)
 
-					if err := utils.DownloadRemoteWithProgress(cmd.Context(), filename, target, url); nil != err {
-						_ = echo.Error("下载[%s]索引库失败: %s", extension, err)
+					if err := utils.DownloadRemoteWithProgress(cmd.Context(), filename, target, url, ""); nil != err {
+						echo.Errorln("download [%s] index failed: %s", true, extension, err)
 
 						os.Exit(1)
 					}
 				} else {
-					_ = echo.Info("下载[%s]索引库: %s", extension, url)
+					echo.Infoln("download [%s] local index: %s", extension, url)
 
 					if err := utils.DownloadLocalWithProgress(cmd.Context(), filename, target, url); nil != err {
-						_ = echo.Error("下载[%s]索引库失败: %s", extension, err)
+						echo.Errorln("download [%s] local index failed: %s", true, extension, err)
 
 						os.Exit(1)
 					}
 				}
 
 				if err := os.RemoveAll(filepath.Join(system.GetIndexPath(), extension)); nil != err {
-					_ = echo.Error("清理就的[%s]索引库失败: %s", extension, err)
+					echo.Errorln("clean old [%s] index failed: %s", true, extension, err)
 
 					os.Exit(1)
 				}
 
 				if err := utils.GzipDecompressWithProgress(cmd.Context(), system.GetIndexPath(), filename, target); nil != err {
-					_ = echo.Error("解压[%s]索引库失败: %s", extension, err)
+					echo.Errorln("decompress [%s] index failed: %s", true, extension, err)
 
 					os.Exit(1)
 				}
 
-				_ = echo.Info("索引库[%s]更新完成", extension)
+				echo.Infoln("index [%s] update completed", extension)
 			}
-
-			return nil
 		},
 	}
 
-	command.Flags().StringVarP(&repo, "repo", "r", repo, "DEM索引数据存储路径")
-	command.Flags().StringVarP(&extensions, "extensions", "e", extensions, "扩展的工具库名称，用,分割")
-	command.Flags().BoolVarP(&local, "local", "l", local, "使用本地索引库")
+	command.Flags().StringVarP(&repo, "repo", "r", repo, "set index repository path")
+	command.Flags().StringVarP(&extensions, "extensions", "e", extensions, "used extension indexes (comma separated)")
+	command.Flags().BoolVarP(&local, "local", "l", local, "use local index repository")
 
 	return command
 }

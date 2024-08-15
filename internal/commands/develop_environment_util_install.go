@@ -17,33 +17,33 @@ func NewDevelopEnvironmentUtilInstallCommand() *cobra.Command {
 
 	var command = &cobra.Command{
 		Use:   "install [options] package [package [...]]",
-		Short: "安装工具包",
+		Short: "install packages",
 		Args:  cobra.MinimumNArgs(1),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		Run: func(cmd *cobra.Command, args []string) {
 			for _, name := range args {
 				installed, err := pkg.Installed(name)
 				if nil != err {
-					_ = echo.Error("检查工具包[%s]安装状态失败: %s", name, err)
+					echo.Errorln("check package[%s] installed status failed: %s", true, name, err)
 
 					os.Exit(1)
 				}
 
 				if installed && !overwrite {
-					_ = echo.Info("工具包[%s]已安装，跳过", name)
+					echo.Infoln("package[%s] has been installed, skip", name)
 
 					continue
 				}
 
 				ind, err := index.Lookup(name)
 				if nil != err {
-					_ = echo.Error("查询工具包[%s]索引失败: %s", name, err)
+					echo.Errorln("lookup package[%s] index failed: %s", true, name, err)
 
 					os.Exit(1)
 				}
 
 				deps, err := DiscoverDepends(ind)
 				if nil != err {
-					_ = echo.Error(err.Error())
+					echo.Errorln(err.Error(), true)
 
 					os.Exit(1)
 				}
@@ -62,9 +62,9 @@ func NewDevelopEnvironmentUtilInstallCommand() *cobra.Command {
 
 					installed, err := pkg.Installed(dep)
 					if nil != err {
-						_ = echo.Error("查询工具包[%s]索引失败: %s\n", name, err)
+						echo.Errorln("find package[%s] index failed: %s", true, name, err)
 
-						return nil
+						os.Exit(1)
 					}
 
 					if installed {
@@ -75,29 +75,27 @@ func NewDevelopEnvironmentUtilInstallCommand() *cobra.Command {
 				}
 
 				if 0 == len(names) {
-					_ = echo.Info("安装工具包[%s]", name)
+					echo.Infoln("install package[%s]", name)
 				} else {
-					_ = echo.Info("安装工具包[%s]及其依赖:[%s]", name, strings.Join(names, ","))
+					echo.Infoln("install package[%s] and its depends[%s]", name, strings.Join(names, ","))
 				}
 
 				names = append(names, name)
 
 				for _, name := range names {
 					if err := pkg.Install(cmd.Context(), name); nil != err {
-						_ = echo.Error(err.Error())
+						echo.Errorln(err.Error(), true)
 
 						os.Exit(1)
 					}
 
-					_ = echo.Info("工具包[%s]安装成功", name)
+					echo.Infoln("package[%s] installed successfully", name)
 				}
 			}
-
-			return nil
 		},
 	}
 
-	command.Flags().BoolVar(&overwrite, "overwrite", false, "覆盖安装")
+	command.Flags().BoolVar(&overwrite, "overwrite", false, "overwrite install")
 
 	return command
 }
@@ -107,7 +105,7 @@ func DiscoverDepends(ind *index.Index) ([]string, error) {
 
 	platform, ok := ind.Platforms[system.GetSystemArch()]
 	if !ok {
-		return nil, fmt.Errorf("工具包[%s]不支持当前平台: %s", ind.PackageName, system.GetSystemArch())
+		return nil, fmt.Errorf("package[%s] does not support current platform: %s", ind.PackageName, system.GetSystemArch())
 	}
 
 	// 包比较少，暂时不考虑循环依赖
@@ -116,7 +114,7 @@ func DiscoverDepends(ind *index.Index) ([]string, error) {
 
 		subInd, err := index.Lookup(pn)
 		if nil != err {
-			return nil, fmt.Errorf("查询工具包[%s]索引失败: %s", pn, err)
+			return nil, fmt.Errorf("find package[%s] index failed: %s", pn, err)
 		}
 
 		subs, err := DiscoverDepends(subInd)

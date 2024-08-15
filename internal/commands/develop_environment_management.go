@@ -3,6 +3,7 @@ package commands
 import (
 	"errors"
 	"fmt"
+	"github.com/Luna-CY/dem/internal/echo"
 	"github.com/Luna-CY/dem/internal/environment"
 	"github.com/Luna-CY/dem/internal/index"
 	"github.com/Luna-CY/dem/internal/system"
@@ -17,26 +18,31 @@ import (
 func NewDevelopEnvironmentManagementCommand() *cobra.Command {
 	return &cobra.Command{
 		Use:                   "dem command [command options] [command args]",
-		Short:                 "通过DEM运行命令，[options]和[args]将被传递给command",
+		Short:                 "Run command with dem，[options] and [args] provider for command",
 		DisableFlagParsing:    true,
 		DisableAutoGenTag:     true,
 		DisableFlagsInUseLine: true,
 		DisableSuggestions:    true,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if 0 == len(args) {
-				fmt.Printf("Develop Environment Management %s\n\n", system.Version)
-				fmt.Printf("Usage: dem command [command options] [command args]\n\n")
-				fmt.Printf("当前查找的路径及顺序\n")
+				fmt.Printf("develop environment management %s\n\n", system.Version)
+				fmt.Printf("usage: dem command [command options] [command args]\n\n")
+
+				echo.Infoln("command find path of dem")
 
 				me, err := environment.GetMixedEnvironment()
 				if nil != err {
-					return fmt.Errorf("查询环境配置失败: %s\n", err)
+					echo.Errorln("find environment configuration failed: %s", true, err)
+
+					os.Exit(1)
 				}
 
 				for pkg, version := range me.Packages {
 					ind, err := index.Lookup(pkg + "@" + version)
 					if nil != err {
-						return fmt.Errorf("查询工具包[%s@%s]索引失败: %s\n", pkg, version, err)
+						echo.Errorln("find index of package[%s@%s] failed: %s", true, pkg, version, err)
+
+						os.Exit(1)
 					}
 
 					for _, fp := range ind.Platforms[system.GetSystemArch()].Paths {
@@ -44,28 +50,32 @@ func NewDevelopEnvironmentManagementCommand() *cobra.Command {
 					}
 				}
 
+				fmt.Println("")
+				echo.Infoln("command find path of system")
+
 				var paths = strings.Split(os.Getenv("PATH"), string(os.PathListSeparator))
 				for _, fp := range paths {
 					fmt.Println(fp)
 				}
 
-				fmt.Println("SHELL内置命令、别名等")
+				fmt.Println("")
+				echo.Infoln("build-in command or alias of shell")
 
 				return nil
 			}
 
 			command, err := findCommand(args[0])
 			if nil != err {
-				fmt.Println(err)
+				echo.Errorln("find command failed: %s", true, err)
 
-				return nil
+				os.Exit(1)
 			}
 
 			pwd, err := os.Getwd()
 			if nil != err {
-				fmt.Printf("获取当前工作目录失败: %s\n", err)
+				echo.Errorln("get current work directory failed: %s", true, err)
 
-				return nil
+				os.Exit(1)
 			}
 
 			var systemCommand = exec.Command(command, args[1:]...)
@@ -78,9 +88,9 @@ func NewDevelopEnvironmentManagementCommand() *cobra.Command {
 
 			environments, err := getEnvironments()
 			if nil != err {
-				fmt.Printf("获取环境变量失败: %s\n", err)
+				echo.Errorln("get environment variables failed: %s", true, err)
 
-				return nil
+				os.Exit(1)
 			}
 
 			for k, v := range environments {
@@ -89,12 +99,12 @@ func NewDevelopEnvironmentManagementCommand() *cobra.Command {
 
 			if err := systemCommand.Run(); nil != err {
 				if errors.Is(err, exec.ErrNotFound) {
-					cmd.PrintErrf("全部路径中未找到命令[%s]\n", command)
+					echo.Errorln("command not found in all paths: %s", false, command)
 
-					return nil
+					os.Exit(1)
 				}
 
-				cmd.PrintErrln(err)
+				echo.Errorln("run command failed: %s", true, err)
 			}
 
 			return nil
@@ -105,14 +115,14 @@ func NewDevelopEnvironmentManagementCommand() *cobra.Command {
 func findCommand(name string) (string, error) {
 	me, err := environment.GetMixedEnvironment()
 	if nil != err {
-		return "", fmt.Errorf("查询环境配置失败: %s\n", err)
+		return "", fmt.Errorf("find environment configuration failed: %s", err)
 	}
 
 	var command string
 	for pkg, version := range me.Packages {
 		ind, err := index.Lookup(pkg + "@" + version)
 		if nil != err {
-			return "", fmt.Errorf("查询工具包[%s@%s]索引失败: %s\n", pkg, version, err)
+			return "", fmt.Errorf("find index of package[%s@%s] failed: %s", pkg, version, err)
 		}
 
 		for _, fp := range ind.Platforms[system.GetSystemArch()].Paths {
@@ -128,7 +138,7 @@ func findCommand(name string) (string, error) {
 	if "" == command {
 		command, err = exec.LookPath(name)
 		if nil != err && !errors.Is(err, exec.ErrNotFound) {
-			return "", fmt.Errorf("查找命令失败: %s\n", err)
+			return "", fmt.Errorf("find command failed: %s", err)
 		}
 	}
 
@@ -144,14 +154,14 @@ func getEnvironments() (map[string]string, error) {
 
 	me, err := environment.GetMixedEnvironment()
 	if nil != err {
-		return nil, fmt.Errorf("查询环境配置失败: %s\n", err)
+		return nil, fmt.Errorf("find environment configuration failed: %s", err)
 	}
 
 	var paths []string
 	for pkg, version := range me.Packages {
 		ind, err := index.Lookup(pkg + "@" + version)
 		if nil != err {
-			return nil, fmt.Errorf("查询工具包[%s@%s]索引失败: %s\n", pkg, version, err)
+			return nil, fmt.Errorf("find index of package[%s@%s] failed: %s", pkg, version, err)
 		}
 
 		// 索引中的环境变量

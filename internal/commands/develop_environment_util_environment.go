@@ -16,11 +16,11 @@ func NewDevelopEnvironmentUtilEnvironmentCommand() *cobra.Command {
 
 	var command = &cobra.Command{
 		Use:   "env [subcommand] [options]",
-		Short: "查看环境信息",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		Short: "show current environment info",
+		Run: func(cmd *cobra.Command, args []string) {
 			me, err := environment.GetMixedEnvironment()
 			if nil != err {
-				_ = echo.Error("查询环境配置失败: %s", err)
+				echo.Errorln("find environment configuration failed: %s", true, err)
 
 				os.Exit(1)
 			}
@@ -31,7 +31,7 @@ func NewDevelopEnvironmentUtilEnvironmentCommand() *cobra.Command {
 				for pkg, version := range me.Packages {
 					ind, err := index.Lookup(pkg + "@" + version)
 					if nil != err {
-						_ = echo.Error("查询工具包[%s@%s]索引失败: %s", pkg, version, err)
+						echo.Errorln("find index of package[%s@%s] failed: %s", true, pkg, version, err)
 
 						os.Exit(1)
 					}
@@ -48,12 +48,12 @@ func NewDevelopEnvironmentUtilEnvironmentCommand() *cobra.Command {
 
 			pkgs, err := os.ReadDir(system.GetPkgPath())
 			if nil != err {
-				_ = echo.Error("查询系统工具包信息失败: %s", err)
+				echo.Errorln("find system packages failed: %s", true, err)
 
 				os.Exit(1)
 			}
 
-			_ = echo.Info("已安装的工具包")
+			echo.Infoln("installed packages")
 
 			for _, pkg := range pkgs {
 				fi, err := os.Stat(filepath.Join(system.GetPkgPath(), pkg.Name(), ".installed"))
@@ -70,14 +70,14 @@ func NewDevelopEnvironmentUtilEnvironmentCommand() *cobra.Command {
 
 			fmt.Print("\n\n")
 
-			_ = echo.Info("当前项目或全局启用的工具包")
+			echo.Infoln("current project or system enabled packages")
 			for pkg, version := range me.Packages {
 				fmt.Printf("%s@%s\t", pkg, version)
 			}
 
 			fmt.Print("\n\n")
 
-			_ = echo.Info("当前项目或全局设置的环境变量表")
+			echo.Infoln("current project or system enabled environments")
 			for k, v := range environments {
 				if environment.ValueNotSet == v {
 					continue
@@ -87,13 +87,11 @@ func NewDevelopEnvironmentUtilEnvironmentCommand() *cobra.Command {
 			}
 
 			fmt.Print("\n")
-
-			return nil
 		},
 	}
 
 	command.AddCommand(NewDevelopEnvironmentUtilEnvironmentSetCommand(), NewDevelopEnvironmentUtilEnvironmentUnsetCommand())
-	command.Flags().BoolVar(&showIndexEnvironments, "show-index-envs", false, "显示索引中配置的环境变量")
+	command.Flags().BoolVar(&showIndexEnvironments, "show-index-envs", false, "show pre-defined environments in index")
 
 	return command
 }

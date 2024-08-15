@@ -10,25 +10,25 @@ import (
 func NewDevelopEnvironmentManagementUtilUninstallCommand() *cobra.Command {
 	return &cobra.Command{
 		Use:   "uninstall pkg [pkg [...]]",
-		Short: "移除安装的工具包",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		Short: "remove installed packages",
+		Run: func(cmd *cobra.Command, args []string) {
 			for _, name := range args {
 				installed, err := pkg.Installed(name)
 				if nil != err {
-					_ = echo.Error("检查工具包[%s]安装状态失败: %s", name, err)
+					echo.Errorln("check package[%s] installed status failed: %s", true, name, err)
 
 					continue
 				}
 
 				if !installed {
-					_ = echo.Info("工具包[%s]未安装，跳过", name)
+					echo.Infoln("package[%s] is not installed, skip", name)
 
 					continue
 				}
 
 				pe, err := environment.GetProjectEnvironment()
 				if nil != err {
-					_ = echo.Error("查询项目环境配置失败: %s", err)
+					echo.Errorln("get project environment failed: %s", true, err)
 
 					continue
 				}
@@ -37,7 +37,7 @@ func NewDevelopEnvironmentManagementUtilUninstallCommand() *cobra.Command {
 					delete(pe.Packages, name)
 
 					if err := pe.Save(); nil != err {
-						_ = echo.Error("清理工具包[%s]的环境配置失败: %s", name, err)
+						echo.Errorln("clean package[%s] environment configuration failed: %s", true, name, err)
 
 						continue
 					}
@@ -45,7 +45,7 @@ func NewDevelopEnvironmentManagementUtilUninstallCommand() *cobra.Command {
 
 				se, err := environment.GetSystemEnvironment()
 				if nil != err {
-					_ = echo.Error("查询系统环境配置失败: %s", err)
+					echo.Errorln("get system environment failed: %s", true, err)
 
 					continue
 				}
@@ -54,23 +54,21 @@ func NewDevelopEnvironmentManagementUtilUninstallCommand() *cobra.Command {
 					delete(se.Packages, name)
 
 					if err := se.Save(); nil != err {
-						_ = echo.Error("清理工具包[%s]的环境配置失败: %s", name, err)
+						echo.Errorln("clean package[%s] environment configuration failed: %s", true, name, err)
 
 						continue
 					}
 				}
 
-				_ = echo.Info("移除安装的工具包[%s]...", name)
+				echo.Infoln("package[%s] removing...", name)
 				if err := pkg.Uninstall(cmd.Context(), name); nil != err {
-					_ = echo.Error(err.Error())
+					echo.Errorln(err.Error(), true)
 
 					continue
 				}
 
-				_ = echo.Info("工具包[%s]移除完成", name)
+				echo.Infoln("package[%s] removed", name)
 			}
-
-			return nil
 		},
 	}
 }

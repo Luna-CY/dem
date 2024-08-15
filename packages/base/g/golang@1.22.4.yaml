@@ -63,7 +63,7 @@ platforms:
             -   name: "Golang 1.22.4 Archive"
                 url: "https://go.dev/dl/go1.22.4.linux-arm64.tar.gz"
                 target: "{ROOT}/go1.22.4.linux-arm64.tar.gz"
-                checksum: "242b78dc4c8f3d5435d28a0d2cec9b4c1aa999b601fb8aa59fb4e5a1364bf827"
+                checksum: "a8e177c354d2e4a1b61020aca3562e27ea3e8f8247eca3170e3fa1e0c2f9e771"
         install:
             - "mkdir -p {ROOT}/data {ROOT}/cache"
             - "tar -zxf {ROOT}/go1.22.4.linux-arm64.tar.gz -C {ROOT}/"
@@ -83,7 +83,7 @@ platforms:
             -   name: "Golang 1.22.4 Archive"
                 url: "https://go.dev/dl/go1.22.4.linux-amd64.tar.gz"
                 target: "{ROOT}/go1.22.4.linux-amd64.tar.gz"
-                checksum: "c95967f50aa4ace34af0c236cbdb49a9a3e80ee2ad09d85775cb4462a5c19ed3"
+                checksum: "ba79d4526102575196273416239cca418a651e049c2b099f3159db85e7bade7d"
         install:
             - "mkdir -p {ROOT}/data {ROOT}/cache"
             - "tar -zxf {ROOT}/go1.22.4.linux-amd64.tar.gz -C {ROOT}/"

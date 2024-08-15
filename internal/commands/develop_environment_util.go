@@ -5,7 +5,7 @@ import "github.com/spf13/cobra"
 func NewDevelopEnvironmentUtilCommand() *cobra.Command {
 	var command = &cobra.Command{
 		Use:   "deu subcommand [options] [args]",
-		Short: "DEM环境管理工具",
+		Short: "develop environment management utils",
 	}
 
 	command.AddCommand(

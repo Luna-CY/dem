@@ -40,5 +40,5 @@ func Lookup(name string) (*Index, error) {
 		return i, nil
 	}
 
-	return nil, fmt.Errorf("未找到[%s]工具包", name)
+	return nil, fmt.Errorf("package [%s] not found", name)
 }

@@ -10,7 +10,7 @@ import (
 )
 
 // DownloadRemoteWithProgress 下载远程文件
-func DownloadRemoteWithProgress(ctx context.Context, filename string, target string, url string) error {
+func DownloadRemoteWithProgress(ctx context.Context, filename string, target string, url string, checksum string) error {
 	request, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if nil != err {
 		return err
@@ -26,7 +26,7 @@ func DownloadRemoteWithProgress(ctx context.Context, filename string, target str
 	}()
 
 	if 200 != response.StatusCode {
-		return fmt.Errorf("下载[%s]失败: %s", filename, response.Status)
+		return fmt.Errorf("download [%s] failed: %s", filename, response.Status)
 	}
 
 	if err := os.MkdirAll(filepath.Dir(target), 0755); nil != err {
@@ -52,11 +52,22 @@ func DownloadRemoteWithProgress(ctx context.Context, filename string, target str
 		return err
 	}
 
+	// 检查文件的checksum值
+	if "" != checksum {
+		cs, err := Checksum(target)
+		if nil != err {
+			return err
+		}
+
+		if cs != checksum {
+			return fmt.Errorf("remote file [%s] checksum mismatch", url)
+		}
+	}
+
 	return nil
 }
 
-// DownloadLocalWithProgress 下载并显示进度条
-// 返回临时文件，调用方需要负责删除临时文件
+// DownloadLocalWithProgress 下载本地并显示进度条
 func DownloadLocalWithProgress(_ context.Context, filename string, target string, path string) error {
 	file, err := os.Open(path)
 	if nil != err {

@@ -11,12 +11,12 @@ import (
 func NewDevelopEnvironmentUtilSearchCommand() *cobra.Command {
 	return &cobra.Command{
 		Use:   "search keyword",
-		Short: "搜索索引库",
+		Short: "search package by keyword",
 		Args:  cobra.ExactArgs(1),
-		RunE: func(cmd *cobra.Command, args []string) error {
+		Run: func(cmd *cobra.Command, args []string) {
 			indexes, err := index.Search(args[0])
 			if nil != err {
-				_ = echo.Error("搜索索引库失败: %s", err)
+				echo.Errorln("search index failed: %s", true, err)
 
 				os.Exit(1)
 			}
@@ -26,8 +26,6 @@ func NewDevelopEnvironmentUtilSearchCommand() *cobra.Command {
 			}
 
 			fmt.Print("\n")
-
-			return nil
 		},
 	}
 }

@@ -63,7 +63,7 @@ platforms:
             -   name: "Golang 1.16.15 Archive"
                 url: "https://go.dev/dl/go1.16.15.linux-arm64.tar.gz"
                 target: "{ROOT}/go1.16.15.linux-arm64.tar.gz"
-                checksum: "28365c5c252970c10f2627dc0aa63a2ec3df04a92df4d45ed83dbe464732c3e0"
+                checksum: "c2f27f0ce5620a9bc2ff3446165d1974ef94e9b885ec12dbfa3c07e0e198b7ce"
         install:
             - "mkdir -p {ROOT}/data {ROOT}/cache"
             - "tar -zxf {ROOT}/go1.16.15.linux-arm64.tar.gz -C {ROOT}/"
@@ -83,7 +83,7 @@ platforms:
             -   name: "Golang 1.16.15 Archive"
                 url: "https://go.dev/dl/go1.16.15.linux-amd64.tar.gz"
                 target: "{ROOT}/go1.16.15.linux-amd64.tar.gz"
-                checksum: "4f16a427ea513892b7be6646ca26159223d404193ef28c5c45c5f2ec9a0f03d1"
+                checksum: "77c782a633186d78c384f972fb113a43c24be0234c42fef22c2d8c4c4c8e7475"
         install:
             - "mkdir -p {ROOT}/data {ROOT}/cache"
             - "tar -zxf {ROOT}/go1.16.15.linux-amd64.tar.gz -C {ROOT}/"
