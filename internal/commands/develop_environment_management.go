@@ -97,8 +97,9 @@ func NewDevelopEnvironmentManagementCommand() *cobra.Command {
 				systemCommand.Env = append(systemCommand.Env, fmt.Sprintf("%s=%s", k, v))
 			}
 
-			// 执行时绑定了输入输出管道，不需要处理返回的错误
-			_ = systemCommand.Run()
+			if err := systemCommand.Run(); nil != err {
+				os.Exit(systemCommand.ProcessState.ExitCode())
+			}
 
 			return nil
 		},
