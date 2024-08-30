@@ -97,15 +97,8 @@ func NewDevelopEnvironmentManagementCommand() *cobra.Command {
 				systemCommand.Env = append(systemCommand.Env, fmt.Sprintf("%s=%s", k, v))
 			}
 
-			if err := systemCommand.Run(); nil != err {
-				if errors.Is(err, exec.ErrNotFound) {
-					echo.Errorln("command not found in all paths: %s", false, command)
-
-					os.Exit(1)
-				}
-
-				echo.Errorln("run command failed: %s", true, err)
-			}
+			// 执行时绑定了输入输出管道，不需要处理返回的错误
+			_ = systemCommand.Run()
 
 			return nil
 		},
