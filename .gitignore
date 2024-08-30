@@ -27,5 +27,5 @@
 go.work
 go.work.sum
 
-dem
-deu
+./dem
+./deu
