@@ -16,7 +16,7 @@ func TestGzipDecompressWithProgress(t *testing.T) {
 		_ = f.Close()
 	}()
 
-	err = GzipDecompressWithProgress(context.Background(), "../../testdata/output/", f, 0)
+	err = GzipDecompressWithProgress(context.Background(), "../../testdata/output/", "base.tar.gz", "../../testdata/base.tar.gz")
 	if nil != err {
 		t.Fatal(err)
 	}
