@@ -8,7 +8,7 @@ platforms:
             - "{ROOT}/bin"
         downloads:
             -   name: "XZ 5.6.2 Source"
-                url: "https://jaist.dl.sourceforge.net/project/lzmautils/xz-5.6.2.tar.gz"
+                url: "https://github.com/tukaani-project/xz/releases/download/v5.6.2/xz-5.6.2.tar.gz"
                 target: "{ROOT}/source/xz-5.6.2.tar.gz"
         install:
             - "tar -zxf {ROOT}/source/xz-5.6.2.tar.gz -C {ROOT}/source/"
@@ -22,7 +22,7 @@ platforms:
             - "{ROOT}/bin"
         downloads:
             -   name: "XZ 5.6.2 Source"
-                url: "https://jaist.dl.sourceforge.net/project/lzmautils/xz-5.6.2.tar.gz"
+                url: "https://github.com/tukaani-project/xz/releases/download/v5.6.2/xz-5.6.2.tar.gz"
                 target: "{ROOT}/source/xz-5.6.2.tar.gz"
         install:
             - "tar -zxf {ROOT}/source/xz-5.6.2.tar.gz -C {ROOT}/source/"
@@ -36,7 +36,7 @@ platforms:
             - "{ROOT}/bin"
         downloads:
             -   name: "XZ 5.6.2 Source"
-                url: "https://jaist.dl.sourceforge.net/project/lzmautils/xz-5.6.2.tar.gz"
+                url: "https://github.com/tukaani-project/xz/releases/download/v5.6.2/xz-5.6.2.tar.gz"
                 target: "{ROOT}/source/xz-5.6.2.tar.gz"
         install:
             - "tar -zxf {ROOT}/source/xz-5.6.2.tar.gz -C {ROOT}/source/"
@@ -50,7 +50,7 @@ platforms:
             - "{ROOT}/bin"
         downloads:
             -   name: "XZ 5.6.2 Source"
-                url: "https://jaist.dl.sourceforge.net/project/lzmautils/xz-5.6.2.tar.gz"
+                url: "https://github.com/tukaani-project/xz/releases/download/v5.6.2/xz-5.6.2.tar.gz"
                 target: "{ROOT}/source/xz-5.6.2.tar.gz"
         install:
             - "tar -zxf {ROOT}/source/xz-5.6.2.tar.gz -C {ROOT}/source/"
