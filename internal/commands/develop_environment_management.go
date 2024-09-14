@@ -98,13 +98,7 @@ func NewDevelopEnvironmentManagementCommand() *cobra.Command {
 			}
 
 			if err := systemCommand.Run(); nil != err {
-				if errors.Is(err, exec.ErrNotFound) {
-					echo.Errorln("command not found in all paths: %s", false, command)
-
-					os.Exit(1)
-				}
-
-				echo.Errorln("run command failed: %s", true, err)
+				os.Exit(systemCommand.ProcessState.ExitCode())
 			}
 
 			return nil
