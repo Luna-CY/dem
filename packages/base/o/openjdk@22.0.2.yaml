@@ -1,0 +1,54 @@
+home-page: "https://openjdk.org/"
+description: |-
+    The place to collaborate on an open-source implementation of the Java Platform, Standard Edition, and related projects.
+package-name: "openjdk@22.0.2"
+
+platforms:
+    darwin-arm64:
+        paths:
+            - "{ROOT}/jdk-22.0.2.jdk/Contents/Home/bin"
+        downloads:
+            -   name: "OpenJDK 22.0.2 Archive"
+                url: "https://download.java.net/java/GA/jdk22.0.2/c7ec1332f7bb44aeba2eb341ae18aca4/8/GPL/openjdk-22.0.2_macos-aarch64_bin.tar.gz"
+                target: "{ROOT}/openjdk-22.0.2_macos-aarch64_bin.tar.gz"
+                checksum: "3dab98730234e1a87aec14bcb8171d2cae101e96ff4eed1dab96abbb08e843fd"
+        install:
+            - "tar -zxf {ROOT}/openjdk-22.0.2_macos-aarch64_bin.tar.gz -C {ROOT}/"
+        uninstall:
+            - "rm -rf {ROOT}/"
+    darwin-amd64:
+        paths:
+            - "{ROOT}/jdk-22.0.2.jdk/Contents/Home/bin"
+        downloads:
+            -   name: "OpenJDK 22.0.2 Archive"
+                url: "https://download.java.net/java/GA/jdk22.0.2/c7ec1332f7bb44aeba2eb341ae18aca4/8/GPL/openjdk-22.0.2_macos-x64_bin.tar.gz"
+                target: "{ROOT}/openjdk-22.0.2_macos-x64_bin.tar.gz"
+                checksum: "e8b3ec7a7077711223d31156e771f11723cd7af31c2017f1bd2eda20855940fb"
+        install:
+            - "tar -zxf {ROOT}/openjdk-22.0.2_macos-x64_bin.tar.gz -C {ROOT}/"
+        uninstall:
+            - "rm -rf {ROOT}/"
+    linux-arm64:
+        paths:
+            - "{ROOT}/jdk-22.0.2/bin"
+        downloads:
+            -   name: "OpenJDK 22.0.2 Archive"
+                url: "https://download.java.net/java/GA/jdk22.0.2/c7ec1332f7bb44aeba2eb341ae18aca4/8/GPL/openjdk-22.0.2_linux-aarch64_bin.tar.gz"
+                target: "{ROOT}/openjdk-22.0.2_linux-aarch64_bin.tar.gz"
+                checksum: "25fba2bd5585e1e9923134dc827f2bd5a2beaca3d242ae00b7e68c152faf7ba6"
+        install:
+            - "tar -zxf {ROOT}/openjdk-22.0.2_linux-aarch64_bin.tar.gz -C {ROOT}/"
+        uninstall:
+            - "rm -rf {ROOT}/"
+    linux-amd64:
+        paths:
+            - "{ROOT}/jdk-22.0.2/bin"
+        downloads:
+            -   name: "OpenJDK 22.0.2 Archive"
+                url: "https://download.java.net/java/GA/jdk22.0.2/c7ec1332f7bb44aeba2eb341ae18aca4/8/GPL/openjdk-22.0.2_linux-x64_bin.tar.gz"
+                target: "{ROOT}/openjdk-22.0.2_linux-x64_bin.tar.gz"
+                checksum: "41536f115668308ecf4eba92aaf6acaeb0936225828b741efd83b6173ba82963"
+        install:
+            - "tar -zxf {ROOT}/openjdk-22.0.2_linux-x64_bin.tar.gz -C {ROOT}/"
+        uninstall:
+            - "rm -rf {ROOT}/"

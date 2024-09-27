@@ -1,0 +1,86 @@
+home-page: "https://www.python.org/"
+description: |-
+    Python，是一种广泛使用的解释型、高级和通用的编程语言
+    
+    Python支持多种编程范型，包括结构化、过程式、反射式、面向对象和函数式编程。它拥有动态类型系统和垃圾回收功能，能够自动管理内存使用，并且其本身拥有一个巨大而广泛的标准库。它的语言结构以及面向对象的方法，旨在帮助程序员为小型的和大型的项目编写逻辑清晰的代码。
+package-name: "python@3.9.20"
+
+platforms:
+    darwin-arm64:
+        paths:
+            - "./venv/bin" # 项目私有解释器优先级最高
+            - "{ROOT}/bin"
+        downloads:
+            -   name: "Python 3.9.20 Source"
+                url: "https://www.python.org/ftp/python/3.9.20/Python-3.9.20.tgz"
+                target: "{ROOT}/source/Python-3.9.20.tar.gz"
+        depends:
+            - "xz@5.6.2"
+            - "zlib@1.3.1"
+            - "gdbm@1.23"
+            - "openssl@3.3.1"
+        install:
+            - "tar -zxf {ROOT}/source/Python-3.9.20.tar.gz -C {ROOT}/source/"
+            - "sed -i '' 's#libmpdec_machine=universal#libmpdec_machine=uint128#g' {ROOT}/source/Python-3.9.20/configure"
+            - "cd {ROOT}/source/Python-3.9.20/ && PYTHONHOME='' PYTHONPATH='' LDFLAGS='-L{PKG:xz@5.6.2}/lib -L{PKG:zlib@1.3.1}/lib -L{PKG:gdbm@1.23}/lib' CFLAGS='-I{PKG:xz@5.6.2}/include -I{PKG:zlib@1.3.1}/include -I{PKG:gdbm@1.23}/include' ./configure --prefix={ROOT} --with-openssl={PKG:openssl@3.3.1}/ --with-lto --enable-optimizations --with-dtrace --with-dbmliborder=gdbm py_cv_module__tkinter=disabled"
+            - "cd {ROOT}/source/Python-3.9.20/ && make && make install"
+        uninstall:
+            - "rm -rf {ROOT}/"
+    darwin-amd64:
+        paths:
+            - "./venv/bin" # 项目私有解释器优先级最高
+            - "{ROOT}/bin"
+        downloads:
+            -   name: "Python 3.9.20 Source"
+                url: "https://www.python.org/ftp/python/3.9.20/Python-3.9.20.tgz"
+                target: "{ROOT}/source/Python-3.9.20.tar.gz"
+        depends:
+            - "xz@5.6.2"
+            - "zlib@1.3.1"
+            - "gdbm@1.23"
+            - "openssl@3.3.1"
+        install:
+            - "tar -zxf {ROOT}/source/Python-3.9.20.tar.gz -C {ROOT}/source/"
+            - "sed -i '' 's#libmpdec_machine=universal#libmpdec_machine=uint128#g' {ROOT}/source/Python-3.9.20/configure"
+            - "cd {ROOT}/source/Python-3.9.20/ && PYTHONHOME='' PYTHONPATH='' LDFLAGS='-L{PKG:xz@5.6.2}/lib -L{PKG:zlib@1.3.1}/lib -L{PKG:gdbm@1.23}/lib' CFLAGS='-I{PKG:xz@5.6.2}/include -I{PKG:zlib@1.3.1}/include -I{PKG:gdbm@1.23}/include' ./configure --prefix={ROOT} --with-openssl={PKG:openssl@3.3.1}/ --with-lto --enable-optimizations --with-dtrace --with-dbmliborder=gdbm py_cv_module__tkinter=disabled"
+            - "cd {ROOT}/source/Python-3.9.20/ && make && make install"
+        uninstall:
+            - "rm -rf {ROOT}/"
+    linux-arm64:
+        paths:
+            - "{ROOT}/bin"
+        downloads:
+            -   name: "Python 3.9.20 Source"
+                url: "https://www.python.org/ftp/python/3.9.20/Python-3.9.20.tgz"
+                target: "{ROOT}/source/Python-3.9.20.tar.gz"
+        depends:
+            - "xz@5.6.2"
+            - "zlib@1.3.1"
+            - "gdbm@1.23"
+            - "openssl@3.3.1"
+        install:
+            - "tar -zxf {ROOT}/source/Python-3.9.20.tar.gz -C {ROOT}/source/"
+            - "sed -i '' 's#libmpdec_machine=universal#libmpdec_machine=uint128#g' {ROOT}/source/Python-3.9.20/configure"
+            - "cd {ROOT}/source/Python-3.9.20/ && PYTHONHOME='' PYTHONPATH='' LDFLAGS='-L{PKG:xz@5.6.2}/lib -L{PKG:zlib@1.3.1}/lib -L{PKG:gdbm@1.23}/lib' CFLAGS='-I{PKG:xz@5.6.2}/include -I{PKG:zlib@1.3.1}/include -I{PKG:gdbm@1.23}/include' ./configure --prefix={ROOT} --with-openssl={PKG:openssl@3.3.1}/ --with-lto --enable-optimizations --with-dtrace --with-dbmliborder=gdbm py_cv_module__tkinter=disabled"
+            - "cd {ROOT}/source/Python-3.9.20/ && make && make install"
+        uninstall:
+            - "rm -rf {ROOT}/"
+    linux-amd64:
+        paths:
+            - "{ROOT}/bin"
+        downloads:
+            -   name: "Python 3.9.20 Source"
+                url: "https://www.python.org/ftp/python/3.9.20/Python-3.9.20.tgz"
+                target: "{ROOT}/source/Python-3.9.20.tar.gz"
+        depends:
+            - "xz@5.6.2"
+            - "zlib@1.3.1"
+            - "gdbm@1.23"
+            - "openssl@3.3.1"
+        install:
+            - "tar -zxf {ROOT}/source/Python-3.9.20.tar.gz -C {ROOT}/source/"
+            - "sed -i '' 's#libmpdec_machine=universal#libmpdec_machine=uint128#g' {ROOT}/source/Python-3.9.20/configure"
+            - "cd {ROOT}/source/Python-3.9.20/ && PYTHONHOME='' PYTHONPATH='' LDFLAGS='-L{PKG:xz@5.6.2}/lib -L{PKG:zlib@1.3.1}/lib -L{PKG:gdbm@1.23}/lib' CFLAGS='-I{PKG:xz@5.6.2}/include -I{PKG:zlib@1.3.1}/include -I{PKG:gdbm@1.23}/include' ./configure --prefix={ROOT} --with-openssl={PKG:openssl@3.3.1}/ --with-lto --enable-optimizations --with-dtrace --with-dbmliborder=gdbm py_cv_module__tkinter=disabled"
+            - "cd {ROOT}/source/Python-3.9.20/ && make && make install"
+        uninstall:
+            - "rm -rf {ROOT}/"
