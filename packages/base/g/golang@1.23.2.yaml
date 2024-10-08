@@ -1,0 +1,91 @@
+home-page: "https://go.dev/"
+description: |-
+    Build simple, secure, scalable systems with Go
+    
+    An open-source programming language supported by Google
+    Easy to learn and great for teams
+    Built-in concurrency and a robust standard library
+    Large ecosystem of partners, communities, and tools
+package-name: "golang@1.23.2"
+
+platforms:
+    darwin-arm64:
+        paths:
+            - "{ROOT}/go/bin"
+            - "{ROOT}/data/bin"
+        environments:
+            GOENV: "false"
+            GOROOT: "{ROOT}/go"
+            GOPATH: "{ROOT}/data"
+            GOCACHE: "{ROOT}/cache"
+            GOMODCACHE: "{ROOT}/data/pkg/mod"
+        downloads:
+            -   name: "Golang 1.23.2 Archive"
+                url: "https://go.dev/dl/go1.23.2.darwin-arm64.tar.gz"
+                target: "{ROOT}/go1.23.2.darwin-arm64.tar.gz"
+                checksum: "e223795ca340e285a760a6446ce57a74500b30e57469a4109961d36184d3c05a"
+        install:
+            - "mkdir -p {ROOT}/data {ROOT}/cache"
+            - "tar -zxf {ROOT}/go1.23.2.darwin-arm64.tar.gz -C {ROOT}/"
+        uninstall:
+            - "rm -rf {ROOT}/"
+    darwin-amd64:
+        paths:
+            - "{ROOT}/go/bin"
+            - "{ROOT}/data/bin"
+        environments:
+            GOENV: "false"
+            GOROOT: "{ROOT}/go"
+            GOPATH: "{ROOT}/data"
+            GOCACHE: "{ROOT}/cache"
+            GOMODCACHE: "{ROOT}/data/pkg/mod"
+        downloads:
+            -   name: "Golang 1.23.2 Archive"
+                url: "https://go.dev/dl/go1.23.2.darwin-amd64.tar.gz"
+                target: "{ROOT}/go1.23.2.darwin-amd64.tar.gz"
+                checksum: "488d9e4ca3e3ed513ee4edd91bef3a2360c65fa6d6be59cf79640bf840130a58"
+        install:
+            - "mkdir -p {ROOT}/data {ROOT}/cache"
+            - "tar -zxf {ROOT}/go1.23.2.darwin-amd64.tar.gz -C {ROOT}/"
+        uninstall:
+            - "rm -rf {ROOT}/"
+    linux-arm64:
+        paths:
+            - "{ROOT}/go/bin"
+            - "{ROOT}/data/bin"
+        environments:
+            GOENV: "false"
+            GOROOT: "{ROOT}/go"
+            GOPATH: "{ROOT}/data"
+            GOCACHE: "{ROOT}/cache"
+            GOMODCACHE: "{ROOT}/data/pkg/mod"
+        downloads:
+            -   name: "Golang 1.23.2 Archive"
+                url: "https://go.dev/dl/go1.23.2.linux-arm64.tar.gz"
+                target: "{ROOT}/go1.23.2.linux-arm64.tar.gz"
+                checksum: "faec7f7f8ae53fda0f3d408f52182d942cc89ef5b7d3d9f23ff117437d4b2d2f"
+        install:
+            - "mkdir -p {ROOT}/data {ROOT}/cache"
+            - "tar -zxf {ROOT}/go1.23.2.linux-arm64.tar.gz -C {ROOT}/"
+        uninstall:
+            - "rm -rf {ROOT}/"
+    linux-amd64:
+        paths:
+            - "{ROOT}/go/bin"
+            - "{ROOT}/data/bin"
+        environments:
+            GOENV: "false"
+            GOROOT: "{ROOT}/go"
+            GOPATH: "{ROOT}/data"
+            GOCACHE: "{ROOT}/cache"
+            GOMODCACHE: "{ROOT}/data/pkg/mod"
+        downloads:
+            -   name: "Golang 1.23.2 Archive"
+                url: "https://go.dev/dl/go1.23.2.linux-amd64.tar.gz"
+                target: "{ROOT}/go1.23.2.linux-amd64.tar.gz"
+                checksum: "49bbb517cfa9eee677e1e7897f7cf9cfdbcf49e05f61984a2789136de359f9bd"
+        install:
+            - "mkdir -p {ROOT}/data {ROOT}/cache"
+            - "tar -zxf {ROOT}/go1.23.2.linux-amd64.tar.gz -C {ROOT}/"
+        uninstall:
+            - "rm -rf {ROOT}/"
